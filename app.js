@@ -1,34 +1,48 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
 
 // Importação de rotas
 const reservasRoutes = require('./src/api/reservas');
 const recadosRoutes = require('./src/routes/recados');
 const anunciosRoutes = require('./src/routes/anuncios'); // Importação da nova rota de anúncios
-const painelRoutes = require('./src/api/painel'); 
+const painelRoutes = require('./src/api/painel');
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
-const db = require('./src/config/db'); // Importação do db.js
+const dbConfig = require('./src/config/db'); // Importação do db.js
 
 const app = express();
 
 process.env.TZ = 'America/Sao_Paulo';
 
 // Conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const uri = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+let db;
+
+async function connectToMongoDB() {
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB");
+        db = client.db(dbConfig.databaseName); // Use your database name from dbConfig
+    } catch (err) {
+        console.error("Error connecting to MongoDB", err);
+    }
+}
+
+connectToMongoDB();
 
 // Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Servir arquivos estáticos 
+// Servir arquivos estáticos
 app.use(express.static('./src/public'));
 
 // Configura o Express para usar EJS como template engine
 app.set('view engine', 'ejs');
-app.set('views', './src/views');  // Define o diretório das views
+app.set('views', './src/views'); // Define o diretório das views
 
 // Definindo as rotas
 app.use('/api/reservas', reservasRoutes);
@@ -63,8 +77,6 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-module.exports = app;
-
 const session = require('express-session');
 
 // Session configuration
@@ -83,39 +95,4 @@ app.use(session({
 
 // Using new routes
 //app.use('/auth', authRoutes);
-//app.use('/usuarios', usuariosRoutes); 
-
-
-const express = require('express');
-const { MongoClient } = require('mongodb');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-
-// Restante da importação de rotas...
-
-const app = express();
-process.env.TZ = 'America/Sao_Paulo';
-
-// Conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'sua-string-de-conexao-mongodb';
-let db;
-
-MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-    if (err) throw err;
-    db = client.db('mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin'); // Substitua com o nome do seu banco de dados
-    console.log('Conectado ao MongoDB');
-});
-
-// Middlewares
-// ... (sem alterações aqui)
-
-// Rotas
-// ... (atualize suas rotas para usar a variável `db` para operações de banco de dados)
-
-// Inicialização do servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
-
-module.exports = { app, db }; // Exportando db para uso em outros arquivos
+//app.use('/usuarios', usuariosRoutes);

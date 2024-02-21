@@ -1,11 +1,19 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 
 // URL de conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 
-// Conexão com o MongoDB
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conexão com MongoDB estabelecida com sucesso!'))
-  .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
+// Função para conectar ao MongoDB
+async function connectToMongoDB() {
+    try {
+        const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await client.connect();
+        console.log('Conexão com MongoDB estabelecida com sucesso!');
+        return client.db(); // Retorna a referência para o banco de dados
+    } catch (err) {
+        console.error('Erro ao conectar ao MongoDB:', err);
+        throw err; // Lança o erro para ser tratado pelo chamador
+    }
+}
 
-module.exports = mongoose.connection;
+module.exports = connectToMongoDB;
