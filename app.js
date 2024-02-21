@@ -9,7 +9,7 @@ const anunciosRoutes = require('./src/routes/anuncios'); // Importação da nova
 const painelRoutes = require('./src/api/painel');
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
-const dbConfig = require('./src/config/db'); // Importação do db.js
+const connectToMongoDB = require('./src/config/db'); // Importação da função connectToMongoDB
 const app = express();
 require('dotenv').config({ path: './.env' }); // Carrega as variáveis de ambiente do arquivo .env
 
@@ -56,11 +56,9 @@ app.get('/api/disponibilidade/:recurso/painel', disponibilidadeController.buscar
 // Inicializando o servidor
 const PORT = process.env.PORT || 3000;
 
-// Conectando ao banco de dados MongoDB usando MongoClient
-MongoClient.connect(dbConfig.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(client => {
-        console.log('Conectado ao banco de dados');
-        const db = client.db(dbConfig.database);
+// Conectando ao banco de dados MongoDB
+connectToMongoDB()
+    .then(db => {
         app.locals.db = db; // Disponibiliza o objeto de banco de dados para o aplicativo
 
         app.listen(PORT, () => {
