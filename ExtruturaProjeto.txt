@@ -1,0 +1,28 @@
+EquipReserve/
+│
+├── src/
+│   ├── api/
+│   │   ├── reservas.js
+│   │   └── recados.js
+│   ├── config/
+│   ├── models/
+│   │   ├── reserva.js
+│   │   └── recado.js
+│   ├── routes/
+│   │   ├── reservas.js
+│   │   └── recados.js
+│   ├── views/
+│   │   ├── admin.ejs
+│   │   ├── reserva.ejs
+│   │   └── index.ejs
+│   └── public/
+│       ├── css/
+│       ├── js/
+│       └── images/
+│   └── utils/
+├── test/
+├── scripts/
+├── docs/
+├── app.js
+├── package.json
+└── .env.example

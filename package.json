@@ -1,0 +1,33 @@
+{
+    "name": "equipreserve",
+    "version": "1.0.0",
+    "description": "Sistema de Reserva de Equipamentos e Espaços para EEEEFM Coronel Olímpio Cunha",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "jest"
+    },
+    "keywords": [
+        "node.js",
+        "express",
+        "mongodb",
+        "ejs",
+        "css3",
+        "javascript"
+    ],
+    "author": "Felipe Guasti",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "ejs": "^3.1.6",
+        "express": "^4.17.1",
+        "express-session": "^1.18.0",
+        "express-validator": "^7.0.1",
+        "moment-timezone": "^0.5.45",
+        "mongod": "^2.0.0",
+        "mongoose": "^6.1.4"
+    },
+    "devDependencies": {
+        "jest": "^27.5.1"
+    }
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial - Sistema de Reserva de Equipamentos e Espaços</title>
+    <link rel="stylesheet" href="/css/painel.css"> <!-- Link para o CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>EEEFM Coronel Olímpio Cunha</h1>
+        <a href="/" class="btn-voltar">← Voltar</a>
+    </header>
+    <main>
+        <section class="right-panel">
+            <nav>
+                <button id="btnTablets" data-recurso="Tablets">Tablets</button>
+                <button id="btnChromebooks" data-recurso="Chromebooks">Chromebooks</button>
+                <button id="btnQuadroInterativo" data-recurso="QuadroInterativo">Quadro Interativo</button>
+                <button id="btnBiblioteca" data-recurso="Biblioteca">Biblioteca</button>
+                <button id="btnSalaRecursos" data-recurso="SalaRecursos">Sala de Recursos</button>
+                <!-- Outros botões conforme necessário -->
+            </nav>
+            <section id="anunciosRecentes">
+                <h2>Anúncios Recentes</h2>
+                <div id="conteudoAnuncios">
+                    <!-- Os anúncios serão carregados aqui dinamicamente -->
+                </div>
+            </section>
+        </section>
+        <section class="left-panel">
+            <div id="recursoInfo"></div>
+            <div id="recursoQuantidade"></div>
+            <div id="calendar-title">Reservas do Mês</div>
+            <!-- Botões de navegação no calendário -->
+            <div class="calendario-container">
+                <button id="btnSemanaAnterior"></button>
+                <div id="calendarioSemanal">
+                    <table>
+                        <thead>
+                            <tr id="cabecalhoCalendario">
+                                <!-- Os cabeçalhos da tabela serão inseridos aqui dinamicamente -->
+                            </tr>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoCalendario">
+                            <!-- Os horários serão preenchidos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <button id="btnProximaSemana"></button>
+            </div>
+        </section>   
+    </main>
+    <script src="/js/painel.js"></script> <!-- Link para o JavaScript -->
+</body>
+</html>

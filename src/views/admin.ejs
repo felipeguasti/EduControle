@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Administrativa</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <h1>Área Administrativa - Gestão de Anúncios</h1>
+        <h3>EEEFM Coronel Olímpio Cunha</h3>
+        <a href="/" class="btn-voltar">← Voltar</a>
+    </header>
+    <section>
+        <form id="formAnuncio" method="post" action="/admin">
+            <label for="tituloAnuncio">Título do Anúncio:</label>
+            <input type="text" id="tituloAnuncio" name="tituloAnuncio" required>
+        
+            <label for="conteudoAnuncio">Conteúdo do Anúncio:</label>
+            <textarea id="conteudoAnuncio" name="conteudoAnuncio" required></textarea>
+        
+            <button type="submit">Adicionar Anúncio</button>
+        </form>        
+    </section>
+    <section>
+        <h2>Anúncios Publicados</h2>
+        <div id="listaAnuncios">
+            <% if (anuncios && anuncios.length > 0) { %>
+                <% anuncios.forEach(anuncio => { %>
+                    <div class="anuncio-container">
+                        <h3><%= anuncio.tituloAnuncio %></h3>
+                        <p><%= anuncio.conteudoAnuncio %></p>
+                        <button class="btn-editar" data-id="<%= anuncio._id %>">Editar</button>
+                        <button class="btn-excluir" data-id="<%= anuncio._id %>">Excluir</button>
+
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum anúncio encontrado.</p>
+            <% } %>
+        </div>
+    </section>
+    <footer>
+        <div class="container-footer">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>Sistema de Reserva de Equipamentos e Espaços</h3>
+                    <p>Este sistema é utilizado para a reserva de equipamentos e espaços da escola EEEFM Coronel Olímpio Cunha. Acesse as funcionalidades através dos menus principais.</p>
+                    <button onclick="location.href='/sobre'">Saiba mais</button>
+                </div>
+                <div class="footer-section links">
+                    <h3>Links Úteis</h3>
+                    <ul>
+                        <li><a href="/" class="pencil-icon">Página Inicial</a></li>
+                        <li><a href="/reserva?recurso=Tablets" class="pencil-icon">Reserva de Tablets</a></li>
+                        <li><a href="/reserva?recurso=Chromebooks" class="pencil-icon">Reserva de Chromebooks</a></li>
+                        <li><a href="/reserva?recurso=QuadroInterativo" class="pencil-icon">Reserva de Quadro Interativo</a></li>
+                        <li><a href="/reserva?recurso=Biblioteca" class="pencil-icon">Reserva da Biblioteca</a></li>
+                        <li><a href="/reserva?recurso=SalaRecursos" class="pencil-icon">Reserva da Sala de Recursos</a></li>
+                        <li><a href="/painel" class="pencil-icon">Exibir o painel</a></li>
+                        <!-- Adicione mais links conforme necessário -->
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contato</h3>
+                    <p>Para suporte ou informações, entre em contato:</p>
+                    <div class="imageContact">
+                        <a href="https://www.instagram.com/" target="_blank">
+                            <img src="/images/insta.png" alt="Instagram">
+                        </a>
+                        <a href="mailto:contato@felipeguasti.com.br">
+                            <img src="/images/email.png" alt="Email">
+                        </a>
+                        <a href="https://wa.me/5527998873776" target="_blank">
+                            <img src="/images/whatsapp.png" alt="WhatsApp">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                 Sistema de Reserva | Designed by <a href="http://www.felipeguasti.com.br">Felipe Guasti</a> &#169; All rights reserved
+            </div>
+        </div>
+    </footer>    
+    <script src="/js/admin.js"></script>
+    <script>
+        // Script de validação do formulário
+        document.getElementById('formAnuncio').addEventListener('submit', function(e) {
+            const tituloAnuncio = document.getElementById('tituloAnuncio').value;
+            const conteudoAnuncio = document.getElementById('conteudoAnuncio').value;
+
+                if (!tituloAnuncio || !conteudoAnuncio) {
+                    alert('Por favor, preencha todos os campos.');
+                    e.preventDefault(); // Impede o envio do formulário
+            }
+            // Implementar funções editarAnuncio e excluirAnuncio em admin.js
+        });
+    </script>
+</body>
+</html>

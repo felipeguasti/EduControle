@@ -1,0 +1,579 @@
+/* Estilos principais do sistema EquipReserve */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/background.webp');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: repeat;
+    background-color: #f0f4f7;
+    color: #2d4156;
+    position: relative; /* Adiciona posição relativa para o pseudo-elemento */
+}
+
+body::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5); /* Camada branca com transparência */
+    z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
+}
+
+
+header {
+    background-image: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(255, 20, 147, 0.5)), url('/images/header.jpg');    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    color: white;
+    text-align: center;
+    padding: 80px 0;
+    border-bottom: 5px solid #2d4156;
+}
+header h1 {
+    padding:0;
+    padding-bottom: 1%;
+    margin:0;
+}
+header h3 {
+    padding:0;
+    margin:0;
+}
+
+header h1, header h3 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+section {
+    margin: 20px;
+}
+
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+nav {
+    display: block;
+    text-align: center;
+    padding: 50px 0px;
+}
+
+button {
+    background-color: #005f6b; /* Complemento da paleta de cores */
+    color: white;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right:2%;
+}
+
+button:hover {
+    background-color: #003366; /* Cor mais escura para o hover */
+}
+
+/* Melhorias na tipografia */
+h1, h2, h3 {
+    font-family: 'Helvetica', sans-serif;
+    margin-top: 0;
+}
+
+p {
+    line-height: 1.6;
+    color: #2d4156;
+    ;
+}
+/* Estilos para o botão de administração */
+#btnAdmin {
+    background-color: transparent; /* Sem cor de fundo */
+    color: white;                  /* Cor do texto */
+    border: none;                  /* Sem bordas */
+    font-size: 16px;               /* Tamanho da fonte */
+    position: absolute;            /* Posicionamento absoluto */
+    top: -10px;                     /* Distância do topo */
+    right: 10px;                   /* Distância da direita */
+    cursor: pointer;               /* Estilo do cursor como ponteiro */
+}
+
+/* Estilo para hover no botão de administração */
+#btnAdmin:hover {
+    color: #ddd; /* Cor do texto ao passar o mouse */
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    background-color: transparent; /* ou qualquer outra cor desejada */
+    color: white;
+    border: none;                  /* Sem bordas */
+    font-size: 16px;               /* Tamanho da fonte */
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    color: #ddd; /* Cor do texto ao passar o mouse */
+}
+
+
+footer {
+    background-color: #d6e6e8; /* Cor padrão da Secretaria de Educação do Espírito Santo */
+    color: #2d4156;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.footer-content {
+    display: flex; /* Usa flexbox para criar layout de colunas */
+    justify-content: space-between; /* Espaço entre as colunas */
+    align-items: flex-start; /* Alinha itens à esquerda */
+    padding: 20px 0; /* Adiciona padding vertical ao conteúdo do rodapé */
+}
+
+.footer-section {
+    flex: 1; /* Permite que cada seção ocupe uma parte igual do espaço */
+    padding: 0 20px; /* Espaçamento interno */
+    margin: 0 10px; /* Aumente a margem para adicionar mais espaço entre as seções */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+.footer-section h3 {
+    margin-top: 0; /* Remove a margem superior do título da seção */
+    color:#c86673;
+}
+
+.footer-section ul {
+    list-style: none; /* Remove os bullets */
+    padding: 0; /* Remove o padding padrão */
+    margin: 0; /* Remove a margem padrão */
+}
+
+.footer-section ul li a {
+    color: inherit;
+    text-decoration: none; /* Remove sublinhado */
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline; /* Sublinha ao passar o mouse */
+    color:white;
+}
+
+.footer-section.links ul li {
+    border-bottom: 1px solid #2d4156; /* Adiciona uma linha na parte inferior de cada item da lista */
+    padding-bottom: 5px; /* Adiciona um pouco de espaço entre o texto e a linha */
+    margin-bottom: 5px; /* Adiciona um pouco de espaço após cada item da lista */
+}
+
+.footer-section.links ul li:last-child {
+    border-bottom: none; /* Remove a linha do último item para evitar uma linha dupla */
+}
+
+.pencil-icon {
+    background: url('/images/link.png') no-repeat; /* Caminho para o ícone de lápis na pasta images */
+    background-size: 13px 13px; /* Define o tamanho do ícone */
+    padding-left: 20px; /* Espaço à esquerda do texto para acomodar o ícone */
+    margin-right: 10px; /* Espaço entre o ícone e o texto */
+}
+
+.footer-section a {
+    color: inherit;
+    text-decoration: none;
+}
+.footer-section a:hover {
+    color: darkgray; /* Cor do texto cinza claro */
+}
+
+
+/* Estilos para a parte de baixo do rodapé com direitos autorais */
+.footer-bottom {
+    background-color: #c86673; /* Cor de fundo cinza azulado */
+    color: #2d4156; /* Cor do texto cinza claro */
+    text-align: left; /* Alinha o texto à esquerda */
+    padding: 30px; /* Adiciona padding horizontal */
+    font-size: 1em; /* Tamanho da fonte menor */
+}
+
+.footer-bottom a {
+    color:darkgray;
+    text-decoration: none; /* Remove sublinhado */
+}
+
+.footer-bottom a:hover {
+    text-decoration: underline; /* Sublinha ao passar o mouse */
+    color:white;
+}
+
+footer {
+    clear: both; /* Clear floats */
+}
+
+.footer-section.about button {
+    background-color: #d6e6e8; /* Fundo do botão */
+    color: #2d4156; /* Cor do texto do botão */
+    border: 1px solid #2d4156; /* Borda do botão */
+    padding: 10px 20px; /* Espaçamento interno do botão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor do mouse como ponteiro */
+    margin-top: 10px; /* Espaço acima do botão */
+    text-align: center; /* Texto centralizado */
+}
+
+.footer-section.about button:hover {
+    background-color: #2d4156; /* Fundo do botão no hover */
+    color: #d6e6e8; /* Cor do texto no hover */
+    border: 1px solid #d6e6e8; /* Borda no hover */
+}
+
+.footer-section.contact img {
+    width: 35px; /* Ou o tamanho que preferir */
+    height: auto;
+    margin: 5px;
+}
+
+#recursoInfo {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#listaAnuncios {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Cria duas colunas */
+    grid-gap: 20px; /* Espaçamento entre os itens da grade */
+    max-height: 1000px; /* Altura máxima para 5 linhas, ajuste conforme necessário */
+    overflow: auto; /* Permite a rolagem se necessário */
+}
+
+.anuncio-container {
+    background-color: rgba(255, 255, 255, 0.5); /* Branco com 50% de transparência */
+    margin-bottom: 10px; /* Espaçamento entre os anúncios */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+}
+
+#conteudoAnuncios {
+    background-color: rgba(255, 255, 255, 0.5); /* White background with 50% transparency */
+    padding: 2px 30px 2px 30px;
+}
+
+#conteudoAnuncios p {
+    margin-bottom: 0; /* Reduces space after <p> */
+    padding-top: 5px;
+}
+
+#conteudoAnuncios h6 {
+    margin-top: 5px; /* Reduces space before <h6> */
+    padding-bottom: 0px;
+    margin-left: 35px;
+}
+#conteudoAnuncios div {
+    padding: 0px;
+    margin: 0px;
+}
+
+#conteudoAnuncios div:not(:last-child) {
+    border-bottom: 1px solid #2d4156; /* Line separator */
+}
+
+#conteudoAnuncios .anuncio-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 10px;
+    display: inline;
+}
+
+.simbolo-disponivel {
+    color: green;
+    margin-left: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.simbolo-indisponivel {
+    color: red;
+    margin-left: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.texto-status {
+    font-size: 0.8em; /* Tamanho da fonte ajustado */
+    margin-left: 5px; /* Espaçamento para separar do símbolo */
+    text-align: center;
+}
+
+/* Alinhamento e estilo para as labels dos horários */
+label[for^="horario"] {
+    display: inline-block; /* Alinhamento inline */
+    margin-right: 10px; /* Espaço entre a label e o próximo elemento */
+}
+
+/* Estilização adicional para elementos interativos */
+button:hover, input[type='radio']:hover {
+    cursor: pointer;
+    opacity: 0.8; /* Ligeira transparência ao passar o mouse */
+}
+
+#horariosDisponiveis {
+    background-color: #f9f9f9; /* Fundo claro */
+    padding: 15px; /* Espaço interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-top: 20px; /* Espaço acima do container */
+}
+
+.horario-item {
+    display: flex;
+    align-items:center;
+    padding:10px;
+    margin-bottom: 10px; /* Espaçamento entre itens */
+    border: 1px solid #ddd; /* Borda sutil */
+    padding: 10px; /* Espaço interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: transform 0.2s; /* Transição suave */
+}
+
+.horario-item:hover {
+    transform: scale(1.03); /* Efeito de zoom ao passar o mouse */
+}
+
+
+.horario-item label {
+    display: inline-block; /* Certifica-se de que o label tem uma largura e altura */
+    width: 60px; /* Ajuste a largura conforme necessário */
+    line-height: 15px; /* Ajusta a altura da linha para corresponder à altura da caixa de seleção */
+    font-size: 1.2em;
+    margin-bottom: 7px;
+}
+
+.horario-item input[type="radio"] {
+    width: 15px; /* Defina a largura desejada */
+    height: 15px; /* Defina a altura desejada */
+    transform: scale(1.5); /* Aumentar o tamanho */
+    margin-right: 10px; /* Espaçamento à direita */
+}
+
+#calendarioSemanal table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+#calendarioSemanal th {
+    border: 1px solid #005f6b;
+    border-right: 1px solid #ddd;
+    padding: 8px;
+    &:first-child {
+        border-left: 1px solid #005f6b;
+    }
+    &:last-child {
+        border-right: 1px solid #005f6b;
+    }
+}
+
+#calendarioSemanal td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.disponivel {
+    font-style: italic;
+    color: green;
+}
+
+/* Oculta as células correspondentes aos dias de sábado (dia-semana-6) e domingo (dia-semana-0) */
+table tr td:nth-child(1) {
+    display: none;
+}
+
+table tr td:nth-child(7) {
+    display: none;
+}
+
+#calendarioSemanal {
+    width: 100%;
+    border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
+    border-spacing: 0; /* Remove cell spacing to maintain the table layout */
+    background-color: none;
+    border: none;
+    outline-offset: 0px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensures the content respects the border radius */
+    outline: 0;
+}
+
+#calendarioSemanal thead th {
+    background-color: #005f6b;
+    color: #d6e6e8;
+    padding: 10px;
+    text-align: center;
+    /* Add border-radius to the first and last th for rounded corners */
+    &:first-child {
+        border-top-left-radius: 5px;
+    }
+    &:last-child {
+        border-top-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td {
+    background-color: #fff;
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+    /* Add border-radius to the first and last td in the last tr for rounded corners */
+    &:first-child {
+        border-bottom-left-radius: 5px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td.disponivel {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+#calendarioSemanal tbody td:not(.disponivel) {
+    background-color: #f9f9f9;
+    color: #a0a0a0;
+}
+
+#calendarioSemanal tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#calendar-title {
+    font-size: 48px; /* Adjust the size as needed */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-style: italic; /* Makes the text italic */
+    font-family: 'Indie Flower', cursive; /* Add other styles like font-size, color as needed */
+    color: #2d4156; /* Choose a color that fits your design */
+    font-weight: bold; /* Make the title bold */
+    text-align: center; /* Center align the title */
+    padding: 10px 0; /* Add some padding above and below the title */
+    margin: 10px 0px; /* Space below the title before the table starts */
+    display: block; /* By default, caption is table-caption, which can't have margin/padding */
+}
+
+.icon-container {
+    display: block; /* Isso forçará o contêiner a ocupar uma linha inteira */
+    margin-top: 5px; /* Espaço acima dos ícones */
+}
+
+.edit-reserva-icon, .delete-reserva-icon {
+    width: 20px; /* Ajuste o tamanho conforme necessário */
+    height: 20px; /* Ajuste o tamanho conforme necessário */
+    cursor: pointer;
+    margin-right: 5px; /* Espaçamento entre os ícones */
+}
+
+/* Estilização adicional se necessário */
+.edit-reserva-icon:hover, .delete-reserva-icon:hover {
+    opacity: 0.8;
+}
+
+/* Estilo para o popup modal */
+.popup-container {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Estilos responsivos para dispositivos móveis */
+@media screen and (max-width: 768px) {
+    header, footer {
+        text-align: left;
+        padding: 10px;
+    }
+
+    header h1 {
+        padding-top: 50px;
+        text-align: center;
+    }
+    header h3 {
+        padding-top: 20px;
+        text-align: center;
+    }
+    form {
+        padding: 10px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+    .footer-section {
+        margin: 10px 0; /* Espaçamento vertical entre as seções para telas menores */
+    }
+    .imageContact {
+        display: flex;
+        justify-content: center; /* Alinha horizontalmente */
+        flex-wrap: wrap; /* Permite que os itens sejam empilhados se não couberem em uma linha */
+    }
+
+    .imageContact img {
+        width: 25px; /* Ou o tamanho que preferir */
+        height: auto;
+        margin: 5px;
+    }
+}
+

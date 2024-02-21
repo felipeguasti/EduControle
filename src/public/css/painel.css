@@ -1,0 +1,363 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/background.webp');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: repeat;
+    background-color: #f0f4f7;
+    color: #2d4156;
+    position: relative; /* Adiciona posição relativa para o pseudo-elemento */
+}
+
+body::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5); /* Camada branca com transparência */
+    z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
+}
+
+.parent-container {
+    padding-bottom: 0px; /* Adjust or remove padding */
+}
+
+header {
+    background-image: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(255, 20, 147, 0.5)), url('/images/header.jpg');    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    color: white;
+    text-align: center;
+    padding: 0;
+    border-bottom: 5px solid #2d4156;
+    height: 10%; /* Adjust this percentage based on your actual header size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+}
+header h1 {
+    padding:0;
+    padding-bottom: 1%;
+    margin:0;
+}
+header h3 {
+    padding:0;
+    margin:0;
+}
+
+header h1, header h3 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Remove default padding */
+}
+
+#calendar-title {
+    font-size: 48px; /* Adjust the size as needed */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-style: italic; /* Makes the text italic */
+    font-family: "Dancing Script", cursive;
+    color: black; /* Choose a color that fits your design */
+    font-weight: bold; /* Make the title bold */
+    text-align: left; /* Center align the title */
+    padding: 10px 0px 10px 20px;
+    margin: 0px; /* Space below the title before the table starts */
+    display: block; /* By default, caption is table-caption, which can't have margin/padding */
+}
+
+#conteudoAnuncios p, #conteudoAnuncios h6, .anuncio-container {
+    margin: 0; /* Removes vertical margins */
+    padding: 0; /* Removes vertical padding */
+}
+
+#anunciosRecentes {
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+}
+
+#anunciosRecentes h2{
+    text-align: center;
+    padding-top: 10px;
+    margin-bottom: 5px; /* Reduce or remove this margin */
+}
+
+#listaAnuncios {
+    display: grid;
+    grid-gap: 10px; /* Espaçamento entre os itens da grade */
+    max-height: 300px; /* Altura máxima para 5 linhas, ajuste conforme necessário */
+    overflow: auto; /* Permite a rolagem se necessário */
+}
+
+.anuncio-container {
+    background-color: rgba(255, 255, 255, 0.5); /* Branco com 50% de transparência */
+    margin-bottom: 0px; /* Espaçamento entre os anúncios */
+    padding: 2px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+}
+
+#conteudoAnuncios {
+    background-color: rgba(255, 255, 255, 0.5); /* White background with 50% transparency */
+    padding: 1px 5px 1px 5px;
+}
+
+#conteudoAnuncios p {
+    margin-bottom: 0; /* Reduces space after <p> */
+    padding-top: 2px;
+}
+
+#conteudoAnuncios h6 {
+    margin-top: 0px; /* Reduces space before <h6> */
+    padding-bottom: 0px;
+    margin-left: 23px;
+}
+#conteudoAnuncios div {
+    padding-bottom: 5px;
+    margin: 5px;
+}
+
+#conteudoAnuncios div:not(:last-child) {
+    border-bottom: 1px solid #2d4156; /* Line separator */
+}
+
+#conteudoAnuncios .anuncio-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 0px;
+    display: inline;
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    background-color: transparent; /* ou qualquer outra cor desejada */
+    color: white;
+    border: none;                  /* Sem bordas */
+    font-size: 16px;               /* Tamanho da fonte */
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    color: #ddd; /* Cor do texto ao passar o mouse */
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    height: 90%; /* This should be the remaining height. Adjust as needed. */
+    overflow: hidden; /* Prevents internal content from causing scrolling */
+}
+
+.left-panel, .right-panel {
+    /* Your existing styles */
+    overflow: hidden; /* Prevents internal content from causing scrolling */
+}
+
+.left-panel {
+    order: 1; /* This will move the left panel to the right */
+    flex: 1; /* Adjust the flex value as needed */
+    flex-grow: 2; /* This will allow the left panel to take up 2 parts */
+}
+
+.right-panel {
+    order: 2; /* This will move the right panel to the left */
+    flex: 1; /* Adjust the flex value as needed */
+    flex-grow: 1; /* This will allow the left panel to take up 2 parts */
+}
+
+nav {
+    display: block;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2d4156; /* Line separator */
+}
+
+button {
+    background-color: #005f6b; /* Complemento da paleta de cores */
+    color: white;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right:2%;
+}
+
+button:hover {
+    background-color: #003366; /* Cor mais escura para o hover */
+}
+
+.botao-ativo {
+    background-color: #003366; /* Cor de fundo para o botão ativo */
+    color: white; /* Cor do texto para o botão ativo */
+}
+
+/* Melhorias na tipografia */
+h1, h2, h3 {
+    font-family: 'Helvetica', sans-serif;
+    margin-top: 0;
+}
+
+p {
+    line-height: 1.6;
+    color: #2d4156;
+}
+
+section {
+    margin-left: 25px;
+}
+
+.calendario-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#calendarioSemanal {
+    width: 100%;
+    border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
+    border-spacing: 0; /* Remove cell spacing to maintain the table layout */
+    background-color: white;
+    border: none;
+    outline-offset: 0px;
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensures the content respects the border radius */
+    outline: 0;
+    position: relative;
+}
+
+#calendarioSemanal table {
+    border-collapse: separate;
+    border-spacing: 6px 6px; /* Espaço entre linhas */
+    table-layout: auto;
+    width: 100%; /* Certifique-se de que a tabela ocupe todo o espaço disponível */
+}
+
+#calendarioSemanal td {
+    border: 1px solid grey;
+    border-top: none; /* Remove a borda superior para evitar duplicação */
+    padding: 5px; /* Reduz o padding */
+    text-align: left;
+}
+
+#calendarioSemanal thead th {
+    color: black;
+    text-align: center;
+    text-align: left;
+    /* Add border-radius to the first and last th for rounded corners */
+    &:first-child {
+        border-top-left-radius: 5px;
+    }
+    &:last-child {
+        border-top-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td {
+    background-color: #fff;
+    padding: 5px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+    /* Add border-radius to the first and last td in the last tr for rounded corners */
+    &:first-child {
+        border-bottom-left-radius: 5px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td.disponivel {
+    border: 1px solid #96cf59; /* Borda verde para disponíveis */
+    border-left: 8px solid #96cf59;
+    color:black;
+}
+
+#calendarioSemanal tbody td:not(.disponivel) {
+    border: 1px solid #3a9fe9; /* Borda azul para indisponíveis */
+    border-left: 8px solid #3a9fe9;
+    color:darkgray;
+}
+
+#calendarioSemanal tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#btnSemanaAnterior, #btnProximaSemana {
+    background: transparent;
+    background-size: cover; /* ou contain, dependendo de suas necessidades */
+    border: none;
+    cursor: pointer;
+    width: 5%; /* Ajuste a largura conforme necessário */
+    height: 5%; /* Ajuste a altura conforme necessário */
+    background-size: contain; /* Faz a imagem caber dentro do botão */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    background-position: center; /* Centraliza a imagem no botão */
+    z-index: 2; /* Garante que os botões fiquem na frente */
+}
+
+#btnSemanaAnterior {
+    background-image: url('/images/semanaAnterior.png');
+    position: absolute;
+    top: 50%; /* Centraliza verticalmente */
+    left: -1%; /* Ajuste este valor conforme necessário */
+    transform: translateY(-50%); /* Ajuste fino para centralização vertical */
+}
+
+#btnProximaSemana {
+    background-image: url('/images/proximaSemana.png');
+    position: absolute;
+    top: 50%; /* Centraliza verticalmente */
+    right: 29%; /* Ajuste este valor conforme necessário */
+    transform: translateY(-50%); /* Ajuste fino para centralização vertical */
+}
+
+@media screen and (max-width: 768px) {
+    header, footer {
+        text-align: left;
+        padding: 10px;
+    }
+
+    header h1 {
+        padding-top: 50px;
+        text-align: center;
+    }
+    header h3 {
+        padding-top: 20px;
+        text-align: center;
+    }
+    .imageContact {
+        display: flex;
+        justify-content: center; /* Alinha horizontalmente */
+        flex-wrap: wrap; /* Permite que os itens sejam empilhados se não couberem em uma linha */
+    }
+
+    .imageContact img {
+        width: 25px; /* Ou o tamanho que preferir */
+        height: auto;
+        margin: 5px;
+    }
+}

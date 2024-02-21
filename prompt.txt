@@ -1,0 +1,44 @@
+Estamos seguindo estes passos. Me pergunte em qual etapa do projeto estamos agora. 
+Depois que eu dizer em qual etapa estamos, analise os arquivos que enviei para o seu sistema e me mande as modificações necessárias. Não me mande exemplos de modificações. Quero alterações reais baseadas no que temos até agora. Se precisar de algum arquivo extra do projeto, é só pedir a qualquer momento. 
+
+Passos para Implementar a Edição:
+1. Modificar a Tabela de Disponibilidade:
+
+Adicionar um botão de editar em cada linha que representa uma reserva existente.
+Este botão deve estar vinculado a um identificador único da reserva (como um ID).
+2. Capturar Dados da Reserva ao Clicar em Editar:
+
+Implementar uma função JavaScript que será chamada quando o botão de editar for clicado.
+Esta função deve capturar os dados da reserva (horário, data, professor, recurso) da linha correspondente.
+3. Preencher o Formulário de Reserva com os Dados Capturados:
+
+Usar os dados capturados para preencher automaticamente o formulário de reserva.
+Isso facilita a edição da reserva pelo usuário.
+4. Rolar a Página para o Formulário de Reserva:
+
+Implementar a lógica para rolar automaticamente a página até o início do formulário de reserva.
+Passos para Implementar a Exclusão:
+5. Adicionar Botão de Excluir:
+
+Incluir um botão de excluir em cada linha da tabela de disponibilidade.
+Este botão também deve estar associado ao identificador único da reserva.
+6. Implementar a Lógica de Exclusão:
+
+Criar uma função JavaScript que será acionada ao clicar no botão de excluir.
+Esta função deve enviar uma requisição para o backend para excluir a reserva do banco de dados.
+7. Atualizar a Interface do Usuário:
+
+Após a exclusão bem-sucedida, atualizar a tabela de disponibilidade para refletir as mudanças.
+Mostrar uma mensagem de confirmação ou erro, conforme o resultado da operação.
+
+8. Modificações no Backend:
+Ajustar o Controller (disponibilidadeController.js):
+Adicionar rotas e lógica no backend para lidar com as requisições de edição e exclusão das reservas.
+Considerações Finais:
+Testes e Validações:
+
+9. Testar as novas funcionalidades para garantir que funcionam conforme o esperado.
+Implementar validações necessárias, como a verificação de permissões do usuário para editar ou excluir reservas.
+Tratamento de Erros:
+
+Implementar um bom tratamento de erros tanto no frontend quanto no backend para lidar com possíveis falhas.
