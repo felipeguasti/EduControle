@@ -16,7 +16,7 @@ const app = express();
 process.env.TZ = 'America/Sao_Paulo';
 
 // Conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/equipreserve';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middlewares
