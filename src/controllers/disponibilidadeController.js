@@ -1,11 +1,10 @@
 const Reserva = require('../models/reserva');
-// Horários para cada turno
+
 const horariosPorTurno = {
     'Matutino': ['7:00', '7:50', '8:40', '9:50', '10:40', '11:30'],
     'Vespertino': ['13:00', '13:50', '14:40', '15:30', '16:40', '17:30']
 };
 
-// Quantidade total disponível para cada tipo de recurso
 const quantidades = {
     'Tablets': 2,
     'Chromebooks': 4,
@@ -14,7 +13,6 @@ const quantidades = {
     'Biblioteca': 1
 };
 
-// Supondo que este arquivo seja 'controladores/recursoControlador.js'
 exports.getQuantidadeRecurso = (req, res) => {
     const recurso = req.params.recurso;
     const quantidade = quantidades[recurso];
@@ -30,8 +28,7 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
         const recurso = req.params.recurso;
         const data = req.query.data;
-        const turno = req.query.turno; // Novo parâmetro para o turno
-        const Reserva = require('../models/reserva');
+        const turno = req.query.turno;
         
         const reservasDoDia = await Reserva.find({
             recurso: recurso,
@@ -49,7 +46,7 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
             if (quantidades[recurso] > 0) {
                 horariosComDisponibilidade[horario] = reservasParaHorario < quantidades[recurso];
             } else {
-                horariosComDisponibilidade[horario] = false; // Não há recursos disponíveis, então o horário não está disponível
+                horariosComDisponibilidade[horario] = false;
             }
         });        
 
@@ -62,19 +59,14 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
 exports.buscarReservasPorSemana = async (req, res) => {
     try {
         const recurso = req.params.recurso;
-        const turno = req.query.turno; // Adicionando o parâmetro de turno
+        const turno = req.query.turno;
         let dataInicio = new Date(req.query.dataInicio);
 
-        // Ajustar para o domingo anterior
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
 
-        // Calcular a data de término (sábado seguinte)
         let dataFim = new Date(dataInicio);
         dataFim.setDate(dataInicio.getDate() + 6);
 
-        const Reserva = require('../models/reserva');
-
-        // Busca todas as reservas para o recurso na semana selecionada
         const reservasDaSemana = await Reserva.find({
             recurso: recurso,
             data: {
@@ -91,10 +83,8 @@ exports.buscarReservasPorSemana = async (req, res) => {
 
             resultadoSemanal[dataFormatada] = {};
 
-            const horarios = horariosPorTurno[turno]; // Usa apenas os horários do turno especificado
+            const horarios = horariosPorTurno[turno];
 
-            // Iterar sobre cada turno e horário
-           
             horarios.forEach(horario => {
                 const reservasParaHorario = reservasDaSemana.filter(reserva => 
                     reserva.data.toISOString().split('T')[0] === dataFormatada && 
@@ -114,22 +104,20 @@ exports.buscarReservasPorSemana = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 exports.atualizarReserva = async (req, res) => {
-    const reservaId = req.params.id; // O ID da reserva é obtido da URL
+    const reservaId = req.params.id;
     try {
         let reserva = await Reserva.findById(reservaId);
         if (!reserva) {
             return res.status(404).json({ message: 'Reserva não encontrada.' });
         }
 
-        // Atualiza os campos da reserva com os dados do formulário
         reserva.data = req.body.data || reserva.data;
         reserva.hora = req.body.hora || reserva.hora;
         reserva.professor = req.body.professor || reserva.professor;
         reserva.turma = req.body.turma || reserva.turma;
-        // Adicione outros campos conforme necessário...
 
-        // Salva as alterações no banco de dados
         const reservaAtualizada = await reserva.save();
         res.json({ reservaSalva: true, reserva: reservaAtualizada });
 
@@ -137,15 +125,15 @@ exports.atualizarReserva = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 exports.deletarReserva = async (req, res) => {
-    const reservaId = req.params.id; // O ID da reserva é obtido da URL
+    const reservaId = req.params.id;
     try {
         let reserva = await Reserva.findById(reservaId);
         if (!reserva) {
             return res.status(404).json({ message: 'Reserva não encontrada.' });
         }
 
-        // Exclui a reserva do banco de dados
         await reserva.remove();
         res.json({ message: 'Reserva excluída com sucesso' });
     } catch (error) {
@@ -156,19 +144,14 @@ exports.deletarReserva = async (req, res) => {
 exports.buscarReservasPorSemanaPainel = async (req, res) => {
     try {
         const recurso = req.params.recurso;
-        const turno = req.query.turno; // Adicionando o parâmetro de turno
+        const turno = req.query.turno;
         let dataInicio = new Date(req.query.dataInicio);
 
-        // Ajustar para o domingo anterior
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
 
-        // Calcular a data de término (sábado seguinte)
         let dataFim = new Date(dataInicio);
         dataFim.setDate(dataInicio.getDate() + 6);
 
-        const Reserva = require('../models/reserva');
-
-        // Busca todas as reservas para o recurso na semana selecionada
         const reservasDaSemana = await Reserva.find({
             recurso: recurso,
             data: {
@@ -185,9 +168,7 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
 
             resultadoSemanal[dataFormatada] = {};
 
-            const horarios = horariosPorTurno[turno]; // Usa apenas os horários do turno especificado
-
-            // Iterar sobre cada turno e horário
+            const horarios = horariosPorTurno[turno];
            
             horarios.forEach(horario => {
                 const reservasParaHorario = reservasDaSemana.filter(reserva => 
