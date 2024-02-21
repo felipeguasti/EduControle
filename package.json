@@ -25,9 +25,13 @@
         "express-validator": "^7.0.1",
         "moment-timezone": "^0.5.45",
         "mongod": "^2.0.0",
-        "mongoose": "^6.1.4"
+        "mongodb": "^5.x",
+        "mongoose": "^5.x"
     },
     "devDependencies": {
         "jest": "^27.5.1"
+    },
+    "engines": {
+        "node": "16.x"
     }
 }
