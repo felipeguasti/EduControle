@@ -85,3 +85,37 @@ app.use(session({
 //app.use('/auth', authRoutes);
 //app.use('/usuarios', usuariosRoutes); 
 
+
+const express = require('express');
+const { MongoClient } = require('mongodb');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+
+// Restante da importação de rotas...
+
+const app = express();
+process.env.TZ = 'America/Sao_Paulo';
+
+// Conexão com o MongoDB
+const mongoURI = process.env.MONGODB_URI || 'sua-string-de-conexao-mongodb';
+let db;
+
+MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+    if (err) throw err;
+    db = client.db('mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin'); // Substitua com o nome do seu banco de dados
+    console.log('Conectado ao MongoDB');
+});
+
+// Middlewares
+// ... (sem alterações aqui)
+
+// Rotas
+// ... (atualize suas rotas para usar a variável `db` para operações de banco de dados)
+
+// Inicialização do servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+module.exports = { app, db }; // Exportando db para uso em outros arquivos
