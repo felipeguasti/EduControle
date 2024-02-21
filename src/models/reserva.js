@@ -1,47 +1,57 @@
-const { ObjectId } = require('mongodb');
-const db = require('../config/db'); // Importação do arquivo db.js
+const mongoose = require('mongoose');
 
-async function getReservaModel() {
-    const database = await db(); // Conecta ao banco de dados
+const reservaSchema = new mongoose.Schema({
+  recurso: {
+    type: String,
+    required: [true, 'O recurso é obrigatório.']
+  },
+  data: { 
+    type: Date, 
+    required: [true, 'A data é obrigatória.'],
+    validate: {
+      validator: function(value) {
+        // Garante que a data da reserva não seja no passado
+        return value.getTime() > Date.now();
+      },
+      message: 'A data da reserva não pode ser no passado.'
+    }
+  },
+  turno: {
+    type: String,
+    required: [true, 'O turno é obrigatório.'],
+    enum: ['Matutino', 'Vespertino']
+  },
+  professor: {
+    type: String,
+    required: [true, 'O nome do professor é obrigatório.']
+  },
+  turma: {
+    type: String,
+    required: [true, 'A turma é obrigatória.']
+  },
+  horario: {
+    type: String,
+    required: [true, 'O horário é obrigatório.'],
+    validate: {
+      validator: function(value) {
+        // Horários para os turnos Matutino e Vespertino
+        const horariosMatutino = ['7:00', '7:50', '8:40', '9:50', '10:40', '11:30'];
+        const horariosVespertino = ['13:00', '13:50', '14:40', '15:30', '16:40', '17:30'];
 
-    // Define a coleção de reservas
-    const reservasCollection = database.collection('reservas');
-
-    // Retorna o modelo de reserva
-    return {
-        async createReserva(recurso, data, turno, professor, turma, horario, observacoes) {
-            const reserva = {
-                recurso,
-                data,
-                turno,
-                professor,
-                turma,
-                horario,
-                observacoes,
-            };
-            const result = await reservasCollection.insertOne(reserva);
-            return result.insertedId;
-        },
-
-        async getReservaById(reservaId) {
-            return await reservasCollection.findOne({ _id: ObjectId(reservaId) });
-        },
-
-        async getAllReservas() {
-            return await reservasCollection.find().toArray();
-        },
-
-        async updateReserva(reservaId, recurso, data, turno, professor, turma, horario, observacoes) {
-            await reservasCollection.updateOne(
-                { _id: ObjectId(reservaId) },
-                { $set: { recurso, data, turno, professor, turma, horario, observacoes } }
-            );
-        },
-
-        async deleteReserva(reservaId) {
-            await reservasCollection.deleteOne({ _id: ObjectId(reservaId) });
+        // Verifica se o horário é válido com base no turno
+        if (this.turno === 'Matutino') {
+          return horariosMatutino.includes(value);
+        } else if (this.turno === 'Vespertino') {
+          return horariosVespertino.includes(value);
         }
-    };
-}
+        return false; // Horário inválido se não for Matutino ou Vespertino
+      },
+      message: 'Horário inválido para o turno selecionado.'
+    }
+  },
+  observacoes: String
+}, { timestamps: true });
 
-module.exports = getReservaModel;
+const Reserva = mongoose.model('Reserva', reservaSchema);
+
+module.exports = Reserva;

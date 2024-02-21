@@ -1,12 +1,11 @@
-const { ObjectId } = require('mongodb');
-const db = require('../config/db'); // Importação do arquivo db.js
+
+const Anuncio = require('../models/anuncio');
 const moment = require('moment-timezone');
+
 
 exports.listarAnuncios = async (req, res) => {
     try {
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const anuncios = await anunciosCollection.find().toArray();
+        const anuncios = await Anuncio.find();
         res.render('admin', { anuncios });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -15,9 +14,7 @@ exports.listarAnuncios = async (req, res) => {
 
 exports.mostrarAnuncios = async (req, res) => {
     try {
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const anuncios = await anunciosCollection.find().toArray();
+        const anuncios = await Anuncio.find();
         res.json(anuncios);
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -26,75 +23,52 @@ exports.mostrarAnuncios = async (req, res) => {
 
 exports.criarAnuncios = async (req, res) => {
     try {
-        const { tituloAnuncio, conteudoAnuncio } = req.body;
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
+        // Criar um novo objeto de anúncio
+        const novoAnuncio = new Anuncio(req.body);
 
         // Adicionar a data e hora de Brasília
-        const dataPublicacao = moment().tz('America/Sao_Paulo').toDate();
-
-        // Criar um novo objeto de anúncio
-        const novoAnuncio = {
-            tituloAnuncio,
-            conteudoAnuncio,
-            dataPublicacao
-        };
+        novoAnuncio.dataPublicacao = moment().tz('America/Sao_Paulo').toDate();
 
         // Salvar o anúncio no banco de dados
-        await anunciosCollection.insertOne(novoAnuncio);
+        await novoAnuncio.save();
 
         res.redirect('admin');
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
 };
-
 exports.obterAnuncioPorId = async (req, res) => {
     try {
-        const { id } = req.params;
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const anuncio = await anunciosCollection.findOne({ _id: ObjectId(id) });
-
+        const anuncio = await Anuncio.findById(req.params.id);
         if (!anuncio) {
             return res.status(404).send('Anúncio não encontrado');
         }
-
         res.json(anuncio);
     } catch (error) {
         res.status(500).send('Erro ao buscar o anúncio: ' + error.message);
     }
 };
-
+// Método para atualizar um anúncio
 exports.atualizarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const anuncioAtualizado = await anunciosCollection.findOneAndUpdate(
-            { _id: ObjectId(id) },
-            { $set: req.body },
-            { returnOriginal: false }
-        );
+        const anuncioAtualizado = await Anuncio.findByIdAndUpdate(id, req.body, { new: true });
 
-        if (!anuncioAtualizado.value) {
+        if (!anuncioAtualizado) {
             return res.status(404).send('Anúncio não encontrado');
         }
 
-        res.json(anuncioAtualizado.value);
+        res.json(anuncioAtualizado);
     } catch (error) {
         res.status(500).send('Erro ao atualizar o anúncio: ' + error.message);
     }
 };
-
 exports.deletarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const result = await anunciosCollection.deleteOne({ _id: ObjectId(id) });
+        const anuncio = await Anuncio.findByIdAndRemove(id);
 
-        if (result.deletedCount === 0) {
+        if (!anuncio) {
             return res.status(404).send('Anúncio não encontrado');
         }
 
@@ -103,15 +77,14 @@ exports.deletarAnuncio = async (req, res) => {
         res.status(500).send('Erro ao deletar anúncio: ' + error.message);
     }
 };
-
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
-        const database = await db(); // Conecta ao banco de dados
-        const anunciosCollection = database.collection('anuncios');
-        const anunciosRecentes = await anunciosCollection.find().sort({ dataPublicacao: -1 }).limit(10).toArray();
+        const anunciosRecentes = await Anuncio.find().sort({ dataPublicacao: -1 }).limit(10);
+        console.log(anunciosRecentes); // Adicione este log para depuração
         res.json(anunciosRecentes);
     } catch (error) {
         console.error('Erro ao listar anúncios recentes:', error);
         res.status(500).send({ message: error.message });
     }
 };
+

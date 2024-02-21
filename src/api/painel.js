@@ -4,8 +4,7 @@ const DisponibilidadeController = require('../controllers/disponibilidadeControl
 
 // Rota para verificar a disponibilidade de horários
 router.get('/:recurso', DisponibilidadeController.buscarHorariosDisponiveis);
-
-// Rota para obter a quantidade de um recurso específico
 router.get('/quantidade/:recurso', DisponibilidadeController.getQuantidadeRecurso);
+
 
 module.exports = router;

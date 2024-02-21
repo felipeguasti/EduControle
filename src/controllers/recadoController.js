@@ -1,5 +1,6 @@
 const Recado = require('../models/recado');
 
+// Função para listar todos os recados
 exports.listarRecados = async (req, res) => {
     try {
         const recados = await Recado.find();
@@ -9,6 +10,7 @@ exports.listarRecados = async (req, res) => {
     }
 };
 
+// Função para criar um novo recado
 exports.criarRecado = async (req, res) => {
     try {
         const novoRecado = new Recado(req.body);
@@ -19,6 +21,7 @@ exports.criarRecado = async (req, res) => {
     }
 };
 
+// Função para buscar um recado por ID
 exports.buscarRecadoPorId = async (req, res, next) => {
     let recado;
     try {
@@ -33,6 +36,7 @@ exports.buscarRecadoPorId = async (req, res, next) => {
     next();
 };
 
+// Função para atualizar um recado por ID
 exports.atualizarRecado = async (req, res) => {
     if (req.body.titulo != null) {
         res.recado.titulo = req.body.titulo;
@@ -40,6 +44,7 @@ exports.atualizarRecado = async (req, res) => {
     if (req.body.conteudo != null) {
         res.recado.conteudo = req.body.conteudo;
     }
+    // adicione outros campos de forma semelhante, se necessário...
     try {
         const updatedRecado = await res.recado.save();
         res.json(updatedRecado);
@@ -48,6 +53,7 @@ exports.atualizarRecado = async (req, res) => {
     }
 };
 
+// Função para deletar um recado por ID
 exports.deletarRecado = async (req, res) => {
     try {
         await res.recado.remove();

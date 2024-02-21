@@ -1,20 +1,17 @@
-const db = require('../config/db'); // Importação do arquivo db.js
+
+const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 
+// Controlador para adicionar um novo usuário
 exports.adicionarUsuario = async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
-        const database = await db(); // Conecta ao banco de dados
-        const usuariosCollection = database.collection('usuarios');
-
-        const usuarioExistente = await usuariosCollection.findOne({ email });
+        const usuarioExistente = await Usuario.findOne({ email });
         if (usuarioExistente) {
             return res.status(400).send('Usuário já existe.');
         }
-
-        const hashedSenha = await bcrypt.hash(senha, 10); // Hash de senha antes de salvar
-        await usuariosCollection.insertOne({ nome, email, senha: hashedSenha });
-
+        const usuario = new Usuario({ nome, email, senha });
+        await usuario.save();
         res.status(201).send('Usuário criado com sucesso.');
     } catch (error) {
         res.status(500).send(error.message);
