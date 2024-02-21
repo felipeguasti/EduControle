@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 // URL de conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://mainUser:<password>@sistemareserva.lyzqgr1.mongodb.net/?retryWrites=true&w=majority&appName=SistemaReserva';
 
 // Função para conectar ao MongoDB
 async function connectToMongoDB() {
