@@ -64,24 +64,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-
-const session = require('express-session');
-
-// Session configuration
-app.use(session({
-    secret: 'pizz@123',  // Replace with a real secret key
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }  // Set to true if using https
-}));
-
-// Importing new controllers and routes for authentication and user management
-//const authController = require('./src/controllers/AuthController');
-//const usuariosController = require('./src/controllers/UsuariosController');
-//const authRoutes = require('./src/routes/auth');
-//const usuariosRoutes = require('./src/routes/usuarios');
-
-// Using new routes
-//app.use('/auth', authRoutes);
-//app.use('/usuarios', usuariosRoutes); 
-
