@@ -9,13 +9,15 @@ const anunciosRoutes = require('./src/routes/anuncios'); // Importação da nova
 const painelRoutes = require('./src/api/painel'); 
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
+const db = require('./src/config/db'); // Importação do db.js
 
 const app = express();
 
 process.env.TZ = 'America/Sao_Paulo';
 
 // Conexão com o MongoDB
-mongoose.connect('mongodb://localhost:27017/equipreserve', { useNewUrlParser: true, useUnifiedTopology: true });
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/equipreserve';
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middlewares
 app.use(bodyParser.json());
