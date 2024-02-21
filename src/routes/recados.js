@@ -1,9 +1,16 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
-const Recado = require('../models/recado');
+const { ObjectId } = require('mongodb');
+const connectToMongoDB = require('../config/db');
 
-// POST request to create a new recado
+// Função para obter a coleção de recados do banco de dados
+async function getRecadosCollection() {
+    const db = await connectToMongoDB();
+    return db.collection('recados');
+}
+
+// POST request para criar um novo recado
 router.post('/', [
     // Validações
     body('titulo').isLength({ max: 100 }).withMessage('Título muito longo.'),
@@ -16,18 +23,20 @@ router.post('/', [
     }
 
     try {
-        const novoRecado = new Recado(req.body);
-        const recadoSalvo = await novoRecado.save();
+        const recadosCollection = await getRecadosCollection();
+        const result = await recadosCollection.insertOne(req.body);
+        const recadoSalvo = result.ops[0];
         res.status(201).json(recadoSalvo);
     } catch (error) {
         res.status(400).json({ message: `Erro ao criar recado: ${error.message}` });
     }
 });
 
-// GET request to fetch all recados
+// GET request para buscar todos os recados
 router.get('/', async (req, res) => {
     try {
-        const recados = await Recado.find();
+        const recadosCollection = await getRecadosCollection();
+        const recados = await recadosCollection.find().toArray();
         res.json(recados);
     } catch (error) {
         res.status(500).json({ message: `Erro ao buscar recados: ${error.message}` });
@@ -36,35 +45,39 @@ router.get('/', async (req, res) => {
 
 // Middleware para obter recado por ID e implementação de log
 async function getRecadoById(req, res, next) {
-    let recado;
+    const recadoId = req.params.id;
     try {
-        recado = await Recado.findById(req.params.id);
-        if (recado == null) {
+        const recadosCollection = await getRecadosCollection();
+        const recado = await recadosCollection.findOne({ _id: ObjectId(recadoId) });
+        if (!recado) {
             return res.status(404).json({ message: 'Recado não encontrado.' });
         }
+        res.recado = recado;
+        next();
     } catch (error) {
         return res.status(500).json({ message: `Erro ao buscar recado: ${error.message}` });
     }
-    res.recado = recado;
-    next();
 }
 
-// PUT request to update recado by ID
+// PUT request para atualizar recado por ID
 router.put('/:id', getRecadoById, async (req, res) => {
-    Object.assign(res.recado, req.body);
+    const recadoId = req.params.id;
     try {
-        const updatedRecado = await res.recado.save();
-        res.json(updatedRecado);
+        const recadosCollection = await getRecadosCollection();
+        await recadosCollection.updateOne({ _id: ObjectId(recadoId) }, { $set: req.body });
+        res.json({ message: 'Recado atualizado com sucesso' });
     } catch (error) {
         res.status(400).json({ message: `Erro ao atualizar recado: ${error.message}` });
     }
 });
 
-// DELETE request to delete recado by ID
+// DELETE request para excluir recado por ID
 router.delete('/:id', getRecadoById, async (req, res) => {
+    const recadoId = req.params.id;
     try {
-        await res.recado.remove();
-        res.json({ message: 'Recado deletado com sucesso' });
+        const recadosCollection = await getRecadosCollection();
+        await recadosCollection.deleteOne({ _id: ObjectId(recadoId) });
+        res.json({ message: 'Recado excluído com sucesso' });
     } catch (error) {
         res.status(500).json({ message: `Erro ao excluir recado: ${error.message}` });
     }
