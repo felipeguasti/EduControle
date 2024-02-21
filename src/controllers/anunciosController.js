@@ -79,9 +79,12 @@ exports.deletarAnuncio = async (req, res) => {
 };
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
-        const anunciosRecentes = await Anuncio.find().sort({ dataPublicacao: -1 }).limit(10); // Limita a 10 anúncios recentes
+        const anunciosRecentes = await Anuncio.find().sort({ dataPublicacao: -1 }).limit(10);
+        console.log(anunciosRecentes); // Adicione este log para depuração
         res.json(anunciosRecentes);
     } catch (error) {
+        console.error('Erro ao listar anúncios recentes:', error);
         res.status(500).send({ message: error.message });
     }
 };
+
