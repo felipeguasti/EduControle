@@ -1,20 +1,14 @@
+
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
-const connectToMongoDB = require('../config/db');
+const Reserva = require('../models/reserva');
 
-// Função para obter a coleção de reservas do banco de dados
-async function getReservasCollection() {
-    const db = await connectToMongoDB();
-    return db.collection('reservas');
-}
-
-// POST request para criar uma nova reserva
+// POST request to create a new reserva
 router.post('/', 
   [ // Validações
     body('data').isISO8601().withMessage('Data inválida.'),
-    body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
+     body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
     // Adicione mais validações conforme necessário
   ], 
   async (req, res) => {
@@ -24,32 +18,29 @@ router.post('/',
     }
 
     try {
-        const reservasCollection = await getReservasCollection();
-        const result = await reservasCollection.insertOne(req.body);
-        const reservaSalva = result.ops[0];
+        const novaReserva = new Reserva(req.body);
+        const reservaSalva = await novaReserva.save();
         res.status(201).json({ reservaSalva }); // Modified to include success field
     } catch (error) {
         res.status(400).json({ message: `Erro ao criar reserva: ${error.message}` }); // Modified to include success field
     }
 });
 
-// GET request para buscar todas as reservas
+// GET request to fetch all reservas
 router.get('/', async (req, res) => {
   try {
-      const reservasCollection = await getReservasCollection();
-      const reservas = await reservasCollection.find().toArray();
+      const reservas = await Reserva.find();
       res.json(reservas);
   } catch (error) {
       res.status(500).json({ message: `Erro ao buscar reservas: ${error.message}` });
   }
 });
 
-// GET request para buscar reserva por ID
+// GET request to fetch reserva by ID
 router.get('/:id', async (req, res) => {
   const reservaId = req.params.id;
   try {
-      const reservasCollection = await getReservasCollection();
-      const reserva = await reservasCollection.findOne({ _id: ObjectId(reservaId) });
+      const reserva = await Reserva.findById(reservaId);
       if (!reserva) {
           return res.status(404).json({ message: 'Reserva não encontrada.' });
       }
@@ -61,39 +52,35 @@ router.get('/:id', async (req, res) => {
 
 // Middleware para obter reserva por ID e implementação de log
 async function getReservaById(req, res, next) {
-  const reservaId = req.params.id;
+  let reserva;
   try {
-      const reservasCollection = await getReservasCollection();
-      const reserva = await reservasCollection.findOne({ _id: ObjectId(reservaId) });
-      if (!reserva) {
+      reserva = await Reserva.findById(req.params.id);
+      if (reserva == null) {
           return res.status(404).json({ message: 'Reserva não encontrada.' });
       }
-      res.reserva = reserva;
-      next();
   } catch (error) {
       return res.status(500).json({ message: `Erro ao buscar reserva: ${error.message}` });
   }
+  res.reserva = reserva;
+  next();
 }
 
-// PUT request para atualizar reserva por ID
+// PUT request to update reserva by ID
 router.put('/:id', getReservaById, async (req, res) => {
   // Atualização parcial
-  const reservaId = req.params.id;
+  Object.assign(res.reserva, req.body);
   try {
-      const reservasCollection = await getReservasCollection();
-      await reservasCollection.updateOne({ _id: ObjectId(reservaId) }, { $set: req.body });
-      res.json({ message: 'Reserva atualizada com sucesso' });
+      const updatedReserva = await res.reserva.save();
+      res.json(updatedReserva);
   } catch (error) {
       res.status(400).json({ message: `Erro ao atualizar reserva: ${error.message}` });
   }
 });
 
-// DELETE request para excluir reserva por ID
+// DELETE request to delete reserva by ID
 router.delete('/:id', getReservaById, async (req, res) => {
-  const reservaId = req.params.id;
   try {
-      const reservasCollection = await getReservasCollection();
-      await reservasCollection.deleteOne({ _id: ObjectId(reservaId) });
+      await res.reserva.remove();
       res.json({ message: 'Reserva excluída com sucesso' });
   } catch (error) {
       res.status(500).json({ message: `Erro ao excluir reserva: ${error.message}` });
