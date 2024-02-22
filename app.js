@@ -10,14 +10,11 @@ const painelRoutes = require('./src/api/painel');
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
 const db = require('./src/config/db'); // Importação do db.js
+const connectToMongoDB = require('./src/config/db'); // Importação da função connectToMongoDB
 
 const app = express();
 
 process.env.TZ = 'America/Sao_Paulo';
-
-// Conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middlewares
 app.use(bodyParser.json());
