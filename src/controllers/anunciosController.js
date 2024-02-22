@@ -1,4 +1,3 @@
-
 const Anuncio = require('../models/anuncio');
 const moment = require('moment-timezone');
 
@@ -37,6 +36,7 @@ exports.criarAnuncios = async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 };
+
 exports.obterAnuncioPorId = async (req, res) => {
     try {
         const anuncio = await Anuncio.findById(req.params.id);
@@ -48,6 +48,7 @@ exports.obterAnuncioPorId = async (req, res) => {
         res.status(500).send('Erro ao buscar o anúncio: ' + error.message);
     }
 };
+
 // Método para atualizar um anúncio
 exports.atualizarAnuncio = async (req, res) => {
     try {
@@ -63,6 +64,7 @@ exports.atualizarAnuncio = async (req, res) => {
         res.status(500).send('Erro ao atualizar o anúncio: ' + error.message);
     }
 };
+
 exports.deletarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
@@ -77,14 +79,13 @@ exports.deletarAnuncio = async (req, res) => {
         res.status(500).send('Erro ao deletar anúncio: ' + error.message);
     }
 };
+
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
         const anunciosRecentes = await Anuncio.find().sort({ dataPublicacao: -1 }).limit(10);
-        console.log(anunciosRecentes); // Adicione este log para depuração
         res.json(anunciosRecentes);
     } catch (error) {
         console.error('Erro ao listar anúncios recentes:', error);
-        res.status(500).send({ message: error.message });
+        res.status(500).json({ message: 'Erro ao listar anúncios recentes.' });
     }
 };
-
