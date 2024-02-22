@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // URL de conexão com o MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://atlas-sql-65d4e1a0c6c9a87766f45303-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
+const mongoURI = 'mongodb+srv://mainUser:NybpcAomtf6AuOSb@atlas-sql-65d6967c33cd836cdb89b5b6-zsuox.a.query.mongodb.net/equipreserve?ssl=true&authSource=admin';
 
 // Conexão com o MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
