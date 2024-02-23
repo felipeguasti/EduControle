@@ -16,9 +16,8 @@ const app = express();
 
 process.env.TZ = 'America/Sao_Paulo';
 
-// Middlewares
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Servir arquivos estáticos 
 app.use(express.static('./src/public'));
