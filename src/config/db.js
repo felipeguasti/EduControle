@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // URL de conexão com o MongoDB
-const mongoURI = 'mongodb+srv://${DB_USER}:${DB_PASS}@${process.env.MONGODB_URI}';
+const mongoURI = 'mongodb://admin:NybpcAomtf6AuOSb@ec2-18-222-20-25.us-east-2.compute.amazonaws.com:27017/nomeDoBancoDeDados';
 
 // Conexão com o MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
