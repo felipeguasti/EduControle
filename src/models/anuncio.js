@@ -1,20 +1,24 @@
+const Sequelize = require('sequelize');
 const db = require('../config/db');
 
-const anuncioSchema = `
-    CREATE TABLE Anuncios (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        tituloAnuncio VARCHAR(255),
-        conteudoAnuncio TEXT,
-        dataPublicacao DATETIME
-    )
-`;
-
-db.query(anuncioSchema, (err, result) => {
-    if (err) {
-        console.error('Erro ao criar tabela Anuncios:', err);
-    } else {
-        console.log('Tabela Anuncios criada com sucesso!');
-    }
+const Anuncio = db.define('Anuncio', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  tituloAnuncio: {
+    type: Sequelize.STRING
+  },
+  conteudoAnuncio: {
+    type: Sequelize.STRING
+  },
+  dataPublicacao: {
+    type: Sequelize.DATE
+  }
+}, {
+  timestamps: false, // Se não desejar timestamps created_at e updated_at
+  tableName: 'anuncios' // Definindo o nome da tabela como "anuncios"
 });
 
-module.exports = anuncioSchema;
+module.exports = Anuncio;

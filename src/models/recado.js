@@ -1,24 +1,45 @@
+const Sequelize = require('sequelize');
 const db = require('../config/db');
 
-const recadoSchema = `
-    CREATE TABLE Recados (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        data DATE NOT NULL,
-        titulo VARCHAR(100) NOT NULL,
-        conteudo VARCHAR(280) NOT NULL,
-        imagem VARCHAR(255), -- Altere o tamanho conforme necessário
-        turno ENUM('Matutino', 'Vespertino', 'Integral') NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )
-`;
-
-db.query(recadoSchema, (err, result) => {
-    if (err) {
-        console.error('Erro ao criar tabela Recados:', err);
-    } else {
-        console.log('Tabela Recados criada com sucesso!');
+const Recado = db.define('Recado', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  data: {
+    type: Sequelize.DATEONLY,
+    allowNull: false,
+    get() {
+      // Retorna apenas a data no formato YYYY-MM-DD
+      return this.getDataValue('data').toISOString().split('T')[0];
     }
+  },
+  titulo: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      len: [1, 100] // Limita o título a 100 caracteres
+    }
+  },
+  conteudo: {
+    type: Sequelize.STRING(280), // Limita o conteúdo a 280 caracteres
+    allowNull: false
+  },
+  imagem: {
+    type: Sequelize.STRING,
+    validate: {
+      isURL: true // Valida se é uma URL válida
+    }
+  },
+  turno: {
+    type: Sequelize.ENUM('Matutino', 'Vespertino', 'Integral'),
+    allowNull: false
+  }
+}, {
+  timestamps: true,
+  underscored: true,
+  tableName: 'recados' // Definindo o nome da tabela como "recados"
 });
 
-module.exports = recadoSchema;
+module.exports = Recado;
