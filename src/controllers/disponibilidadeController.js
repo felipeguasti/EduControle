@@ -83,13 +83,15 @@ exports.buscarReservasPorSemana = async (req, res) => {
         });
 
         let resultadoSemanal = {};
+        const horarios = horariosPorTurno[turno]; // Correção aqui
+        console.log("Horários:", horarios);
+
         for (let dia = 0; dia < 7; dia++) {
             const dataAtual = new Date(dataInicio);
             dataAtual.setDate(dataInicio.getDate() + dia);
             const dataFormatada = dataAtual.toISOString().split('T')[0];
 
             resultadoSemanal[dataFormatada] = {};
-            const horarios = horariosPorTurno[turno];
 
             horarios.forEach(horario => {
                 const reservasParaHorario = reservasDaSemana.filter(reserva => 
@@ -112,6 +114,7 @@ exports.buscarReservasPorSemana = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 exports.atualizarReserva = async (req, res) => {
