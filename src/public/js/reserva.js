@@ -391,7 +391,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function atualizarCalendarioSemanal() {
     const selectRecurso = document.getElementById("recurso");
     const selectData = document.getElementById("data");
-    const selectTurno = document.getElementById("turno");
     const recurso = selectRecurso.value;
     const data = selectData.value;
     const turno = selectTurno.value;
@@ -402,11 +401,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch(
       `/api/disponibilidade/${recurso}/semana?turno=${turno}&dataInicio=${data}`
-    )  
+    )
       .then((response) => response.json())
       .then((reservasPorDia) => {
         const corpoCalendario = document.getElementById("corpoCalendario");
-        corpoCalendario.innerHTML = ""; // Limpa o conteúdo atual    
+        corpoCalendario.innerHTML = ""; // Limpa o conteúdo atual
 
         // Assumindo que o primeiro dia na resposta contém todos os horários possíveis
         const primeiroDia = Object.keys(reservasPorDia)[0];
@@ -430,13 +429,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (reserva && reserva.disponivel) {
               if (reserva.professores != "") {
-                let professoresText;
-                  if (reserva.professores && Array.isArray(reserva.professores)) {
-                    professoresText = document.createTextNode(reserva.professores.join(", "));
-                  } else {
-                    professoresText = document.createTextNode("Nenhum professor atribuído");
-                  }
-
+                const professoresText = document.createTextNode(
+                  reserva.professores
+                );
                 celulaHorario.appendChild(professoresText);
                 celulaHorario.classList.add("disponivel");
               } else {
@@ -447,9 +442,8 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             } else if (reserva) {
               const professoresText = document.createTextNode(
-  (reserva.professores && Array.isArray(reserva.professores)) ? reserva.professores.join(", ") : "Nenhum professor atribuído"
-);
-
+                reserva.professores.join(", ")
+              );
               celulaHorario.appendChild(professoresText);
             }
 

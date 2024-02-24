@@ -64,19 +64,18 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
 
 exports.buscarReservasPorSemana = async (req, res) => {
     try {
-        const { turno } = req.query;
-        const { recurso } = req.params;
+        const recurso = req.params.recurso;
+        const turno = req.query.turno; // Adicionando o parâmetro de turno
         let dataInicio = new Date(req.query.dataInicio);
+
+        // Ajustar para o domingo anterior
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
+
+        // Calcular a data de término (sábado seguinte)
         let dataFim = new Date(dataInicio);
         dataFim.setDate(dataInicio.getDate() + 6);
-        
-        console.log("Recurso:", recurso);
-        console.log("Turno:", turno);
-        console.log("Data de Início:", dataInicio);
-      
-      
 
+        // Busca todas as reservas para o recurso na semana selecionada
         const reservasDaSemana = await Reserva.findAll({
             where: {
                 recurso: recurso,
@@ -85,8 +84,8 @@ exports.buscarReservasPorSemana = async (req, res) => {
                 }
             }
         });
-        let resultadoSemanal = {};
 
+        let resultadoSemanal = {};
         for (let dia = 0; dia < 7; dia++) {
             const dataAtual = new Date(dataInicio);
             dataAtual.setDate(dataInicio.getDate() + dia);
@@ -94,30 +93,23 @@ exports.buscarReservasPorSemana = async (req, res) => {
 
             resultadoSemanal[dataFormatada] = {};
 
-            const horarios = horariosPorTurno[turno];
+            const horarios = horariosPorTurno[turno]; // Usa apenas os horários do turno especificado
 
-            if (horarios) { 
-                console.log('Horários:', horarios);
-                console.log('Reservas da semana:', reservasDaSemana);
-                console.log('Resultado semanal antes do forEach:', resultadoSemanal);
-                horarios.forEach(horario => {
-                    const reservasParaHorario = reservasDaSemana.filter(reserva => 
-                        reserva.data.toISOString().split('T')[0] === dataFormatada && 
-                        reserva.horario === horario
-                    );
-                    resultadoSemanal[dataFormatada][horario] = {
-                        disponivel: reservasParaHorario.length < quantidades[recurso],
-                        reservas: reservasParaHorario.map(reserva => ({
-                            id: reserva.id,
-                            professor: reserva.professor,
-                            turma: reserva.turma
-                        }))
-                    };
-                });
-            } else {
-                console.log("Horários não encontrados para o turno:", turno); // Adiciona uma mensagem de log caso os horários não sejam encontrados
-            }
+            // Iterar sobre cada turno e horário
+            horarios.forEach(horario => {
+                const reservasParaHorario = reservasDaSemana.filter(reserva =>
+                    reserva.data.toISOString().split('T')[0] === dataFormatada &&
+                    reserva.horario === horario
+                );
+                const disponivel = reservasParaHorario.length < quantidades[recurso];
+                resultadoSemanal[dataFormatada][horario] = {
+                    disponivel: disponivel,
+                    professores: reservasParaHorario.map(reserva => reserva.professor),
+                    idsReservas: reservasParaHorario.map(reserva => reserva.id), // Alterado para utilizar o atributo id do Sequelize
+                };
+            });
         }
+
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
