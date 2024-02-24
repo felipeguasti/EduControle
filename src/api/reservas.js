@@ -3,6 +3,8 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const Reserva = require('../models/reserva');
+const db = require('../config/db');
+
 
 // POST request to create a new reserva
 router.post('/', 

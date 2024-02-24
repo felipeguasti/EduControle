@@ -9,8 +9,7 @@ const anunciosRoutes = require('./src/routes/anuncios'); // Importação da nova
 const painelRoutes = require('./src/api/painel'); 
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
-const db = require('./src/config/db'); // Importação do db.js
-const connectToMongoDB = require('./src/config/db'); // Importação da função connectToMongoDB
+const db = require('./src/config/db');
 
 const app = express();
 

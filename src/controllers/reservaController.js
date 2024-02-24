@@ -1,4 +1,5 @@
 const Reserva = require('../models/reserva'); // Certifique-se de que este é o modelo Sequelize
+const db = require('../config/db');
 
 const ReservaController = {
     async listarReservas(req, res) {

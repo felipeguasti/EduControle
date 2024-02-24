@@ -2,6 +2,8 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const Recado = require('../models/recado');
+const db = require('../config/db');
+
 
 // Middleware para autenticação simples usando chave de API
 function verificaAutenticacao(req, res, next) {

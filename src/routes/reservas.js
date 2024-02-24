@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const ReservaController = require('../controllers/reservaController');
 const verificaAutenticacao = require('../middleware/authorization');
+const db = require('../config/db');
 
 // Rota para listar todas as reservas
 router.get('/', ReservaController.listarReservas);
