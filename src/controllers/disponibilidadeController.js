@@ -44,7 +44,9 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
                 }
             }
         });
-
+        // Adicionar console.log para verificar a resposta do banco de dados
+        console.log("Reservas do Dia:", reservasDoDia);
+      
         let horariosComDisponibilidade = {};
         const todosHorarios = horariosPorTurno[turno] || [];
 
