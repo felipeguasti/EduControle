@@ -409,11 +409,11 @@ button:hover, input[type='radio']:hover {
 }
 
 /* Oculta as células correspondentes aos dias de sábado (dia-semana-6) e domingo (dia-semana-0) */
-table tr td:nth-child(1) {
+table tr td:nth-child(7) {
     display: none;
 }
 
-table tr td:nth-child(7) {
+table tr td:nth-child(6) {
     display: none;
 }
 
