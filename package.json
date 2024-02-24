@@ -26,7 +26,9 @@
         "moment-timezone": "^0.5.45",
         "mongod": "^2.0.0",
         "mongodb": "^5.x",
-        "mongoose": "^5.13.22"
+        "mongoose": "^5.13.22",
+        "mysql2": "^3.9.1",
+        "sequelize": "^6.37.1"
     },
     "devDependencies": {
         "jest": "^27.5.1"
