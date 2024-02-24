@@ -5,7 +5,7 @@ const router = express.Router();
 const DisponibilidadeController = require('../controllers/disponibilidadeController');
 
 // Rota para verificar a disponibilidade de horários
-router.get('/:recurso/horarios', DisponibilidadeController.buscarHorariosDisponiveis);
+router.get('/:recurso', DisponibilidadeController.buscarHorariosDisponiveis);
 
 // Rota para buscar reservas por semana
 router.get('/:recurso/semana', DisponibilidadeController.buscarReservasPorSemanaPainel);

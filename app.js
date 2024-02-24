@@ -48,6 +48,7 @@ app.get('/painel', (req, res) => {
     res.render('painel', { recurso });
 });
 
+
 // Nova rota para buscar reservas por semana
 app.get('/api/disponibilidade/:recurso/semana', disponibilidadeController.buscarReservasPorSemana);
 // Rota para buscar reservas por semana no painel
