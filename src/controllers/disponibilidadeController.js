@@ -30,8 +30,6 @@ exports.getQuantidadeRecurso = (req, res) => {
 
 exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
-        console.log("Parâmetros da requisição:", req.query); // Adicionando log para imprimir os parâmetros da requisição
-
         const { recurso, data, turno } = req.query;
         const dataInicio = new Date(data);
         const dataFim = new Date(data);
@@ -47,9 +45,10 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
                 }
             }
         });
-        // Adicionar console.log para verificar a resposta do banco de dados
+
+        // Adicionar log para verificar a resposta do banco de dados
         console.log("Reservas do Dia:", reservasDoDia);
-      
+
         let horariosComDisponibilidade = {};
         const todosHorarios = horariosPorTurno[turno] || [];
 
