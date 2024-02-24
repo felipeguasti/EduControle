@@ -33,8 +33,6 @@ async function buscarHorariosDisponiveis(recurso, data, turno) {
             }
         });
 
-        console.log("Reservas do Dia:", reservasDoDia);
-
         let horariosComDisponibilidade = {};
         const todosHorarios = horariosPorTurno[turno] || [];
 
@@ -43,7 +41,6 @@ async function buscarHorariosDisponiveis(recurso, data, turno) {
             horariosComDisponibilidade[horario] = reservasParaHorario < quantidades[recurso];
         });
 
-        console.log("Horários com Disponibilidade:", horariosComDisponibilidade);
         return horariosComDisponibilidade;
     } catch (error) {
         console.error("Erro ao buscar horários:", error.message);
