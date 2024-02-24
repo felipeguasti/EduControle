@@ -1,57 +1,63 @@
-const mongoose = require('mongoose');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('./path/to/your/db.js'); // Atualize com o caminho correto para o seu arquivo db.js
 
-const reservaSchema = new mongoose.Schema({
+class Reserva extends Model {}
+
+Reserva.init({
   recurso: {
-    type: String,
-    required: [true, 'O recurso é obrigatório.']
-  },
-  data: { 
-    type: Date, 
-    required: [true, 'A data é obrigatória.'],
+    type: DataTypes.STRING,
+    allowNull: false,
     validate: {
-      validator: function(value) {
-        // Garante que a data da reserva não seja no passado
-        return value.getTime() > Date.now();
-      },
-      message: 'A data da reserva não pode ser no passado.'
+      notNull: { msg: 'O recurso é obrigatório.' }
+    }
+  },
+  data: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    validate: {
+      notNull: { msg: 'A data é obrigatória.' },
+      isDate: { msg: 'Deve ser uma data válida.' },
+      isAfter: { args: String(new Date()), msg: 'A data da reserva não pode ser no passado.' }
     }
   },
   turno: {
-    type: String,
-    required: [true, 'O turno é obrigatório.'],
-    enum: ['Matutino', 'Vespertino']
-  },
-  professor: {
-    type: String,
-    required: [true, 'O nome do professor é obrigatório.']
-  },
-  turma: {
-    type: String,
-    required: [true, 'A turma é obrigatória.']
-  },
-  horario: {
-    type: String,
-    required: [true, 'O horário é obrigatório.'],
+    type: DataTypes.STRING,
+    allowNull: false,
     validate: {
-      validator: function(value) {
-        // Horários para os turnos Matutino e Vespertino
-        const horariosMatutino = ['7:00', '7:50', '8:40', '9:50', '10:40', '11:30'];
-        const horariosVespertino = ['13:00', '13:50', '14:40', '15:30', '16:40', '17:30'];
-
-        // Verifica se o horário é válido com base no turno
-        if (this.turno === 'Matutino') {
-          return horariosMatutino.includes(value);
-        } else if (this.turno === 'Vespertino') {
-          return horariosVespertino.includes(value);
-        }
-        return false; // Horário inválido se não for Matutino ou Vespertino
-      },
-      message: 'Horário inválido para o turno selecionado.'
+      notNull: { msg: 'O turno é obrigatório.' },
+      isIn: {
+        args: [['Matutino', 'Vespertino']],
+        msg: 'Turno inválido.'
+      }
     }
   },
-  observacoes: String
-}, { timestamps: true });
-
-const Reserva = mongoose.model('Reserva', reservaSchema);
+  professor: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notNull: { msg: 'O nome do professor é obrigatório.' }
+    }
+  },
+  turma: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notNull: { msg: 'A turma é obrigatória.' }
+    }
+  },
+  horario: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notNull: { msg: 'O horário é obrigatório.' },
+      // Implemente a lógica de validação de horários aqui conforme necessário
+    }
+  },
+  observacoes: DataTypes.STRING
+}, {
+  sequelize,
+  modelName: 'Reserva',
+  timestamps: true
+});
 
 module.exports = Reserva;
