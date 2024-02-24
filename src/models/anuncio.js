@@ -1,10 +1,16 @@
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/db'); // Ajuste o caminho conforme necessário
 
-const mongoose = require('mongoose');
+class Anuncio extends Model {}
 
-const anuncioSchema = new mongoose.Schema({
-    tituloAnuncio: String,
-    conteudoAnuncio: String,
-    dataPublicacao: Date,
+Anuncio.init({
+  tituloAnuncio: DataTypes.STRING,
+  conteudoAnuncio: DataTypes.STRING,
+  dataPublicacao: DataTypes.DATE
+}, {
+  sequelize,
+  modelName: 'Anuncio',
+  timestamps: false // Desabilita timestamps se não forem necessários
 });
 
-module.exports = mongoose.model('Anuncio', anuncioSchema);
+module.exports = Anuncio;

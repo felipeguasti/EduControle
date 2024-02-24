@@ -1,35 +1,43 @@
-
-const mongoose = require('mongoose');
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/db'); // Ajuste o caminho conforme necessário
 const bcrypt = require('bcryptjs');
 
-const usuarioSchema = new mongoose.Schema({
-    nome: {
-        type: String,
-        required: true
+class Usuario extends Model {}
+
+Usuario.init({
+  nome: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  senha: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  funcao: {
+    type: DataTypes.ENUM,
+    values: ['administrador', 'usuario'],
+    defaultValue: 'usuario'
+  }
+}, {
+  sequelize,
+  modelName: 'Usuario',
+  hooks: {
+    beforeCreate: async (usuario) => {
+      if (usuario.senha) {
+        usuario.senha = await bcrypt.hash(usuario.senha, 10);
+      }
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    senha: {
-        type: String,
-        required: true
-    },
-    funcao: {
-        type: String,
-        enum: ['administrador', 'usuario'],
-        default: 'usuario'
+    beforeUpdate: async (usuario) => {
+      if (usuario.senha) {
+        usuario.senha = await bcrypt.hash(usuario.senha, 10);
+      }
     }
+  }
 });
 
-// Middleware para hash de senha antes de salvar
-usuarioSchema.pre('save', async function(next) {
-    if (!this.isModified('senha')) {
-        return next();
-    }
-    this.senha = await bcrypt.hash(this.senha, 10);
-    next();
-});
-
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = Usuario;

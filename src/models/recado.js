@@ -1,39 +1,56 @@
-const mongoose = require('mongoose');
-const validator = require('validator'); // Utilize 'npm install validator' para adicionar esta dependência
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/db'); // Ajuste o caminho conforme necessário
+const validator = require('validator');
 
-const recadoSchema = new mongoose.Schema({
-  data: { 
-    type: Date, 
-    required: true,
-    get: valor => valor.toISOString().substring(0,10)
+class Recado extends Model {}
+
+Recado.init({
+  data: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    get() {
+      const valor = this.getDataValue('data');
+      return valor ? valor.toISOString().substring(0,10) : null;
+    }
   },
-  titulo: { 
-    type: String, 
-    required: true,
-    maxlength: 100
+  titulo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [0, 100]
+    }
   },
-  conteudo: { 
-    type: String, 
-    required: true,
-    maxlength: 280 // Limita o conteúdo ao tamanho de um tweet
+  conteudo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [0, 280]
+    }
   },
   imagem: {
-    type: String,
+    type: DataTypes.STRING,
     validate: {
-      validator: function(valor) {
-        // Permite nulo ou uma string que seja uma URL válida
-        return valor == null || validator.isURL(valor);
-      },
-      message: 'URL inválida'
+      isUrlOrNull(value) {
+        if (value !== null && !validator.isURL(value)) {
+          throw new Error('URL inválida');
+        }
+      }
     }
   },
   turno: {
-    type: String,
-    required: true,
-    enum: ['Matutino', 'Vespertino', 'Integral'],
+    type: DataTypes.ENUM,
+    values: ['Matutino', 'Vespertino', 'Integral'],
+    allowNull: false
   },
-}, { timestamps: true, toObject: { getters: true }, toJSON: { getters: true } });
-
-const Recado = mongoose.model('Recado', recadoSchema);
+}, {
+  sequelize,
+  modelName: 'Recado',
+  timestamps: true,
+  getterMethods: {
+    dataFormatada() {
+      return this.data ? this.data.toISOString().substring(0, 10) : null;
+    }
+  }
+});
 
 module.exports = Recado;
