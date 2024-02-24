@@ -152,7 +152,8 @@ exports.deletarReserva = async (req, res) => {
 
 exports.buscarReservasPorSemanaPainel = async (req, res) => {
     try {
-        const { recurso, turno } = req.params;
+        const { recurso } = req.params;
+        const { turno } = req.query;
         let dataInicio = new Date(req.query.dataInicio);
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
         let dataFim = new Date(dataInicio);
