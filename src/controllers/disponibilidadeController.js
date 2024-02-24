@@ -30,7 +30,9 @@ exports.getQuantidadeRecurso = (req, res) => {
 
 exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
+        console.log("Parâmetros da requisição:", req.query);
         const { recurso, data, turno } = req.query;
+        console.log("Parâmetros desestruturados:", { recurso, data, turno });
         const dataInicio = new Date(data);
         const dataFim = new Date(data);
 
