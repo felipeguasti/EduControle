@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 
 // Simulando dados que normalmente viriam do front-end
 const recursoSimulado = 'Tablet';
-const dataSimulada = '2024-02-25'; // Use o formato apropriado
+const dataSimulada = '2024-02-26'; // Use o formato apropriado
 const turnoSimulado = 'Matutino'; // ou 'Vespertino'
 
 // Horários para cada turno e quantidades de recursos

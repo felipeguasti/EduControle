@@ -27,6 +27,54 @@ exports.getQuantidadeRecurso = (req, res) => {
     }
 };
 
+
+
+
+
+async function buscarHorariosDisponiveis(recurso, data, turno) {
+    try {
+        const dataInicio = new Date(data);
+        const dataFim = new Date(data);
+
+        dataInicio.setHours(0, 0, 0, 0);
+        dataFim.setHours(23, 59, 59, 999);
+
+        const reservasDoDia = await Reserva.findAll({
+            where: {
+                recurso: recurso,
+                data: {
+                    [Op.between]: [dataInicio, dataFim]
+                }
+            }
+        });
+
+        console.log("Reservas do Dia:", reservasDoDia);
+
+        let horariosComDisponibilidade = {};
+        const todosHorarios = horariosPorTurno[turno] || [];
+
+        todosHorarios.forEach(horario => {
+            const reservasParaHorario = reservasDoDia.filter(reserva => reserva.horario === horario).length;
+            horariosComDisponibilidade[horario] = reservasParaHorario < quantidades[recurso];
+        });
+
+        console.log("Horários com Disponibilidade:", horariosComDisponibilidade);
+        return horariosComDisponibilidade;
+    } catch (error) {
+        console.error("Erro ao buscar horários:", error.message);
+        return null;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
         const { recurso, data, turno } = req.query;
