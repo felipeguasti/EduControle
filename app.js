@@ -50,7 +50,9 @@ app.get('/painel', (req, res) => {
 
 // Nova rota para buscar reservas por semana
 app.get('/api/disponibilidade/:recurso/semana', disponibilidadeController.buscarReservasPorSemana);
+// Rota para buscar reservas por semana no painel
 app.get('/api/disponibilidade/:recurso/painel', disponibilidadeController.buscarReservasPorSemanaPainel);
+
 
 // Inicializando o servidor
 const PORT = process.env.PORT || 3000;

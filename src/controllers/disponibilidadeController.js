@@ -29,7 +29,7 @@ exports.getQuantidadeRecurso = (req, res) => {
 
 exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
-        const { recurso, data, turno } = req.params;
+        const { recurso, data, turno } = req.query;
         const dataInicio = new Date(data);
         const dataFim = new Date(data);
 
@@ -59,10 +59,9 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
     }
 };
 
-
 exports.buscarReservasPorSemana = async (req, res) => {
     try {
-        const { recurso, turno } = req.params;
+        const { recurso, turno } = req.query;
         let dataInicio = new Date(req.query.dataInicio);
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
         let dataFim = new Date(dataInicio);
