@@ -1,45 +1,49 @@
-const Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 
 const Recado = db.define('Recado', {
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
   data: {
-    type: Sequelize.DATEONLY,
-    allowNull: false,
-    get() {
-      // Retorna apenas a data no formato YYYY-MM-DD
-      return this.getDataValue('data').toISOString().split('T')[0];
-    }
+    type: DataTypes.DATE,
+    allowNull: false
   },
   titulo: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [1, 100] // Limita o título a 100 caracteres
+      len: [1, 100] // Limita o tamanho do título entre 1 e 100 caracteres
     }
   },
   conteudo: {
-    type: Sequelize.STRING(280), // Limita o conteúdo a 280 caracteres
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [1, 280] // Limita o tamanho do conteúdo entre 1 e 280 caracteres
+    }
   },
   imagem: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
+    allowNull: true, // Permite valores nulos para imagem
     validate: {
-      isURL: true // Valida se é uma URL válida
+      isUrl: true // Valida se é uma URL válida
     }
   },
   turno: {
-    type: Sequelize.ENUM('Matutino', 'Vespertino', 'Integral'),
+    type: DataTypes.ENUM('Matutino', 'Vespertino', 'Integral'),
     allowNull: false
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
-}, {
-  timestamps: true,
-  underscored: true,
-  tableName: 'recados' // Definindo o nome da tabela como "recados"
 });
 
 module.exports = Recado;

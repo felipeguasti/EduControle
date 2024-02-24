@@ -1,17 +1,54 @@
-const express = require('express');
-const router = express.Router();
-const DisponibilidadeController = require('../controllers/disponibilidadeController');
+const db = require('../config/db');
 
-// Rota para verificar a disponibilidade de horários
-router.get('/horarios/:recurso', DisponibilidadeController.buscarHorariosDisponiveis);
+exports.buscarHorariosDisponiveis = async (req, res) => {
+    try {
+        const recurso = req.params.recurso;
+        const data = req.query.data;
+        const turno = req.query.turno;
+        
+        const queryString = 'SELECT horario FROM Reservas WHERE recurso = ? AND data = ?';
+        db.query(queryString, [recurso, data], (err, result) => {
+            if (err) {
+                return res.status(500).send(err.message);
+            }
+            // Lógica para verificar horários disponíveis
+            res.json(result);
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-// Rota para buscar as reservas por semana para o painel
-router.get('/semana/:recurso', DisponibilidadeController.buscarReservasPorSemanaPainel);
+exports.buscarReservasPorSemanaPainel = async (req, res) => {
+    try {
+        const recurso = req.params.recurso;
+        const turno = req.query.turno;
+        let dataInicio = new Date(req.query.dataInicio);
+        dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
+        let dataFim = new Date(dataInicio);
+        dataFim.setDate(dataInicio.getDate() + 6);
 
-// Rota para deletar uma reserva
-router.delete('/reservas/:id', DisponibilidadeController.deletarReserva);
+        const queryString = 'SELECT * FROM Reservas WHERE recurso = ? AND data BETWEEN ? AND ?';
+        db.query(queryString, [recurso, dataInicio, dataFim], (err, result) => {
+            if (err) {
+                return res.status(500).send(err.message);
+            }
+            // Lógica para formatar e retornar as reservas da semana
+            res.json(result);
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-// Rota para obter a quantidade de um recurso disponível
-router.get('/quantidade/:recurso', DisponibilidadeController.getQuantidadeRecurso);
-
-module.exports = router;
+exports.getQuantidadeRecurso = (req, res) => {
+    const recurso = req.params.recurso;
+    const queryString = 'SELECT quantidade FROM Recursos WHERE nome = ?';
+    db.query(queryString, [recurso], (err, result) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        // Lógica para retornar a quantidade disponível do recurso
+        res.json(result);
+    });
+};

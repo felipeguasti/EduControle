@@ -1,24 +1,24 @@
-const Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 
 const Anuncio = db.define('Anuncio', {
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
   tituloAnuncio: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   conteudoAnuncio: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   dataPublicacao: {
-    type: Sequelize.DATE
+    type: DataTypes.DATE,
+    allowNull: true
   }
-}, {
-  timestamps: false, // Se não desejar timestamps created_at e updated_at
-  tableName: 'anuncios' // Definindo o nome da tabela como "anuncios"
 });
 
 module.exports = Anuncio;

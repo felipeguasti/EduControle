@@ -1,45 +1,44 @@
-const Sequelize = require('sequelize');
-const db = require('../config/db');
+const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const db = require('../config/db');
 
 const Usuario = db.define('Usuario', {
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
   nome: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false
   },
   email: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
   senha: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false
   },
   funcao: {
-    type: Sequelize.ENUM('administrador', 'usuario'),
+    type: DataTypes.ENUM('administrador', 'usuario'),
     defaultValue: 'usuario'
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
-}, {
-  timestamps: false,
-  tableName: 'usuarios',
-  hooks: {
-    beforeCreate: async (usuario, options) => {
-      const hashedSenha = await bcrypt.hash(usuario.senha, 10);
-      usuario.senha = hashedSenha;
-    },
-    beforeUpdate: async (usuario, options) => {
-      if (usuario.changed('senha')) {
-        const hashedSenha = await bcrypt.hash(usuario.senha, 10);
-        usuario.senha = hashedSenha;
-      }
-    }
-  }
+});
+
+// Middleware para hash de senha antes de salvar
+Usuario.beforeCreate(async (usuario, options) => {
+  const hashedPassword = await bcrypt.hash(usuario.senha, 10);
+  usuario.senha = hashedPassword;
 });
 
 module.exports = Usuario;
