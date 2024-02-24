@@ -59,7 +59,7 @@ function carregarAnunciosRecentes() {
 }
 
 function atualizarCalendarioParaRecurso(recurso) {
-    const data = obterDataInicioSemanaAtual().toISOString().split('T')[0]; // Formatar a data para o formato aaaa-mm-dd
+    const data = obterDataInicioSemanaAtual();
     const turno = obterTurnoAtual();
 
     // Atualiza o cabeçalho do calendário com os dias da semana
@@ -99,7 +99,7 @@ function atualizarCalendarioParaRecurso(recurso) {
             });
         })
         .catch(error => console.error('Erro ao buscar reservas:', error));
-}
+}    
 
 function obterTurnoAtual() {
     // Criar um objeto de data/hora atual
