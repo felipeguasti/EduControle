@@ -90,10 +90,9 @@ exports.buscarReservasPorSemana = async (req, res) => {
 
             resultadoSemanal[dataFormatada] = {};
 
-            const horarios = horariosPorTurno[turno]; 
-            console.log("Horários para o turno:", horarios); // Adiciona este console.log para verificar se os horários foram obtidos corretamente
+            const horarios = horariosPorTurno[turno];
 
-            if (horarios) {
+            if (horarios) { 
                 horarios.forEach(horario => {
                     const reservasParaHorario = reservasDaSemana.filter(reserva => 
                         reserva.data.toISOString().split('T')[0] === dataFormatada && 
@@ -184,10 +183,6 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                     reserva.data.toISOString().split('T')[0] === dataFormatada && 
                     reserva.horario === horario
                 );
-                console.log("Data formatada:", dataFormatada); // Adiciona este console.log para verificar a data atual formatada
-                console.log("Horário:", horario); // Adiciona este console.log para verificar o horário atual
-                console.log("Reservas para o horário:", reservasParaHorario); // Adiciona este console.log para verificar as reservas para o horário atual
-
                 resultadoSemanal[dataFormatada][horario] = {
                     disponivel: reservasParaHorario.length < quantidades[recurso],
                     reservas: reservasParaHorario.map(reserva => ({
@@ -197,9 +192,6 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                     }))
                 };
             });
-          } else {
-        console.log("Horários não encontrados para o turno:", turno); // Adiciona uma mensagem de log caso os horários não sejam encontrados
-    }
         }
 
         res.json(resultadoSemanal);
