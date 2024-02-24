@@ -30,9 +30,8 @@ exports.getQuantidadeRecurso = (req, res) => {
 
 exports.buscarHorariosDisponiveis = async (req, res) => {
     try {
-        console.log("Parâmetros da requisição:", req.query);
-        const { recurso, data, turno } = req.query;
-        console.log("Parâmetros desestruturados:", { recurso, data, turno });
+        const { recurso } = req.params;
+        const { data, turno } = req.query;
         const dataInicio = new Date(data);
         const dataFim = new Date(data);
 
@@ -67,7 +66,8 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
 
 exports.buscarReservasPorSemana = async (req, res) => {
     try {
-        const { recurso, turno } = req.query;
+        const { turno } = req.query;
+        const { recurso } = req.params; // Alteração aqui
         let dataInicio = new Date(req.query.dataInicio);
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
         let dataFim = new Date(dataInicio);
@@ -112,6 +112,7 @@ exports.buscarReservasPorSemana = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.atualizarReserva = async (req, res) => {
     const reservaId = req.params.id;
