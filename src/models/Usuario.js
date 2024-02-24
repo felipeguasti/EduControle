@@ -1,35 +1,21 @@
+const db = require('../config/db');
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const usuarioSchema = `
+    CREATE TABLE Usuarios (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        senha VARCHAR(255) NOT NULL,
+        funcao ENUM('administrador', 'usuario') DEFAULT 'usuario'
+    )
+`;
 
-const usuarioSchema = new mongoose.Schema({
-    nome: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    senha: {
-        type: String,
-        required: true
-    },
-    funcao: {
-        type: String,
-        enum: ['administrador', 'usuario'],
-        default: 'usuario'
+db.query(usuarioSchema, (err, result) => {
+    if (err) {
+        console.error('Erro ao criar tabela Usuarios:', err);
+    } else {
+        console.log('Tabela Usuarios criada com sucesso!');
     }
 });
 
-// Middleware para hash de senha antes de salvar
-usuarioSchema.pre('save', async function(next) {
-    if (!this.isModified('senha')) {
-        return next();
-    }
-    this.senha = await bcrypt.hash(this.senha, 10);
-    next();
-});
-
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = usuarioSchema;

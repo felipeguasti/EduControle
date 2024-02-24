@@ -1,39 +1,24 @@
-const mongoose = require('mongoose');
-const validator = require('validator'); // Utilize 'npm install validator' para adicionar esta dependência
+const db = require('../config/db');
 
-const recadoSchema = new mongoose.Schema({
-  data: { 
-    type: Date, 
-    required: true,
-    get: valor => valor.toISOString().substring(0,10)
-  },
-  titulo: { 
-    type: String, 
-    required: true,
-    maxlength: 100
-  },
-  conteudo: { 
-    type: String, 
-    required: true,
-    maxlength: 280 // Limita o conteúdo ao tamanho de um tweet
-  },
-  imagem: {
-    type: String,
-    validate: {
-      validator: function(valor) {
-        // Permite nulo ou uma string que seja uma URL válida
-        return valor == null || validator.isURL(valor);
-      },
-      message: 'URL inválida'
+const recadoSchema = `
+    CREATE TABLE Recados (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        data DATE NOT NULL,
+        titulo VARCHAR(100) NOT NULL,
+        conteudo VARCHAR(280) NOT NULL,
+        imagem VARCHAR(255), -- Altere o tamanho conforme necessário
+        turno ENUM('Matutino', 'Vespertino', 'Integral') NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+`;
+
+db.query(recadoSchema, (err, result) => {
+    if (err) {
+        console.error('Erro ao criar tabela Recados:', err);
+    } else {
+        console.log('Tabela Recados criada com sucesso!');
     }
-  },
-  turno: {
-    type: String,
-    required: true,
-    enum: ['Matutino', 'Vespertino', 'Integral'],
-  },
-}, { timestamps: true, toObject: { getters: true }, toJSON: { getters: true } });
+});
 
-const Recado = mongoose.model('Recado', recadoSchema);
-
-module.exports = Recado;
+module.exports = recadoSchema;

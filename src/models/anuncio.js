@@ -1,10 +1,20 @@
+const db = require('../config/db');
 
-const mongoose = require('mongoose');
+const anuncioSchema = `
+    CREATE TABLE Anuncios (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        tituloAnuncio VARCHAR(255),
+        conteudoAnuncio TEXT,
+        dataPublicacao DATETIME
+    )
+`;
 
-const anuncioSchema = new mongoose.Schema({
-    tituloAnuncio: String,
-    conteudoAnuncio: String,
-    dataPublicacao: Date,
+db.query(anuncioSchema, (err, result) => {
+    if (err) {
+        console.error('Erro ao criar tabela Anuncios:', err);
+    } else {
+        console.log('Tabela Anuncios criada com sucesso!');
+    }
 });
 
-module.exports = mongoose.model('Anuncio', anuncioSchema);
+module.exports = anuncioSchema;
