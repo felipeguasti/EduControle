@@ -402,11 +402,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch(
       `/api/disponibilidade/${recurso}/semana?turno=${turno}&dataInicio=${data}`
-    )
+    )  
       .then((response) => response.json())
       .then((reservasPorDia) => {
         const corpoCalendario = document.getElementById("corpoCalendario");
-        corpoCalendario.innerHTML = ""; // Limpa o conteúdo atual
+        corpoCalendario.innerHTML = ""; // Limpa o conteúdo atual    
 
         // Assumindo que o primeiro dia na resposta contém todos os horários possíveis
         const primeiroDia = Object.keys(reservasPorDia)[0];

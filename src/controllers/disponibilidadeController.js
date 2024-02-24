@@ -79,8 +79,6 @@ exports.buscarReservasPorSemana = async (req, res) => {
                 }
             }
         });
-        console.log("Reservas da semana:", reservasDaSemana); // Adiciona este console.log para verificar se as reservas foram recuperadas corretamente
-
         let resultadoSemanal = {};
 
         for (let dia = 0; dia < 7; dia++) {
@@ -111,7 +109,6 @@ exports.buscarReservasPorSemana = async (req, res) => {
                 console.log("Horários não encontrados para o turno:", turno); // Adiciona uma mensagem de log caso os horários não sejam encontrados
             }
         }
-
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
