@@ -1,5 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./path/to/your/db.js'); // Atualize com o caminho correto para o seu arquivo db.js
+const sequelize = require('../config/db'); // Atualize com o caminho correto para o seu arquivo db.js
 
 class Reserva extends Model {}
 
