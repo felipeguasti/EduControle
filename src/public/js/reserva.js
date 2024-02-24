@@ -430,9 +430,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (reserva && reserva.disponivel) {
               if (reserva.professores != "") {
-                const professoresText = document.createTextNode(
-                  reserva.professores
-                );
+                let professoresText;
+                  if (reserva.professores && Array.isArray(reserva.professores)) {
+                    professoresText = document.createTextNode(reserva.professores.join(", "));
+                  } else {
+                    professoresText = document.createTextNode("Nenhum professor atribuído");
+                  }
+
                 celulaHorario.appendChild(professoresText);
                 celulaHorario.classList.add("disponivel");
               } else {
@@ -443,8 +447,9 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             } else if (reserva) {
               const professoresText = document.createTextNode(
-                reserva.professores.join(", ")
-              );
+  (reserva.professores && Array.isArray(reserva.professores)) ? reserva.professores.join(", ") : "Nenhum professor atribuído"
+);
+
               celulaHorario.appendChild(professoresText);
             }
 
