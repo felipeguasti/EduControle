@@ -141,19 +141,20 @@ var turno = obterTurnoAtual();
 function obterDataInicioSemanaAtual() {
     const hoje = new Date();
     const diaDaSemana = hoje.getDay(); // Domingo é 0, Segunda é 1, e assim por diante
-    const diferencaDias = diaDaSemana === 0 ? 6 : diaDaSemana - 1; // Se for domingo, considere 6 dias para trás, caso contrário diaDaSemana - 1
-    hoje.setDate(hoje.getDate() - diferencaDias); // Ajusta a data para a segunda-feira da semana atual
+    const diferencaDias = diaDaSemana === 0 ? 0 - 6 : 0 - (diaDaSemana - 1); // Se for domingo, considere 6 dias para trás, caso contrário diaDaSemana - 1
+    hoje.setDate(hoje.getDate() + diferencaDias); // Ajusta a data para o domingo da semana atual
     hoje.setHours(0, 0, 0, 0); // Zera a hora, minuto, segundo e milissegundo
 
-    return dataInicioSemana;
+    return hoje;
 }
+
 
 function obterDiasDaSemanaAtual() {
     let datas = [];
     let diaAtual = new Date(dataInicioSemana); // Utiliza a data de início da semana
 
     // Adiciona cada dia da semana (segunda a sexta) com base na data de início
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
         datas.push(new Date(diaAtual));
         diaAtual.setDate(diaAtual.getDate() + 1);
     }
@@ -174,7 +175,7 @@ function criarCabecalhoCalendario() {
 }
 
 function formatarDataParaCabecalho(data) {
-    const diasDaSemana = ['', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
     const diaDaSemana = diasDaSemana[data.getDay()];
     const diaDoMes = data.getDate();
     return `${diaDaSemana} (${diaDoMes})`;
