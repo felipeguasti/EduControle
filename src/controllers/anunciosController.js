@@ -1,4 +1,4 @@
-const Anuncio = require('../models/Anuncio');
+const Anuncio = require('../models/anuncio');
 const moment = require('moment-timezone');
 
 exports.listarAnuncios = async (req, res) => {

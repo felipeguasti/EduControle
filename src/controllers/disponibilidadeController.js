@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const Reserva = require('../models/Reserva');
+const Reserva = require('../models/reserva');
 
 exports.getQuantidadeRecurso = async (req, res) => {
     const recurso = req.params.recurso;

@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
-const Recado = require('../models/recado');
+const db = require('../config/db');
 
 // Middleware para autenticação simples usando chave de API
 function verificaAutenticacao(req, res, next) {
@@ -16,57 +16,79 @@ function verificaAutenticacao(req, res, next) {
 
 // POST request to create a new recado
 router.post('/', verificaAutenticacao,
-  [ // Validações
-    body('titulo').isLength({ max: 100 }).withMessage('Título muito longo.'),
-    body('conteudo').isLength({ max: 280 }).withMessage('Conteúdo muito longo.'),
-    // Adicione mais validações conforme necessário
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    [ // Validações
+        body('titulo').isLength({ max: 100 }).withMessage('Título muito longo.'),
+        body('conteudo').isLength({ max: 280 }).withMessage('Conteúdo muito longo.')
+        // Adicione mais validações conforme necessário
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-    try {
-        const novoRecado = new Recado(req.body);
-        const recadoSalvo = await novoRecado.save();
-        res.status(201).json(recadoSalvo);
-    } catch (error) {
-        res.status(400).json({ message: `Erro ao criar recado: ${error.message}` });
+        try {
+            const { titulo, conteudo } = req.body;
+            const queryString = 'INSERT INTO Recado (titulo, conteudo) VALUES (?, ?)';
+            db.query(queryString, [titulo, conteudo], (err, result) => {
+                if (err) {
+                    return res.status(400).json({ message: err.message });
+                }
+                res.status(201).json({ id: result.insertId, titulo, conteudo });
+            });
+        } catch (error) {
+            res.status(400).json({ message: `Erro ao criar recado: ${error.message}` });
+        }
     }
-});
+);
 
 // GET request to fetch all recados
 router.get('/', async (req, res) => {
     try {
-        const recados = await Recado.find();
-        res.json(recados);
+        const queryString = 'SELECT * FROM Recado';
+        db.query(queryString, (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            res.json(result);
+        });
     } catch (error) {
         res.status(500).json({ message: `Erro ao buscar recados: ${error.message}` });
     }
 });
 
-// Middleware para obter recado por ID e implementação de log
+// Middleware para obter recado por ID
 async function getRecadoById(req, res, next) {
-    let recado;
+    const recadoId = req.params.id;
     try {
-        recado = await Recado.findById(req.params.id);
-        if (recado == null) {
-            return res.status(404).json({ message: 'Recado não encontrado.' });
-        }
+        const queryString = 'SELECT * FROM Recado WHERE id = ?';
+        db.query(queryString, [recadoId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Recado não encontrado' });
+            }
+            res.recado = result[0];
+            next();
+        });
     } catch (error) {
-        return res.status(500).json({ message: `Erro ao buscar recado: ${error.message}` });
+        res.status(500).json({ message: error.message });
     }
-    res.recado = recado;
-    next();
 }
 
 // PUT request to update recado by ID
 router.put('/:id', verificaAutenticacao, getRecadoById, async (req, res) => {
     Object.assign(res.recado, req.body);
     try {
-        const updatedRecado = await res.recado.save();
-        res.json(updatedRecado);
+        const { titulo, conteudo } = req.body;
+        const queryString = 'UPDATE Recado SET titulo = ?, conteudo = ? WHERE id = ?';
+        db.query(queryString, [titulo, conteudo, req.params.id], (err, result) => {
+            if (err) {
+                return res.status(400).json({ message: err.message });
+            }
+            res.json({ message: 'Recado atualizado com sucesso' });
+        });
     } catch (error) {
         res.status(400).json({ message: `Erro ao atualizar recado: ${error.message}` });
     }
@@ -75,8 +97,13 @@ router.put('/:id', verificaAutenticacao, getRecadoById, async (req, res) => {
 // DELETE request to delete recado by ID
 router.delete('/:id', verificaAutenticacao, getRecadoById, async (req, res) => {
     try {
-        await res.recado.remove();
-        res.json({ message: 'Recado deletado com sucesso' });
+        const queryString = 'DELETE FROM Recado WHERE id = ?';
+        db.query(queryString, [req.params.id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            res.json({ message: 'Recado deletado com sucesso' });
+        });
     } catch (error) {
         res.status(500).json({ message: `Erro ao excluir recado: ${error.message}` });
     }
