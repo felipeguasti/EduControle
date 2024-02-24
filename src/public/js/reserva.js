@@ -338,124 +338,124 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
-    function atualizarCalendarioSemanal() {
-        const selectRecurso = document.getElementById('recurso');
-        const selectData = document.getElementById('data');
-        const recurso = selectRecurso.value;
-        const data = selectData.value;
-        const turno = selectTurno.value;
-    
-        if (!data || !recurso) {
-            return;
-        }
-    
-        fetch(`/api/disponibilidade/${recurso}/semana?turno=${turno}&dataInicio=${data}`)
-            .then(response => response.json())
-            .then(reservasPorDia => {
-                const corpoCalendario = document.getElementById('corpoCalendario');
-                corpoCalendario.innerHTML = ''; // Limpa o conteúdo atual
+    function atualizarCalendarioSemanal(turno) {
+    const selectRecurso = document.getElementById('recurso');
+    const selectData = document.getElementById('data');
+    const recurso = selectRecurso.value;
+    const data = selectData.value;
+
+    if (!data || !recurso || !turno) {
+        return;
+    }
+
+    fetch(`/api/disponibilidade/${recurso}/semana?turno=${turno}&dataInicio=${data}`)
+        .then(response => response.json())
+        .then(reservasPorDia => {
+            const corpoCalendario = document.getElementById('corpoCalendario');
+            corpoCalendario.innerHTML = ''; // Limpa o conteúdo atual
                 
-                // Assumindo que o primeiro dia na resposta contém todos os horários possíveis
-                const primeiroDia = Object.keys(reservasPorDia)[0];
-                const horarios = Object.keys(reservasPorDia[primeiroDia]);
-    
-                horarios.forEach(horario => {
-                    const linhaHorario = document.createElement('tr');
-                    Object.entries(reservasPorDia).forEach(([dia, reservasDia]) => {
-                        const celulaHorario = document.createElement('td');
-                        const reserva = reservasDia[horario];
-                        
-                        // Create a span or strong element for the horario part
-                        const horarioSpan = document.createElement('strong');
-                        horarioSpan.textContent = horario;
-    
-                        // Append the horario part to the cell
-                        celulaHorario.appendChild(horarioSpan);
-    
-                        // Add text node for separator
-                        celulaHorario.appendChild(document.createTextNode(' - '));
-    
-                        if (reserva && reserva.disponivel) {
-                            if (reserva.professores != ""){
-                                const professoresText = document.createTextNode(reserva.professores);
-                                celulaHorario.appendChild(professoresText);
-                                celulaHorario.classList.add('disponivel');
-                            } else {
-                                celulaHorario.appendChild(document.createTextNode('Disponível'));
-                                celulaHorario.classList.add('disponivel');
-                            }
-                        
-                        } else if (reserva) {
-                            const professoresText = document.createTextNode(reserva.professores.join(', '));
+            // Assumindo que o primeiro dia na resposta contém todos os horários possíveis
+            const primeiroDia = Object.keys(reservasPorDia)[0];
+            const horarios = Object.keys(reservasPorDia[primeiroDia]);
+
+            horarios.forEach(horario => {
+                const linhaHorario = document.createElement('tr');
+                Object.entries(reservasPorDia).forEach(([dia, reservasDia]) => {
+                    const celulaHorario = document.createElement('td');
+                    const reserva = reservasDia[horario];
+                    
+                    // Create a span or strong element for the horario part
+                    const horarioSpan = document.createElement('strong');
+                    horarioSpan.textContent = horario;
+
+                    // Append the horario part to the cell
+                    celulaHorario.appendChild(horarioSpan);
+
+                    // Add text node for separator
+                    celulaHorario.appendChild(document.createTextNode(' - '));
+
+                    if (reserva && reserva.disponivel) {
+                        if (reserva.professores != ""){
+                            const professoresText = document.createTextNode(reserva.professores);
                             celulaHorario.appendChild(professoresText);
-                        }
-    
-                        // Create a break line element
-                        const breakLine = document.createElement('br');
-                        celulaHorario.appendChild(breakLine);
-    
-                        // Container para ícones
-                        const iconContainer = document.createElement('div');
-                        iconContainer.className = 'icon-container';
-    
-                        // Add Edit Icon
-                        const editIcon = document.createElement('img');
-                        if (reserva && reserva.disponivel === true) {
-                            if (reserva.professores != ""){
-                                editIcon.src = '/images/editar.png';
-                                editIcon.className = 'edit-reserva-icon';
-                            }
+                            celulaHorario.classList.add('disponivel');
                         } else {
+                            celulaHorario.appendChild(document.createTextNode('Disponível'));
+                            celulaHorario.classList.add('disponivel');
+                        }
+                    
+                    } else if (reserva) {
+                        const professoresText = document.createTextNode(reserva.professores.join(', '));
+                        celulaHorario.appendChild(professoresText);
+                    }
+
+                    // Create a break line element
+                    const breakLine = document.createElement('br');
+                    celulaHorario.appendChild(breakLine);
+
+                    // Container para ícones
+                    const iconContainer = document.createElement('div');
+                    iconContainer.className = 'icon-container';
+
+                    // Add Edit Icon
+                    const editIcon = document.createElement('img');
+                    if (reserva && reserva.disponivel === true) {
+                        if (reserva.professores != ""){
                             editIcon.src = '/images/editar.png';
                             editIcon.className = 'edit-reserva-icon';
                         }
-    
-                        if (reserva && reserva.idsReservas && reserva.idsReservas.length > 1) {
-                            // Se houver múltiplas reservas no mesmo horário, ativar o popup
-                            editIcon.onclick = () => {
-                                abrirPopupSelecaoProfessor(reserva.idsReservas, reserva.professores);
-                                buscarHorariosDisponiveis();
-                            };
-                        } else if (reserva && reserva.idsReservas && reserva.idsReservas.length === 1) {
-                            // Se houver apenas uma reserva, carregar os detalhes diretamente
-                            editIcon.onclick = async () => carregarDetalhesReserva(reserva.idsReservas[0]);
-                        }
-    
-                        celulaHorario.appendChild(editIcon);
-    
-                        // Adicionando o ícone de exclusão para cada reserva
-                        const deleteIcon = document.createElement('img');
-                        
-                        if (reserva && reserva.disponivel === true) {
-                            if (reserva.professores != ""){
-                                deleteIcon.src = '/images/excluir.png';
-                                deleteIcon.className = 'delete-reserva-icon';
-                            }
-                        } else {
+                    } else {
+                        editIcon.src = '/images/editar.png';
+                        editIcon.className = 'edit-reserva-icon';
+                    }
+
+                    if (reserva && reserva.idsReservas && reserva.idsReservas.length > 1) {
+                        // Se houver múltiplas reservas no mesmo horário, ativar o popup
+                        editIcon.onclick = () => {
+                            abrirPopupSelecaoProfessor(reserva.idsReservas, reserva.professores);
+                            buscarHorariosDisponiveis();
+                        };
+                    } else if (reserva && reserva.idsReservas && reserva.idsReservas.length === 1) {
+                        // Se houver apenas uma reserva, carregar os detalhes diretamente
+                        editIcon.onclick = async () => carregarDetalhesReserva(reserva.idsReservas[0]);
+                    }
+
+                    celulaHorario.appendChild(editIcon);
+
+                    // Adicionando o ícone de exclusão para cada reserva
+                    const deleteIcon = document.createElement('img');
+                    
+                    if (reserva && reserva.disponivel === true) {
+                        if (reserva.professores != ""){
                             deleteIcon.src = '/images/excluir.png';
                             deleteIcon.className = 'delete-reserva-icon';
                         }
+                    } else {
+                        deleteIcon.src = '/images/excluir.png';
+                        deleteIcon.className = 'delete-reserva-icon';
+                    }
 
-                        if (reserva && reserva.idsReservas && reserva.idsReservas.length > 1) {
-                            deleteIcon.onclick = () => {
-                                abrirPopupSelecao(reserva.idsReservas, reserva.professores, 'excluir');
-                            }        
-                        } else if (reserva && reserva.idsReservas && reserva.idsReservas.length === 1) {
-                            deleteIcon.onclick = () => excluirReserva(reserva.idsReservas[0]);
-                        }
+                    if (reserva && reserva.idsReservas && reserva.idsReservas.length > 1) {
+                        deleteIcon.onclick = () => {
+                            abrirPopupSelecao(reserva.idsReservas, reserva.professores, 'excluir');
+                        }        
+                    } else if (reserva && reserva.idsReservas && reserva.idsReservas.length === 1) {
+                        deleteIcon.onclick = () => excluirReserva(reserva.idsReservas[0]);
+                    }
 
-                        celulaHorario.appendChild(deleteIcon);
+                    celulaHorario.appendChild(deleteIcon);
 
-    
-                        // Adicionando o container de ícones à célula
-                        celulaHorario.appendChild(iconContainer);
-                        linhaHorario.appendChild(celulaHorario);
-                    });
-                    corpoCalendario.appendChild(linhaHorario);
+
+                    // Adicionando o container de ícones à célula
+                    celulaHorario.appendChild(iconContainer);
+                    linhaHorario.appendChild(celulaHorario);
                 });
-            })
-            .catch(error => console.error('Erro ao buscar reservas:', error));
-    } 
+                corpoCalendario.appendChild(linhaHorario);
+            });
+        })
+        .catch(error => console.error('Erro ao buscar reservas:', error));
+} 
+ 
     
     function redefinirListeners() {
         const selectData = document.getElementById('data');
