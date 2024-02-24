@@ -1,12 +1,7 @@
-
-const Usuario = require('../models/Usuario');
-const bcrypt = require('bcryptjs');
-
-// Controlador para login do usuário
 exports.login = async (req, res) => {
     try {
         const { email, senha } = req.body;
-        const usuario = await Usuario.findOne({ email });
+        const usuario = await Usuario.findOne({ where: { email } }); // Correção aqui
         if (!usuario) {
             return res.status(401).send('Credenciais inválidas.');
         }
@@ -20,5 +15,3 @@ exports.login = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
-
-// Controlador para logout do usuário (implementação pendente)

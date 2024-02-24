@@ -1,10 +1,9 @@
 const Anuncio = require('../models/anuncio');
 const moment = require('moment-timezone');
 
-
 exports.listarAnuncios = async (req, res) => {
     try {
-        const anuncios = await Anuncio.find();
+        const anuncios = await Anuncio.findAll();
         res.render('admin', { anuncios });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -13,7 +12,7 @@ exports.listarAnuncios = async (req, res) => {
 
 exports.mostrarAnuncios = async (req, res) => {
     try {
-        const anuncios = await Anuncio.find();
+        const anuncios = await Anuncio.findAll();
         res.json(anuncios);
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -22,15 +21,11 @@ exports.mostrarAnuncios = async (req, res) => {
 
 exports.criarAnuncios = async (req, res) => {
     try {
-        // Criar um novo objeto de anúncio
-        const novoAnuncio = new Anuncio(req.body);
-
-        // Adicionar a data e hora de Brasília
-        novoAnuncio.dataPublicacao = moment().tz('America/Sao_Paulo').toDate();
-
-        // Salvar o anúncio no banco de dados
-        await novoAnuncio.save();
-
+        const dadosAnuncio = {
+            ...req.body,
+            dataPublicacao: moment().tz('America/Sao_Paulo').toDate()
+        };
+        const novoAnuncio = await Anuncio.create(dadosAnuncio);
         res.redirect('admin');
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -39,7 +34,7 @@ exports.criarAnuncios = async (req, res) => {
 
 exports.obterAnuncioPorId = async (req, res) => {
     try {
-        const anuncio = await Anuncio.findById(req.params.id);
+        const anuncio = await Anuncio.findByPk(req.params.id);
         if (!anuncio) {
             return res.status(404).send('Anúncio não encontrado');
         }
@@ -49,17 +44,19 @@ exports.obterAnuncioPorId = async (req, res) => {
     }
 };
 
-// Método para atualizar um anúncio
 exports.atualizarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
-        const anuncioAtualizado = await Anuncio.findByIdAndUpdate(id, req.body, { new: true });
+        const anuncioAtualizado = await Anuncio.update(req.body, {
+            where: { id: id },
+            returning: true
+        });
 
-        if (!anuncioAtualizado) {
+        if (!anuncioAtualizado[0]) {
             return res.status(404).send('Anúncio não encontrado');
         }
 
-        res.json(anuncioAtualizado);
+        res.json(anuncioAtualizado[1][0]);
     } catch (error) {
         res.status(500).send('Erro ao atualizar o anúncio: ' + error.message);
     }
@@ -68,7 +65,9 @@ exports.atualizarAnuncio = async (req, res) => {
 exports.deletarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
-        const anuncio = await Anuncio.findByIdAndRemove(id);
+        const anuncio = await Anuncio.destroy({
+            where: { id: id }
+        });
 
         if (!anuncio) {
             return res.status(404).send('Anúncio não encontrado');
@@ -82,7 +81,10 @@ exports.deletarAnuncio = async (req, res) => {
 
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
-        const anunciosRecentes = await Anuncio.find().sort({ dataPublicacao: -1 }).limit(10);
+        const anunciosRecentes = await Anuncio.findAll({
+            order: [['dataPublicacao', 'DESC']],
+            limit: 10
+        });
         res.json(anunciosRecentes);
     } catch (error) {
         console.error('Erro ao listar anúncios recentes:', error);

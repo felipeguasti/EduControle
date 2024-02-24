@@ -141,3 +141,50 @@ exports.deletarReserva = async (req, res) => {
     }
 };
 
+exports.buscarReservasPorSemanaPainel = async (req, res) => {
+    try {
+        const { recurso, turno } = req.params;
+        let dataInicio = new Date(req.query.dataInicio);
+        dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
+        let dataFim = new Date(dataInicio);
+        dataFim.setDate(dataInicio.getDate() + 6);
+
+        const reservasDaSemana = await Reserva.findAll({
+            where: {
+                recurso: recurso,
+                data: {
+                    [Op.between]: [dataInicio, dataFim]
+                }
+            }
+        });
+
+        let resultadoSemanal = {};
+        for (let dia = 0; dia < 7; dia++) {
+            const dataAtual = new Date(dataInicio);
+            dataAtual.setDate(dataInicio.getDate() + dia);
+            const dataFormatada = dataAtual.toISOString().split('T')[0];
+
+            resultadoSemanal[dataFormatada] = {};
+            const horarios = horariosPorTurno[turno];
+
+            horarios.forEach(horario => {
+                const reservasParaHorario = reservasDaSemana.filter(reserva => 
+                    reserva.data.toISOString().split('T')[0] === dataFormatada && 
+                    reserva.horario === horario
+                );
+                resultadoSemanal[dataFormatada][horario] = {
+                    disponivel: reservasParaHorario.length < quantidades[recurso],
+                    reservas: reservasParaHorario.map(reserva => ({
+                        id: reserva.id,
+                        professor: reserva.professor,
+                        turma: reserva.turma
+                    }))
+                };
+            });
+        }
+
+        res.json(resultadoSemanal);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
