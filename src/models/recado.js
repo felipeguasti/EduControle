@@ -1,49 +1,39 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+const mongoose = require('mongoose');
+const validator = require('validator'); // Utilize 'npm install validator' para adicionar esta dependência
 
-const Recado = db.define('Recado', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+const recadoSchema = new mongoose.Schema({
+  data: { 
+    type: Date, 
+    required: true,
+    get: valor => valor.toISOString().substring(0,10)
   },
-  data: {
-    type: DataTypes.DATE,
-    allowNull: false
+  titulo: { 
+    type: String, 
+    required: true,
+    maxlength: 100
   },
-  titulo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      len: [1, 100] // Limita o tamanho do título entre 1 e 100 caracteres
-    }
-  },
-  conteudo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      len: [1, 280] // Limita o tamanho do conteúdo entre 1 e 280 caracteres
-    }
+  conteudo: { 
+    type: String, 
+    required: true,
+    maxlength: 280 // Limita o conteúdo ao tamanho de um tweet
   },
   imagem: {
-    type: DataTypes.STRING,
-    allowNull: true, // Permite valores nulos para imagem
+    type: String,
     validate: {
-      isUrl: true // Valida se é uma URL válida
+      validator: function(valor) {
+        // Permite nulo ou uma string que seja uma URL válida
+        return valor == null || validator.isURL(valor);
+      },
+      message: 'URL inválida'
     }
   },
   turno: {
-    type: DataTypes.ENUM('Matutino', 'Vespertino', 'Integral'),
-    allowNull: false
+    type: String,
+    required: true,
+    enum: ['Matutino', 'Vespertino', 'Integral'],
   },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  }
-});
+}, { timestamps: true, toObject: { getters: true }, toJSON: { getters: true } });
+
+const Recado = mongoose.model('Recado', recadoSchema);
 
 module.exports = Recado;

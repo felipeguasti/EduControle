@@ -1,9 +1,9 @@
-const Reserva = require('../models/Reserva');
+const Reserva = require('../models/reserva');
 
 const ReservaController = {
     async listarReservas(req, res) {
         try {
-            const reservas = await Reserva.findAll();
+            const reservas = await Reserva.find();
             res.json(reservas);
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -12,18 +12,17 @@ const ReservaController = {
 
     async criarReserva(req, res) {
         try {
-            const { campo1, campo2 } = req.body; // ajuste para os campos da sua tabela Reservas
-            const reserva = await Reserva.create({ campo1, campo2 });
-            res.status(201).json(reserva);
+            const novaReserva = new Reserva(req.body);
+            const reservaSalva = await novaReserva.save();
+            res.status(201).json(reservaSalva);
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     },
 
     async buscarReservaPorId(req, res) {
-        const reservaId = req.params.id;
         try {
-            const reserva = await Reserva.findByPk(reservaId);
+            const reserva = await Reserva.findById(req.params.id);
             if (!reserva) {
                 return res.status(404).json({ message: 'Reserva não encontrada' });
             }
@@ -34,28 +33,23 @@ const ReservaController = {
     },
 
     async atualizarReserva(req, res) {
-        const reservaId = req.params.id;
-        const { campo1, campo2 } = req.body; // ajuste para os campos da sua tabela Reservas
         try {
-            const reserva = await Reserva.findByPk(reservaId);
-            if (!reserva) {
+            const reservaAtualizada = await Reserva.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            if (!reservaAtualizada) {
                 return res.status(404).json({ message: 'Reserva não encontrada' });
             }
-            await reserva.update({ campo1, campo2 });
-            res.json({ message: 'Reserva atualizada com sucesso' });
+            res.json(reservaAtualizada);
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     },
 
     async deletarReserva(req, res) {
-        const reservaId = req.params.id;
         try {
-            const reserva = await Reserva.findByPk(reservaId);
-            if (!reserva) {
+            const reservaDeletada = await Reserva.findByIdAndDelete(req.params.id);
+            if (!reservaDeletada) {
                 return res.status(404).json({ message: 'Reserva não encontrada' });
             }
-            await reserva.destroy();
             res.json({ message: 'Reserva excluída com sucesso' });
         } catch (error) {
             res.status(500).json({ message: error.message });

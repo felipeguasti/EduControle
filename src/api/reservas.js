@@ -1,3 +1,4 @@
+
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
@@ -7,7 +8,7 @@ const Reserva = require('../models/reserva');
 router.post('/', 
   [ // Validações
     body('data').isISO8601().withMessage('Data inválida.'),
-    body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
+     body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
     // Adicione mais validações conforme necessário
   ], 
   async (req, res) => {
