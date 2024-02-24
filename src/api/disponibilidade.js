@@ -7,8 +7,11 @@ const DisponibilidadeController = require('../controllers/disponibilidadeControl
 // Rota para verificar a disponibilidade de horários
 router.get('/:recurso', DisponibilidadeController.buscarHorariosDisponiveis);
 
+router.get('/:recurso/semana', DisponibilidadeController.buscarReservasPorSemana);
+
+
 // Rota para buscar reservas por semana
-router.get('/:recurso/semana', DisponibilidadeController.buscarReservasPorSemanaPainel);
+router.get('/:recurso/painel', DisponibilidadeController.buscarReservasPorSemanaPainel);
 
 // Rota para deletar uma reserva específica
 router.delete('/reservas/:id', DisponibilidadeController.deletarReserva);
