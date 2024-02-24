@@ -62,8 +62,6 @@ exports.buscarHorariosDisponiveis = async (req, res) => {
     }
 };
 
-const Reserva = require('../models/Reserva'); // Importar o modelo de Reserva do banco de dados
-
 exports.buscarReservasPorSemana = async (req, res) => {
     try {
         const { turno } = req.query;
@@ -73,7 +71,6 @@ exports.buscarReservasPorSemana = async (req, res) => {
         let dataFim = new Date(dataInicio);
         dataFim.setDate(dataInicio.getDate() + 6);
 
-        // Consultar o banco de dados para obter as reservas da semana
         const reservasDaSemana = await Reserva.findAll({
             where: {
                 recurso: recurso,
@@ -85,7 +82,6 @@ exports.buscarReservasPorSemana = async (req, res) => {
 
         let resultadoSemanal = {};
 
-        // Estruturar os dados das reservas em um formato adequado
         for (let dia = 0; dia < 7; dia++) {
             const dataAtual = new Date(dataInicio);
             dataAtual.setDate(dataInicio.getDate() + dia);
@@ -93,22 +89,28 @@ exports.buscarReservasPorSemana = async (req, res) => {
 
             resultadoSemanal[dataFormatada] = {};
 
-            // Adicionar as reservas do dia ao resultado semanal
-            reservasDaSemana.forEach(reserva => {
-                if (reserva.data.toISOString().split('T')[0] === dataFormatada) {
-                    if (!resultadoSemanal[dataFormatada][reserva.horario]) {
-                        resultadoSemanal[dataFormatada][reserva.horario] = [];
-                    }
-                    resultadoSemanal[dataFormatada][reserva.horario].push({
-                        id: reserva.id,
-                        professor: reserva.professor,
-                        turma: reserva.turma
-                    });
-                }
-            });
+            const horarios = Array.isArray(horariosPorTurno[turno]) ? horariosPorTurno[turno] : [];
+
+            if (horarios.length > 0) { 
+                horarios.forEach(horario => {
+                    const reservasParaHorario = reservasDaSemana.filter(reserva => 
+                        reserva.data.toISOString().split('T')[0] === dataFormatada && 
+                        reserva.horario === horario
+                    );
+                    resultadoSemanal[dataFormatada][horario] = {
+                        disponivel: reservasParaHorario.length < quantidades[recurso],
+                        reservas: reservasParaHorario.map(reserva => ({
+                            id: reserva.id,
+                            professor: reserva.professor,
+                            turma: reserva.turma
+                        }))
+                    };
+                });
+            } else {
+                console.log("Horários não encontrados para o turno:", turno); // Adiciona uma mensagem de log caso os horários não sejam encontrados
+            }
         }
 
-        // Enviar a resposta ao frontend com os detalhes da disponibilidade semanal
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
