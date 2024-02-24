@@ -1,11 +1,23 @@
-const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
 
-// URL de conexão com o MongoDB
-const mongoURI = 'mongodb://mainUser:NybpcAomtf6AuOSb@ec2-18-222-20-25.us-east-2.compute.amazonaws.com:27017/equipreserve';
+// Configuração da conexão com o MySQL
+const sequelize = new Sequelize('u612973268_broadcast', 'u612973268_broadcast', 'E1=iTrLXsvk', {
+  host: '195.35.61.61',
+  dialect: 'mysql',
+  logging: false
+});
 
-// Conexão com o MongoDB
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conexão com MongoDB estabelecida com sucesso!'))
-  .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
+// Testar a conexão
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Conexão com MySQL estabelecida com sucesso!');
+  } catch (error) {
+    console.error('Erro ao conectar ao MySQL:', error);
+  }
+}
 
-module.exports = mongoose.connection;
+// Testar a conexão
+testConnection();
+
+module.exports = sequelize;

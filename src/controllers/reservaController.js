@@ -1,56 +1,85 @@
-const Reserva = require('../models/reserva');
+const db = require('../config/db');
 
 const ReservaController = {
-    async listarReservas(req, res) {
+    listarReservas(req, res) {
         try {
-            const reservas = await Reserva.find();
-            res.json(reservas);
+            const queryString = 'SELECT * FROM Reservas';
+            db.query(queryString, (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message });
+                }
+                res.json(result);
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
 
-    async criarReserva(req, res) {
+    criarReserva(req, res) {
         try {
-            const novaReserva = new Reserva(req.body);
-            const reservaSalva = await novaReserva.save();
-            res.status(201).json(reservaSalva);
+            const { campo1, campo2 } = req.body; // ajuste para os campos da sua tabela Reservas
+            const queryString = 'INSERT INTO Reservas (campo1, campo2) VALUES (?, ?)';
+            db.query(queryString, [campo1, campo2], (err, result) => {
+                if (err) {
+                    return res.status(400).json({ message: err.message });
+                }
+                res.status(201).json({ id: result.insertId, campo1: campo1, campo2: campo2 });
+            });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     },
 
-    async buscarReservaPorId(req, res) {
+    buscarReservaPorId(req, res) {
+        const reservaId = req.params.id;
         try {
-            const reserva = await Reserva.findById(req.params.id);
-            if (!reserva) {
-                return res.status(404).json({ message: 'Reserva não encontrada' });
-            }
-            res.json(reserva);
+            const queryString = 'SELECT * FROM Reservas WHERE id = ?';
+            db.query(queryString, [reservaId], (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message });
+                }
+                if (result.length === 0) {
+                    return res.status(404).json({ message: 'Reserva não encontrada' });
+                }
+                res.json(result[0]);
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
 
     async atualizarReserva(req, res) {
+        const reservaId = req.params.id;
+        const { campo1, campo2 } = req.body; // ajuste para os campos da sua tabela Reservas
         try {
-            const reservaAtualizada = await Reserva.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            if (!reservaAtualizada) {
-                return res.status(404).json({ message: 'Reserva não encontrada' });
-            }
-            res.json(reservaAtualizada);
+            const queryString = 'UPDATE Reservas SET campo1 = ?, campo2 = ? WHERE id = ?';
+            db.query(queryString, [campo1, campo2, reservaId], (err, result) => {
+                if (err) {
+                    return res.status(400).json({ message: err.message });
+                }
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Reserva não encontrada' });
+                }
+                res.json({ message: 'Reserva atualizada com sucesso' });
+            });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     },
 
     async deletarReserva(req, res) {
+        const reservaId = req.params.id;
         try {
-            const reservaDeletada = await Reserva.findByIdAndDelete(req.params.id);
-            if (!reservaDeletada) {
-                return res.status(404).json({ message: 'Reserva não encontrada' });
-            }
-            res.json({ message: 'Reserva excluída com sucesso' });
+            const queryString = 'DELETE FROM Reservas WHERE id = ?';
+            db.query(queryString, [reservaId], (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message });
+                }
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Reserva não encontrada' });
+                }
+                res.json({ message: 'Reserva excluída com sucesso' });
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }

@@ -1,10 +1,15 @@
-const Recado = require('../models/recado');
+const db = require('../config/db');
 
 // Função para listar todos os recados
 exports.listarRecados = async (req, res) => {
     try {
-        const recados = await Recado.find();
-        res.json(recados);
+        const queryString = 'SELECT * FROM Recados';
+        db.query(queryString, (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            res.json(result);
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -13,9 +18,14 @@ exports.listarRecados = async (req, res) => {
 // Função para criar um novo recado
 exports.criarRecado = async (req, res) => {
     try {
-        const novoRecado = new Recado(req.body);
-        const recadoSalvo = await novoRecado.save();
-        res.status(201).json(recadoSalvo);
+        const { titulo, conteudo } = req.body;
+        const queryString = 'INSERT INTO Recados (titulo, conteudo) VALUES (?, ?)';
+        db.query(queryString, [titulo, conteudo], (err, result) => {
+            if (err) {
+                return res.status(400).json({ message: err.message });
+            }
+            res.status(201).json({ id: result.insertId, titulo: titulo, conteudo: conteudo });
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -23,31 +33,39 @@ exports.criarRecado = async (req, res) => {
 
 // Função para buscar um recado por ID
 exports.buscarRecadoPorId = async (req, res, next) => {
-    let recado;
+    const recadoId = req.params.id;
     try {
-        recado = await Recado.findById(req.params.id);
-        if (recado == null) {
-            return res.status(404).json({ message: 'Não consigo achar o recado' });
-        }
+        const queryString = 'SELECT * FROM Recados WHERE id = ?';
+        db.query(queryString, [recadoId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Não consigo achar o recado' });
+            }
+            res.recado = result[0];
+            next();
+        });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
-    res.recado = recado;
-    next();
 };
 
 // Função para atualizar um recado por ID
 exports.atualizarRecado = async (req, res) => {
-    if (req.body.titulo != null) {
-        res.recado.titulo = req.body.titulo;
-    }
-    if (req.body.conteudo != null) {
-        res.recado.conteudo = req.body.conteudo;
-    }
-    // adicione outros campos de forma semelhante, se necessário...
+    const recadoId = req.params.id;
+    const { titulo, conteudo } = req.body;
     try {
-        const updatedRecado = await res.recado.save();
-        res.json(updatedRecado);
+        const queryString = 'UPDATE Recados SET titulo = ?, conteudo = ? WHERE id = ?';
+        db.query(queryString, [titulo, conteudo, recadoId], (err, result) => {
+            if (err) {
+                return res.status(400).json({ message: err.message });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Recado não encontrado' });
+            }
+            res.json({ message: 'Recado atualizado com sucesso' });
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -55,9 +73,18 @@ exports.atualizarRecado = async (req, res) => {
 
 // Função para deletar um recado por ID
 exports.deletarRecado = async (req, res) => {
+    const recadoId = req.params.id;
     try {
-        await res.recado.remove();
-        res.json({ message: 'Recado excluido com sucesso' });
+        const queryString = 'DELETE FROM Recados WHERE id = ?';
+        db.query(queryString, [recadoId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Recado não encontrado' });
+            }
+            res.json({ message: 'Recado excluído com sucesso' });
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
