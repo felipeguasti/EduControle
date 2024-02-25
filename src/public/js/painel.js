@@ -167,18 +167,18 @@ function criarCabecalhoCalendario() {
     const cabecalhoCalendario = document.getElementById('cabecalhoCalendario');
     cabecalhoCalendario.innerHTML = ''; // Limpa o cabeçalho atual
 
-    diasDaSemana.forEach(data => {
+    diasDaSemana.forEach(dia => {
         let th = document.createElement('th');
-        th.textContent = formatarDataParaCabecalho(data);
+        th.textContent = formatarDataParaCabecalho(dia);
         cabecalhoCalendario.appendChild(th);
     });
 }
 
 function formatarDataParaCabecalho(data) {
-    const diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    const dia = diaSemana[data.getDay()];
+    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const diaDaSemana = diasDaSemana[data.getDay()];
     const diaDoMes = data.getDate();
-    return `${dia} (${diaDoMes})`;
+    return `${diaDaSemana} (${diaDoMes})`;
 }
 
 
