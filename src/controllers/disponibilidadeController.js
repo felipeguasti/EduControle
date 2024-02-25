@@ -155,9 +155,13 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
         const { recurso } = req.params;
         const { turno } = req.query;
         let dataInicio = new Date(req.query.dataInicio);
+
+        // Ajusta a data de início para o domingo da semana corrente
         dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
-        let dataFim = new Date(dataInicio);
-        dataFim.setDate(dataInicio.getDate() + 6);
+
+        // Aqui, você pode ajustar para que a data final seja sempre o dia atual
+        let dataFim = new Date(); // Isso define dataFim para a data atual
+        dataFim.setHours(23, 59, 59, 999); // Ajusta para o final do dia
 
         const reservasDaSemana = await Reserva.findAll({
             where: {
@@ -192,7 +196,7 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                 };
             });
         }
-
+        
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
