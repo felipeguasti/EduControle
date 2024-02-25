@@ -52,20 +52,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Middleware para obter reserva por ID e implementação de log
-async function getReservaById(req, res, next) {
-  let reserva;
+// Middleware para encontrar reserva por ID
+const getReservaById = async (req, res, next) => {
+  const reservaId = req.params.id;
   try {
-      reserva = await Reserva.findByPk(req.params.id);
-      if (reserva == null) {
-          return res.status(404).json({ message: 'Reserva não encontrada.' });
-      }
+    const reserva = await Reserva.findByPk(reservaId);
+    if (!reserva) {
+      return res.status(404).json({ message: 'Reserva não encontrada.' });
+    }
+    req.reserva = reserva; // Atribuir a reserva a req.reserva
+    next(); // Chamar next() para passar para a próxima função de middleware ou rota
   } catch (error) {
-      return res.status(500).json({ message: `Erro ao buscar reserva: ${error.message}` });
+    res.status(500).json({ message: `Erro ao buscar reserva: ${error.message}` });
   }
-  res.reserva = reserva;
-  next();
-}
+};
+
 
 // PUT request to update reserva by ID
 router.put('/:id', getReservaById, async (req, res) => {
@@ -82,11 +83,11 @@ router.put('/:id', getReservaById, async (req, res) => {
 // DELETE request to delete reserva by ID
 router.delete('/:id', getReservaById, async (req, res) => {
   try {
-      console.log(res.reserva);
-      await res.reserva.remove();
-      res.json({ message: 'Reserva excluída com sucesso' });
+    console.log(req.reserva); // Verificar se req.reserva está configurado corretamente
+    await req.reserva.destroy(); // Excluir a reserva
+    res.json({ message: 'Reserva excluída com sucesso' });
   } catch (error) {
-      res.status(500).json({ message: `Erro ao excluir reserva: ${error.message}` });
+    res.status(500).json({ message: `Erro ao excluir reserva: ${error.message}` });
   }
 });
 
