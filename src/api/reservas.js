@@ -82,7 +82,7 @@ router.put('/:id', getReservaById, async (req, res) => {
 // DELETE request to delete reserva by ID
 router.delete('/:id', getReservaById, async (req, res) => {
   try {
-      
+      console.log(res.reserva);
       await res.reserva.remove();
       res.json({ message: 'Reserva excluída com sucesso' });
   } catch (error) {
