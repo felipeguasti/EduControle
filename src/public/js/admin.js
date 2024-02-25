@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
             editarAnuncio(id);
-            console.log(id);
         });
     });
 
@@ -82,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     function editarAnuncio(id) {
+        console.log("ID do anúncio recebido:", id); // Verificar se o ID está sendo recebido corretamente
         fetch(`/admin/anuncios/${id}`)
         .then(response => response.json())
         .then(anuncio => {
