@@ -244,14 +244,20 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         exibirCarregamento(false);
-        if (data && data.id !== undefined) {
-          alert(
-            method === "POST"
-              ? "Reserva realizada com sucesso!"
-              : "Reserva atualizada com sucesso!"
-          );
+
+        // Sucesso na operação POST
+        if (method === "POST" && data && data.id !== undefined) {
+          alert("Reserva realizada com sucesso!");
           atualizarHorariosDisponiveis();
-        } else {
+        }
+        // Sucesso na operação PUT
+        else if (method === "PUT" && data) {
+          // Aqui você pode adicionar mais condições conforme a lógica de sua API
+          alert("Reserva atualizada com sucesso!");
+          atualizarHorariosDisponiveis();
+        }
+        // Tratamento de erros
+        else {
           alert(
             "Erro ao realizar a reserva: " +
               (data.message || "Erro desconhecido")
