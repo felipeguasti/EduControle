@@ -2,7 +2,8 @@
 let recursoAtual = 'Tablets';
 let dataInicioSemana = new Date();
 
-document.addEventListener('DOMContentLoaded', function() {  
+document.addEventListener('DOMContentLoaded', function() {
+    dataInicioSemana = obterDataInicioSemanaAtual();
     atualizarCalendarioParaRecurso(recursoAtual);
     carregarAnunciosRecentes();
 
@@ -59,7 +60,7 @@ function carregarAnunciosRecentes() {
 }
 
 function atualizarCalendarioParaRecurso(recurso) {
-    const data = obterDataInicioSemanaAtual();
+    const data = dataInicioSemana;
     const turno = obterTurnoAtual();
 
     // Atualiza o cabeçalho do calendário com os dias da semana
@@ -140,30 +141,27 @@ var turno = obterTurnoAtual();
 
 function obterDataInicioSemanaAtual() {
     const hoje = new Date();
-    const diaDaSemana = hoje.getDay(); // Domingo é 0, Segunda é 1, e assim por diante
-    const diferencaDias = diaDaSemana === 0 ? -6 : 1 - diaDaSemana; // Se for domingo, considere 6 dias para trás, caso contrário, subtraia o número do dia da semana
-    hoje.setDate(hoje.getDate() + diferencaDias); // Ajusta a data para o domingo da semana atual
+    const diaDaSemana = hoje.getDay(); // Domingo é 0, Segunda é 1, etc.
+    hoje.setDate(hoje.getDate() - diaDaSemana); // Ajusta para o domingo anterior (ou mantém se hoje for domingo)
     hoje.setHours(0, 0, 0, 0); // Zera a hora, minuto, segundo e milissegundo
 
     return hoje;
 }
 
 
+
 function obterDiasDaSemanaAtual() {
     let datas = [];
-    let diaAtual = new Date(dataInicioSemana); // Utiliza a data de início da semana
+    let diaAtual = new Date(dataInicioSemana);
 
-    // Adiciona cada dia da semana (domingo a sábado) com base na data de início
     for (let i = 0; i < 7; i++) {
         datas.push(new Date(diaAtual));
         diaAtual.setDate(diaAtual.getDate() + 1);
     }
 
-    // Move o domingo para o final da lista
-    datas.push(datas.shift());
-
     return datas;
 }
+
 
 function criarCabecalhoCalendario() {
     const diasDaSemana = obterDiasDaSemanaAtual();
