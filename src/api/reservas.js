@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const reservaId = req.params.id;
   try {
-      const reserva = await Reserva.findById(reservaId);
+      const reserva = await Reserva.findByPk(reservaId);
       if (!reserva) {
           return res.status(404).json({ message: 'Reserva não encontrada.' });
       }
@@ -56,7 +56,7 @@ router.get('/:id', async (req, res) => {
 async function getReservaById(req, res, next) {
   let reserva;
   try {
-      reserva = await Reserva.findById(req.params.id);
+      reserva = await Reserva.findByPk(req.params.id);
       if (reserva == null) {
           return res.status(404).json({ message: 'Reserva não encontrada.' });
       }
@@ -82,6 +82,7 @@ router.put('/:id', getReservaById, async (req, res) => {
 // DELETE request to delete reserva by ID
 router.delete('/:id', getReservaById, async (req, res) => {
   try {
+      
       await res.reserva.remove();
       res.json({ message: 'Reserva excluída com sucesso' });
   } catch (error) {

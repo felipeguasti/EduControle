@@ -235,10 +235,10 @@ formReserva.addEventListener("submit", function (event) {
     let method = "POST";
 
     // Verifica se está editando uma reserva existente
-    if (dadosFormulario.idsReservas) {
-        url = `/api/reservas/${dadosFormulario.idsReservas}`;
+    if (dadosFormulario.idReserva) {
+        url = `/api/reservas/${dadosFormulario.idReserva}`;
         method = "PUT";
-        delete dadosFormulario.idsReservas;
+        delete dadosFormulario.idReserva;
     }
 
     fetch(url, {
