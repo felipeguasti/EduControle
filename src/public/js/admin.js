@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
             editarAnuncio(id);
+            console.log(id);
         });
     });
 

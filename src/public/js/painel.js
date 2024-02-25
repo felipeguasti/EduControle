@@ -88,7 +88,7 @@ function atualizarCalendarioParaRecurso(recurso) {
                         // Verificar se há reservas e se há professores e turmas associados
                         if (reserva.reservas && reserva.reservas.length > 0) {
                             const reservasFormatadas = reserva.reservas.map(reserva => `${reserva.professor} (${reserva.turma})`).join(', ');
-                        celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br>Professor${reserva.professores && reserva.professores.length !== 1 ? 'es' : ''}:<br>${reservasFormatadas}`;
+                        celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br><strong>Professor${reserva.reservas && reserva.reservas.length !== 1 ? 'es' : ''}:</strong><br>${reservasFormatadas}`;
 
 
                         } else {
