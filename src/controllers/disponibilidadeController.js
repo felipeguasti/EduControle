@@ -154,13 +154,11 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
     try {
         const { recurso } = req.params;
         const { turno } = req.query;
-        let dataInicio = new Date(req.query.dataInicio);
+        let dataInicio = new Date(req.query.dataInicio); // Usando a data recebida diretamente da URL
+        dataInicio.setHours(0, 0, 0, 0); // Zerar a hora para o início do dia
 
-        // Ajusta a data de início para o domingo da semana corrente
-        dataInicio.setDate(dataInicio.getDate() - dataInicio.getDay());
-
-        // Aqui, você pode ajustar para que a data final seja sempre o dia atual
-        let dataFim = new Date(); // Isso define dataFim para a data atual
+        let dataFim = new Date(dataInicio);
+        dataFim.setDate(dataInicio.getDate() + 6); // Adiciona 6 dias à data de início
         dataFim.setHours(23, 59, 59, 999); // Ajusta para o final do dia
 
         const reservasDaSemana = await Reserva.findAll({
@@ -171,7 +169,6 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                 }
             }
         });
-
         let resultadoSemanal = {};
         for (let dia = 0; dia < 7; dia++) {
             const dataAtual = new Date(dataInicio);
@@ -196,7 +193,7 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                 };
             });
         }
-        
+        console.log('Data de Início Recebida:', req.query.dataInicio);
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
