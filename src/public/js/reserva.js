@@ -318,11 +318,21 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", fecharPopupProfessores);
 
 function carregarDetalhesReserva(reservaId) {
+  console.log("Iniciando carregamento dos detalhes da reserva com ID:", reservaId);
   fetch(`/api/reservas/${reservaId}`)
     .then((response) => response.json())
     .then((reserva) => {
-      // Preenche o campo hidden com o ID da reserva
-      document.getElementById("idReserva").value = reserva.id;
+      console.log("Reserva recebida:", reserva);
+
+      // Ajuste para acessar o campo de ID da reserva corretamente
+      const campoIdReserva = document.getElementById("idReserva");
+      console.log("Campo de ID da reserva:", campoIdReserva);
+
+      if (campoIdReserva) {
+        campoIdReserva.value = reserva.id;
+      } else {
+        console.error("Erro: Campo de ID da reserva não encontrado");
+      }
 
       // Verifica e preenche cada campo do formulário se o dado estiver disponível
       if (reserva.data) {
@@ -331,8 +341,8 @@ function carregarDetalhesReserva(reservaId) {
           .split("T")[0];
         document.getElementById("data").value = formattedDate;
       }
-      if (reserva.horario) {
-        const horarioSelecionado = reserva.horario;
+      if (reserva.hora) {
+        const horarioSelecionado = reserva.hora;
         const radios = document.getElementsByName("horario");
         for (const radio of radios) {
           if (radio.value === horarioSelecionado) {
@@ -356,6 +366,8 @@ function carregarDetalhesReserva(reservaId) {
       console.error("Erro ao buscar dados da reserva:", error)
     );
 }
+
+
 
 
 
