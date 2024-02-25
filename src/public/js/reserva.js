@@ -322,16 +322,12 @@ function carregarDetalhesReserva(reservaId) {
   fetch(`/api/reservas/${reservaId}`)
     .then((response) => response.json())
     .then((reserva) => {
-      console.log("Reserva recebida:", reserva);
-      // Ajuste para acessar o campo de ID da reserva corretamente
-      const campoIdReserva = document.getElementById("idReserva").value;
-      console.log("Campo de ID da reserva:", campoIdReserva);
 
-      if (campoIdReserva) {
-        campoIdReserva = reserva.id;
-      } else {
-        console.error("Erro: Campo de ID da reserva não encontrado");
-      }
+      // Ajuste para acessar o campo de ID da reserva corretamente
+      const campoIdReserva = document.getElementsByName("idReserva");
+      campoIdReserva.value = reservaId;
+      console.log("Id", campoIdReserva);
+
 
       // Verifica e preenche cada campo do formulário se o dado estiver disponível
       if (reserva.data) {
