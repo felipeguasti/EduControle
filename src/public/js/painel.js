@@ -69,6 +69,7 @@ function atualizarCalendarioParaRecurso(recurso) {
     fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${data}`)
         .then(response => response.json())
         .then(reservasPorDia => {
+                console.log(reservasPorDia); // Para depuração
             const corpoCalendario = document.getElementById('corpoCalendario');
             corpoCalendario.innerHTML = '';
 
