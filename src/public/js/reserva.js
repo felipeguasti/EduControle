@@ -240,6 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dadosFormulario.idReserva) {
       url = `/api/reservas/${dadosFormulario.idReserva}`;
       method = "PUT";
+      
     }
 
     fetch(url, {

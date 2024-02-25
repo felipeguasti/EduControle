@@ -31,12 +31,13 @@ router.post('/',
 // GET request to fetch all reservas
 router.get('/', async (req, res) => {
   try {
-      const reservas = await Reserva.find();
+      const reservas = await Reserva.findAll();
       res.json(reservas);
   } catch (error) {
       res.status(500).json({ message: `Erro ao buscar reservas: ${error.message}` });
   }
 });
+
 
 // GET request to fetch reserva by ID
 router.get('/:id', async (req, res) => {
