@@ -94,6 +94,7 @@ function atualizarCalendarioParaRecurso(recurso) {
                     }
 
                     linhaHorario.appendChild(celulaHorario);
+                  console.log(celulaHorario)
                 });
 
                 corpoCalendario.appendChild(linhaHorario);
