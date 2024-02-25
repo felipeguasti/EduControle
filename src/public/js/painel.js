@@ -97,8 +97,6 @@ function atualizarCalendarioParaRecurso(recurso) {
                 });
 
                 corpoCalendario.appendChild(linhaHorario);
-              console.log(linhaHorario);
-
                 // Adicionar linha vazia para separar informações de professor e turma
                 const linhaVazia = document.createElement('tr');
                 const celulaVazia = document.createElement('td');
