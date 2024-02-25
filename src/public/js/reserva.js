@@ -212,21 +212,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Event listeners and initializations
-  const formReserva = document.getElementById("formReserva").addEventListener("submit", function (event) {
-    event.preventDefault();
-    if (!validarFormulario()) return;
+  const formReserva = document.getElementById("formReserva");
+formReserva.addEventListener("submit", function (event) {
+  event.preventDefault();
+  if (!validarFormulario()) return;
 
-    exibirCarregamento(true);
-    const formData = new FormData(this);
-    const dadosFormulario = {};
-    formData.forEach((value, key) => {
-        dadosFormulario[key] = value;
-    });
-
-    // Converter a data para o formato aaaa-mm-dd 00:00:00
-    if (dadosFormulario.data) {
-        dadosFormulario.data += " 00:00:00";
+  exibirCarregamento(true);
+  const formData = new FormData(formReserva);
+  const dadosFormulario = {};
+  formData.forEach((value, key) => {
+    // Converta a data para o formato aaaa-mm-dd
+    if (key === "data") { // Substitua "data" pelo nome do seu campo de data no formulário
+      const dataObj = new Date(value);
+      const dataFormatada = dataObj.toISOString().split('T')[0];
+      dadosFormulario[key] = dataFormatada;
+    } else {
+      dadosFormulario[key] = value;
     }
+  });
 
     let url = "/api/reservas";
     let method = "POST";
