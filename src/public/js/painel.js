@@ -68,7 +68,7 @@ function atualizarCalendarioParaRecurso(recurso) {
 
     fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${dataFormatada}`)
         .then(response => response.json())
-        .then(reservasPorDia => {                console.log(reservasPorDia); // Para depuração
+        .then(reservasPorDia => {                
             const corpoCalendario = document.getElementById('corpoCalendario');
             corpoCalendario.innerHTML = '';
 
@@ -87,8 +87,8 @@ function atualizarCalendarioParaRecurso(recurso) {
                         celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br>`;
 
                         // Verificar se há professores e se a informação de turmas está disponível
-                        if (reserva.professores && reserva.professores.length > 0 && reserva.turmas) {
-                            const professoresFormatados = reserva.professores.map((prof, index) => `${prof} (${reserva.turmas[index]})`).join(', ');
+                        if (reserva.professor && reserva.professor.length > 0 && reserva.turma) {
+                            const professoresFormatados = reserva.professor.map((prof, index) => `${prof} (${reserva.turmas[index]})`).join(', ');
                             celulaHorario.innerHTML += `Professores:<br>${professoresFormatados}`;
                         }
                     }
