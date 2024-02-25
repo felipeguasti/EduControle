@@ -60,16 +60,15 @@ function carregarAnunciosRecentes() {
 }
 
 function atualizarCalendarioParaRecurso(recurso) {
-    const data = dataInicioSemana;
+    const dataFormatada = dataInicioSemana.toISOString().split('T')[0];
     const turno = obterTurnoAtual();
 
     // Atualiza o cabeçalho do calendário com os dias da semana
     criarCabecalhoCalendario();
 
-    fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${data}`)
+    fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${dataFormatada}`)
         .then(response => response.json())
-        .then(reservasPorDia => {
-                console.log(reservasPorDia); // Para depuração
+        .then(reservasPorDia => {                console.log(reservasPorDia); // Para depuração
             const corpoCalendario = document.getElementById('corpoCalendario');
             corpoCalendario.innerHTML = '';
 
