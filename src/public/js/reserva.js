@@ -213,26 +213,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Event listeners and initializations
   const formReserva = document.getElementById("formReserva");
-formReserva.addEventListener("submit", function(event) {
-  event.preventDefault();
+  formReserva.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-  if (!validarFormulario()) return;
+    if (!validarFormulario()) return;
 
-  exibirCarregamento(true);
-  const formData = new FormData(formReserva);
-  const dadosFormulario = {};
-  formData.forEach((value, key) => {
-    dadosFormulario[key] = value;
-  });
+    exibirCarregamento(true);
+    const formData = new FormData(formReserva);
+    const dadosFormulario = {};
+    formData.forEach((value, key) => {
+      dadosFormulario[key] = value;
+    });
 
-  let url = "/api/reservas";
-  let method = "POST";
-  
-  // Verifica se estamos editando uma reserva existente
-  if (dadosFormulario.idReserva) {
-    url = `/api/reservas/${dadosFormulario.idReserva}`;
-    method = "PUT";
-  }
+    let url = "/api/reservas";
+    let method = "POST";
+
+    // Verifica se estamos editando uma reserva existente
+    if (dadosFormulario.idReserva) {
+      url = `/api/reservas/${dadosFormulario.idReserva}`;
+      method = "PUT";
+    }
 
     fetch(url, {
       method: method,
@@ -244,6 +244,7 @@ formReserva.addEventListener("submit", function(event) {
       .then((response) => response.json())
       .then((data) => {
         exibirCarregamento(false);
+        console.log(data);
         if (data.reservaSalva && data.reservaSalva.id !== undefined) {
           alert(
             method === "POST"
@@ -264,7 +265,7 @@ formReserva.addEventListener("submit", function(event) {
         alert("Erro ao realizar a reserva.");
       });
   });
-  
+
   function atualizarHorariosDisponiveis() {
     document.getElementById("horariosDisponiveis").value = "";
     document.getElementById("observacoes").value = "";
@@ -308,61 +309,62 @@ formReserva.addEventListener("submit", function(event) {
     .querySelector(".close")
     .addEventListener("click", fecharPopupProfessores);
 
-function carregarDetalhesReserva(reservaId) {
-  console.log("Iniciando carregamento dos detalhes da reserva com ID:", reservaId);
-  fetch(`/api/reservas/${reservaId}`)
-    .then((response) => response.json())
-    .then((reserva) => {
-
-      // Verifica e preenche cada campo do formulário se o dado estiver disponível
-      if (reserva.data) {
-        const formattedDate = new Date(reserva.data)
-          .toISOString()
-          .split("T")[0];
-        document.getElementById("data").value = formattedDate;
-      }
-      if (reserva.hora) {
-        const horarioSelecionado = reserva.hora;
-        const radios = document.getElementsByName("horario");
-        for (const radio of radios) {
-          if (radio.value === horarioSelecionado) {
-            radio.checked = true;
-            break;
+  function carregarDetalhesReserva(reservaId) {
+    console.log(
+      "Iniciando carregamento dos detalhes da reserva com ID:",
+      reservaId
+    );
+    fetch(`/api/reservas/${reservaId}`)
+      .then((response) => response.json())
+      .then((reserva) => {
+        // Verifica e preenche cada campo do formulário se o dado estiver disponível
+        if (reserva.data) {
+          const formattedDate = new Date(reserva.data)
+            .toISOString()
+            .split("T")[0];
+          document.getElementById("data").value = formattedDate;
+        }
+        if (reserva.hora) {
+          const horarioSelecionado = reserva.hora;
+          const radios = document.getElementsByName("horario");
+          for (const radio of radios) {
+            if (radio.value === horarioSelecionado) {
+              radio.checked = true;
+              break;
+            }
           }
         }
-      }
-      if (reserva.professor) {
-        document.getElementById("professor").value = reserva.professor;
-      }
-      if (reserva.turma) {
-        document.getElementById("turma").value = reserva.turma;
-      }
-      // Ajuste para acessar o campo de ID da reserva corretamente
-      // Atribuir o ID da reserva ao campo oculto
-      const idReservaElement = document.getElementById("idReserva");
-      if (idReservaElement) {
-        idReservaElement.value = reservaId;
-      } else {
-        console.error("Elemento 'idReserva' não encontrado.");
-        // Criar o campo oculto se não existir
-        const hiddenIdField = document.createElement("input");
-        hiddenIdField.setAttribute("type", "hidden");
-        hiddenIdField.setAttribute("id", "idReserva");
-        hiddenIdField.setAttribute("name", "idReserva");
-        hiddenIdField.value = reservaId;
-        document.getElementById("formReserva").appendChild(hiddenIdField);
-      }
+        if (reserva.professor) {
+          document.getElementById("professor").value = reserva.professor;
+        }
+        if (reserva.turma) {
+          document.getElementById("turma").value = reserva.turma;
+        }
+        // Ajuste para acessar o campo de ID da reserva corretamente
+        // Atribuir o ID da reserva ao campo oculto
+        const idReservaElement = document.getElementById("idReserva");
+        if (idReservaElement) {
+          idReservaElement.value = reservaId;
+        } else {
+          console.error("Elemento 'idReserva' não encontrado.");
+          // Criar o campo oculto se não existir
+          const hiddenIdField = document.createElement("input");
+          hiddenIdField.setAttribute("type", "hidden");
+          hiddenIdField.setAttribute("id", "idReserva");
+          hiddenIdField.setAttribute("name", "idReserva");
+          hiddenIdField.value = reservaId;
+          document.getElementById("formReserva").appendChild(hiddenIdField);
+        }
 
-      // Rolar para o formulário de reserva se necessário
-      document.getElementById("formReserva").scrollIntoView();
-      atualizarQuantidadeRecurso();
-      buscarHorariosDisponiveis();
-    })
-    .catch((error) =>
-      console.error("Erro ao buscar dados da reserva:", error)
-    );
-}
-
+        // Rolar para o formulário de reserva se necessário
+        document.getElementById("formReserva").scrollIntoView();
+        atualizarQuantidadeRecurso();
+        buscarHorariosDisponiveis();
+      })
+      .catch((error) =>
+        console.error("Erro ao buscar dados da reserva:", error)
+      );
+  }
 
   function abrirPopupSelecao(idsReservas, professores, modo) {
     let listaProfessores = "";
