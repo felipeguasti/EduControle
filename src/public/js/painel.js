@@ -140,7 +140,7 @@ var turno = obterTurnoAtual();
 function obterDataInicioSemanaAtual() {
     const hoje = new Date();
     const diaDaSemana = hoje.getDay(); // Domingo é 0, Segunda é 1, e assim por diante
-    const diferencaDias = diaDaSemana === 0 ? 0 : -diaDaSemana; // Se for domingo, não precisa subtrair nada, caso contrário subtrai o número de dias até domingo
+    const diferencaDias = diaDaSemana === 0 ? 0 - 6 : 0 - (diaDaSemana - 1); // Se for domingo, considere 6 dias para trás, caso contrário diaDaSemana - 1
     hoje.setDate(hoje.getDate() + diferencaDias); // Ajusta a data para o domingo da semana atual
     hoje.setHours(0, 0, 0, 0); // Zera a hora, minuto, segundo e milissegundo
 
