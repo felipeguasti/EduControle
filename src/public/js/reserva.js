@@ -241,14 +241,9 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: JSON.stringify(dadosFormulario),
     })
-      .then((response) => {
-        console.log("Status da resposta:", response.status); // Log do status
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log("Dados recebidos:", data); // Log dos dados recebidos
         exibirCarregamento(false);
-
         if (data && data.id !== undefined) {
           alert(
             method === "POST"
