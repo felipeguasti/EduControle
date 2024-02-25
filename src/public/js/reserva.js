@@ -212,59 +212,55 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Event listeners and initializations
-  const formReserva = document.getElementById("formReserva");
-  formReserva.addEventListener("submit", function (event) {
+  const formReserva = document.getElementById("formReserva").addEventListener("submit", function (event) {
     event.preventDefault();
     if (!validarFormulario()) return;
 
     exibirCarregamento(true);
-    const formData = new FormData(formReserva);
+    const formData = new FormData(this);
     const dadosFormulario = {};
     formData.forEach((value, key) => {
-      dadosFormulario[key] = value;
+        dadosFormulario[key] = value;
     });
+
+    // Converter a data para o formato aaaa-mm-dd 00:00:00
+    if (dadosFormulario.data) {
+        dadosFormulario.data += " 00:00:00";
+    }
 
     let url = "/api/reservas";
     let method = "POST";
 
     // Verifica se está editando uma reserva existente
     if (dadosFormulario.idReserva) {
-      // Substitua 'idReserva' pelo campo correto
-      url = `/api/reservas/${dadosFormulario.idReserva}`;
-      method = "PUT";
-      delete dadosFormulario.idReserva; // Remova o id do corpo da requisição, se necessário
+        url = `/api/reservas/${dadosFormulario.idReserva}`;
+        method = "PUT";
+        delete dadosFormulario.idReserva;
     }
 
     fetch(url, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dadosFormulario),
+        method: method,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dadosFormulario),
     })
-      .then((response) => response.json())
-      .then((data) => {
+    .then(response => response.json())
+    .then(data => {
         exibirCarregamento(false);
         if (data.reservaSalva) {
-          alert(
-            method === "POST"
-              ? "Reserva realizada com sucesso!"
-              : "Reserva atualizada com sucesso!"
-          );
-          atualizarHorariosDisponiveis();
+            alert(method === "POST" ? "Reserva realizada com sucesso!" : "Reserva atualizada com sucesso!");
+            atualizarHorariosDisponiveis();
         } else {
-          alert(
-            "Erro ao realizar a reserva: " +
-              (data.message || "Erro desconhecido")
-          );
+            alert("Erro ao realizar a reserva: " + (data.message || "Erro desconhecido"));
         }
-      })
-      .catch((error) => {
+    })
+    .catch(error => {
         exibirCarregamento(false);
         console.error("Falha na requisição:", error);
         alert("Erro ao realizar a reserva.");
-      });
-  });
+    });
+});
 
   function atualizarHorariosDisponiveis() {
     document.getElementById("horariosDisponiveis").value = "";
