@@ -346,10 +346,9 @@ function carregarDetalhesReserva(reservaId) {
       if (reserva.turma) {
         document.getElementById("turma").value = reserva.turma;
       }
-      }
       // Ajuste para acessar o campo de ID da reserva corretamente
       if (reserva.id) {
-          document.querySelector("#idReserva").value = reserva.id;
+          document.getElementById("idReserva").value = reservaId;
       }
     
       // Rolar para o formulário de reserva se necessário
