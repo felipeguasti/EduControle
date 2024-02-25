@@ -350,10 +350,9 @@ function carregarDetalhesReserva(reservaId) {
       const idReservaElement = document.getElementById("idReserva");
       if (idReservaElement !== null) {
           idReservaElement.value = reservaId;
+          console.log(idReservaElement.value);
       } else {
           console.error("Elemento 'idReserva' não encontrado.");
-          console.log(idReservaElement.value);
-
       }
 
       // Rolar para o formulário de reserva se necessário
