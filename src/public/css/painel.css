@@ -249,6 +249,14 @@ section {
     position: relative;
 }
 
+table tr td:nth-child(1) {
+    display: none;
+}
+
+table tr td:nth-child(7) {
+    display: none;
+}
+
 #calendarioSemanal table {
     border-collapse: separate;
     border-spacing: 6px 6px; /* Espaço entre linhas */

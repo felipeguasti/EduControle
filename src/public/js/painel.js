@@ -176,7 +176,7 @@ function criarCabecalhoCalendario() {
 }
 
 function formatarDataParaCabecalho(data) {
-    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const diasDaSemana = [ 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
     const diaDaSemana = diasDaSemana[data.getDay()];
     const diaDoMes = data.getDate();
     return `${diaDaSemana} (${diaDoMes})`;

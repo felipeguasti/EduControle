@@ -170,7 +170,7 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
             }
         });
         let resultadoSemanal = {};
-        for (let dia = 0; dia < 7; dia++) {
+        for (let dia = 1; dia < 7; dia++) {
             const dataAtual = new Date(dataInicio);
             dataAtual.setDate(dataInicio.getDate() + dia);
             const dataFormatada = dataAtual.toISOString().split('T')[0];
@@ -193,7 +193,7 @@ exports.buscarReservasPorSemanaPainel = async (req, res) => {
                 };
             });
         }
-        console.log('Data de Início Recebida:', req.query.dataInicio);
+        console.log('Reservas da :', resultadoSemanal);
         res.json(resultadoSemanal);
     } catch (error) {
         res.status(500).json({ message: error.message });
