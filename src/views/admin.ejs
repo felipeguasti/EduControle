@@ -32,8 +32,8 @@
                       <h3><%= anuncio.tituloAnuncio %></h3>
                       <p><%= anuncio.conteudoAnuncio %></p>
                       <% console.log("ID do anúncio:", anuncio._id); %> <!-- Adicionar este console.log para verificar o ID do anúncio -->
-                      <button class="btn-editar" data-id="<%= anuncio._id %>">Editar</button>
-                      <button class="btn-excluir" data-id="<%= anuncio._id %>">Excluir</button>
+                      <button class="btn-editar" data-id="<%= anuncio.id %>">Editar</button>
+                      <button class="btn-excluir" data-id="<%= anuncio.id %>">Excluir</button>
                   </div>
               <% }); %>
           <% } else { %>
