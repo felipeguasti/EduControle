@@ -32,30 +32,7 @@ const ReservaController = {
         }
     },
 
-async atualizarReserva(req, res) {
-    console.log("Atualizando reserva com ID:", req);
-
-    try {
-        console.log("Atualizando reserva com ID:", req.params.id);
-        console.log("Dados recebidos para atualização:", req.body);
-
-        const reserva = await Reserva.findByPk(req.params.id);
-        if (!reserva) {
-            console.log("Reserva não encontrada para o ID:", req.params.id);
-            return res.status(404).json({ message: 'Reserva não encontrada' });
-        }
-
-        await reserva.update(req.body);
-        console.log("Reserva atualizada:", reserva);
-
-        res.json(reserva);
-    } catch (error) {
-        console.log("Erro ao atualizar reserva:", error);
-        res.status(500).json({ message: error.message });
-    }
-},
-
-    async deletarReserva(req, res) {
+     async deletarReserva(req, res) {
         try {
             const reserva = await Reserva.findByPk(req.params.id);
             if (!reserva) {
@@ -68,5 +45,18 @@ async atualizarReserva(req, res) {
         }
     }
 };
+
+async function getReservaById(req, res, next) {
+    try {
+        const reserva = await Reserva.findByPk(req.params.id);
+        if (!reserva) {
+            return res.status(404).json({ message: 'Reserva não encontrada' });
+        }
+        req.reserva = reserva; // Armazenando a reserva no objeto req
+        next(); // Passando para o próximo middleware
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = ReservaController;

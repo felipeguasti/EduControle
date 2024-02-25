@@ -72,15 +72,13 @@ const getReservaById = async (req, res, next) => {
 
 // PUT request to update reserva by ID
 router.put('/:id', getReservaById, async (req, res) => {
-  // Atualização parcial
-  Object.assign(res.reserva, req.body);
-  try {
-      console.log('Erro no back');
-      const updatedReserva = await res.reserva.save();
-      res.json(updatedReserva);
-  } catch (error) {
-      res.status(400).json({ message: `Erro ao atualizar reserva: ${error.message}` });
-  }
+    try {
+        // Usando req.reserva que foi definido no middleware
+        const updatedReserva = await req.reserva.update(req.body);
+        res.json(updatedReserva);
+    } catch (error) {
+        res.status(400).json({ message: `Erro ao atualizar reserva: ${error.message}` });
+    }
 });
 
 // DELETE request to delete reserva by ID
