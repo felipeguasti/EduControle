@@ -154,7 +154,7 @@ function obterDiasDaSemanaAtual() {
     let datas = [];
     let diaAtual = new Date(dataInicioSemana);
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 1; i < 6; i++) {
         datas.push(new Date(diaAtual));
         diaAtual.setDate(diaAtual.getDate() + 1);
     }
