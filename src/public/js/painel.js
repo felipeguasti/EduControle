@@ -84,12 +84,13 @@ function atualizarCalendarioParaRecurso(recurso) {
 
                     if (reserva) {
                         celulaHorario.classList.add(reserva.disponivel ? 'disponivel' : 'indisponivel');
-                        celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br>`;
 
-                        // Verificar se há professores e se a informação de turmas está disponível
-                        if (reserva.professores && reserva.professores.length > 0 && reserva.turmas) {
-                            const professoresFormatados = reserva.professores.map((prof, index) => `${prof} (${reserva.turmas[index]})`).join(', ');
-                            celulaHorario.innerHTML += `<br>Professores:<br>${professoresFormatados}`;
+                        // Verificar se há reservas e se há professores e turmas associados
+                        if (reserva.reservas && reserva.reservas.length > 0) {
+                            const reservasFormatadas = reserva.reservas.map(reserva => `${reserva.professor} (${reserva.turma})`).join(', ');
+                        celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br>Professor${reserva.professores && reserva.professores.length > 1 ? 'es' : ''}:<br>${reservasFormatadas}`;
+                        } else {
+                            celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}`;
                         }
                     }
 
@@ -97,6 +98,7 @@ function atualizarCalendarioParaRecurso(recurso) {
                 });
 
                 corpoCalendario.appendChild(linhaHorario);
+
                 // Adicionar linha vazia para separar informações de professor e turma
                 const linhaVazia = document.createElement('tr');
                 const celulaVazia = document.createElement('td');
