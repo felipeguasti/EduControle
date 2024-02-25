@@ -48,18 +48,18 @@ exports.atualizarAnuncio = async (req, res) => {
     try {
         const { id } = req.params;
         const anuncioAtualizado = await Anuncio.update(req.body, {
-            where: { id: id },
-            returning: true
+            where: { id: id }
         });
         if (!anuncioAtualizado[0]) {
             return res.status(404).send('Anúncio não encontrado');
         }
 
-        res.json(anuncioAtualizado[1][0]);
+        res.json(anuncioAtualizado); // Aqui, apenas retornamos o resultado da atualização
     } catch (error) {
         res.status(500).send('Erro ao atualizar o anúncio: ' + error.message);
     }
 };
+
 
 exports.deletarAnuncio = async (req, res) => {
     try {
