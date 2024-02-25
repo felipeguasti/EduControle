@@ -213,35 +213,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Event listeners and initializations
   const formReserva = document.getElementById("formReserva");
-  formReserva.addEventListener("submit", function (event) {
-    event.preventDefault();
-    if (!validarFormulario()) return;
+formReserva.addEventListener("submit", function(event) {
+  event.preventDefault();
 
-    exibirCarregamento(true);
-    const formData = new FormData(formReserva);
-    const dadosFormulario = {};
-    formData.forEach((value, key) => {
-      // Converta a data para o formato aaaa-mm-dd
-      if (key === "data") {
-        // Substitua "data" pelo nome do seu campo de data no formulário
-        const dataObj = new Date(value);
-        const dataFormatada = dataObj.toISOString().split("T")[0];
-        dadosFormulario[key] = dataFormatada;
-      } else {
-        dadosFormulario[key] = value;
-      }
-    });
+  if (!validarFormulario()) return;
 
-    console.log(dadosFormulario);
-    let url = "/api/reservas";
-    let method = "POST";
+  exibirCarregamento(true);
+  const formData = new FormData(formReserva);
+  const dadosFormulario = {};
+  formData.forEach((value, key) => {
+    dadosFormulario[key] = value;
+  });
 
-    // Verifica se estamos editando uma reserva existente
-    if (document.getElementById("idReserva").value) {
-      url = `/api/reservas/${document.getElementById("idReserva").value}`;
-      method = "PUT";
-    }
-
+  let url = "/api/reservas";
+  let method = "POST";
+  
+  // Verifica se estamos editando uma reserva existente
+  if (dadosFormulario.idReserva) {
+    url = `/api/reservas/${dadosFormulario.idReserva}`;
+    method = "PUT";
+  }
 
     fetch(url, {
       method: method,
@@ -347,12 +338,19 @@ function carregarDetalhesReserva(reservaId) {
         document.getElementById("turma").value = reserva.turma;
       }
       // Ajuste para acessar o campo de ID da reserva corretamente
+      // Atribuir o ID da reserva ao campo oculto
       const idReservaElement = document.getElementById("idReserva");
-      if (idReservaElement !== null) {
-          idReservaElement.value = reservaId;
-          console.log(idReservaElement.value);
+      if (idReservaElement) {
+        idReservaElement.value = reservaId;
       } else {
-          console.error("Elemento 'idReserva' não encontrado.");
+        console.error("Elemento 'idReserva' não encontrado.");
+        // Criar o campo oculto se não existir
+        const hiddenIdField = document.createElement("input");
+        hiddenIdField.setAttribute("type", "hidden");
+        hiddenIdField.setAttribute("id", "idReserva");
+        hiddenIdField.setAttribute("name", "idReserva");
+        hiddenIdField.value = reservaId;
+        document.getElementById("formReserva").appendChild(hiddenIdField);
       }
 
       // Rolar para o formulário de reserva se necessário
@@ -364,6 +362,7 @@ function carregarDetalhesReserva(reservaId) {
       console.error("Erro ao buscar dados da reserva:", error)
     );
 }
+
 
   function abrirPopupSelecao(idsReservas, professores, modo) {
     let listaProfessores = "";
