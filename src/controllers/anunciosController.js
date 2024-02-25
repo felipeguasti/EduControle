@@ -51,7 +51,6 @@ exports.atualizarAnuncio = async (req, res) => {
             where: { id: id },
             returning: true
         });
-
         if (!anuncioAtualizado[0]) {
             return res.status(404).send('Anúncio não encontrado');
         }
