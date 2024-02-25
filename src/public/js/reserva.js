@@ -233,16 +233,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     console.log(dadosFormulario);
-    let url = "/api/reservas";
-    let method = "POST";
+  let url = "/api/reservas";
+  let method = "POST";
 
-    // Verifica se está editando uma reserva existente
-    // Verifica se está editando uma reserva existente
-    if (dadosFormulario.idReserva) {
-      url = `/api/reservas/${dadosFormulario.idReserva}`;
-      method = "PUT";
-      
-    }
+  // Verifica se está editando uma reserva existente
+  if (dadosFormulario.id !== undefined) {
+    url = `/api/reservas/${dadosFormulario.id}`;
+    method = "PUT";      
+  }
+
 
     fetch(url, {
       method: method,
@@ -322,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`/api/reservas/${reservaId}`)
       .then((response) => response.json())
       .then((reserva) => {
-      
+        
         // Verifica e preenche cada campo do formulário se o dado estiver disponível
         if (reserva.data) {
           const formattedDate = new Date(reserva.data)
