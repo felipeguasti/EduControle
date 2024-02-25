@@ -26,20 +26,21 @@
     <section>
         <h2>Anúncios Publicados</h2>
         <div id="listaAnuncios">
-            <% if (anuncios && anuncios.length > 0) { %>
-                <% anuncios.forEach(anuncio => { %>
-                    <div class="anuncio-container">
-                        <h3><%= anuncio.tituloAnuncio %></h3>
-                        <p><%= anuncio.conteudoAnuncio %></p>
-                        <button class="btn-editar" data-id="<%= anuncio._id %>">Editar</button>
-                        <button class="btn-excluir" data-id="<%= anuncio._id %>">Excluir</button>
+          <% if (anuncios && anuncios.length > 0) { %>
+              <% anuncios.forEach(anuncio => { %>
+                  <div class="anuncio-container">
+                      <h3><%= anuncio.tituloAnuncio %></h3>
+                      <p><%= anuncio.conteudoAnuncio %></p>
+                      <% console.log("ID do anúncio:", anuncio._id); %> <!-- Adicionar este console.log para verificar o ID do anúncio -->
+                      <button class="btn-editar" data-id="<%= anuncio._id %>">Editar</button>
+                      <button class="btn-excluir" data-id="<%= anuncio._id %>">Excluir</button>
+                  </div>
+              <% }); %>
+          <% } else { %>
+              <p>Nenhum anúncio encontrado.</p>
+          <% } %>
+      </div>
 
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <p>Nenhum anúncio encontrado.</p>
-            <% } %>
-        </div>
     </section>
     <footer>
         <div class="container-footer">
