@@ -1,6 +1,6 @@
 // Variável global para manter o rastreamento do recurso atualmente selecionado
 let recursoAtual = 'Tablets';
-let dataInicioSemana = obterDataInicioSemanaAtual();
+let dataInicioSemana = new Date();
 
 document.addEventListener('DOMContentLoaded', function() {  
     atualizarCalendarioParaRecurso(recursoAtual);
@@ -58,13 +58,14 @@ function carregarAnunciosRecentes() {
     .catch(error => console.error('Erro ao carregar anúncios:', error));
 }
 
-function atualizarCalendarioParaRecurso(recurso, dataInicioSemana) {
+function atualizarCalendarioParaRecurso(recurso) {
+    const data = obterDataInicioSemanaAtual();
     const turno = obterTurnoAtual();
 
     // Atualiza o cabeçalho do calendário com os dias da semana
-    criarCabecalhoCalendario(dataInicioSemana);
+    criarCabecalhoCalendario();
 
-    fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${dataInicioSemana}`)
+    fetch(`/api/disponibilidade/${recurso}/painel?turno=${turno}&dataInicio=${data}`)
         .then(response => response.json())
         .then(reservasPorDia => {
             const corpoCalendario = document.getElementById('corpoCalendario');
@@ -98,7 +99,7 @@ function atualizarCalendarioParaRecurso(recurso, dataInicioSemana) {
             });
         })
         .catch(error => console.error('Erro ao buscar reservas:', error));
-}
+}    
 
 function obterTurnoAtual() {
     // Criar um objeto de data/hora atual
@@ -124,14 +125,15 @@ function obterTurnoAtual() {
 document.getElementById('btnSemanaAnterior').addEventListener('click', function() {
     // Subtrair 7 dias da dataInicioSemana
     dataInicioSemana.setDate(dataInicioSemana.getDate() - 7);
-    atualizarCalendarioParaRecurso(recursoAtual, dataInicioSemana);
+    atualizarCalendarioParaRecurso(recursoAtual);
 });
 
 document.getElementById('btnProximaSemana').addEventListener('click', function() {
     // Adicionar 7 dias à dataInicioSemana
     dataInicioSemana.setDate(dataInicioSemana.getDate() + 7);
-    atualizarCalendarioParaRecurso(recursoAtual, dataInicioSemana);
+    atualizarCalendarioParaRecurso(recursoAtual);
 });
+
 
 // Usar a função para definir o turno
 var turno = obterTurnoAtual();
@@ -139,14 +141,15 @@ var turno = obterTurnoAtual();
 function obterDataInicioSemanaAtual() {
     const hoje = new Date();
     const diaDaSemana = hoje.getDay(); // Domingo é 0, Segunda é 1, e assim por diante
-    const diferencaDias = diaDaSemana === 0 ? 0 : -diaDaSemana; // Se for domingo, não precisa subtrair nada, caso contrário subtrai o número de dias até domingo
+    const diferencaDias = diaDaSemana === 0 ? 0 - 6 : 0 - (diaDaSemana - 1); // Se for domingo, considere 6 dias para trás, caso contrário diaDaSemana - 1
     hoje.setDate(hoje.getDate() + diferencaDias); // Ajusta a data para o domingo da semana atual
     hoje.setHours(0, 0, 0, 0); // Zera a hora, minuto, segundo e milissegundo
 
     return hoje;
 }
 
-function obterDiasDaSemana(dataInicioSemana) {
+
+function obterDiasDaSemanaAtual() {
     let datas = [];
     let diaAtual = new Date(dataInicioSemana); // Utiliza a data de início da semana
 
@@ -159,8 +162,8 @@ function obterDiasDaSemana(dataInicioSemana) {
     return datas;
 }
 
-function criarCabecalhoCalendario(dataInicioSemana) {
-    const diasDaSemana = obterDiasDaSemana(dataInicioSemana);
+function criarCabecalhoCalendario() {
+    const diasDaSemana = obterDiasDaSemanaAtual();
     const cabecalhoCalendario = document.getElementById('cabecalhoCalendario');
     cabecalhoCalendario.innerHTML = ''; // Limpa o cabeçalho atual
 
@@ -177,6 +180,7 @@ function formatarDataParaCabecalho(data) {
     const diaDoMes = data.getDate();
     return `${diaDaSemana} (${diaDoMes})`;
 }
+
 
 function obterHorarios() {
     return ['7:00', '7:50', '8:40', '9:50', '10:40', '11:30', '13:00', '13:50', '14:40', '15:30', '16:40', '17:30'];
