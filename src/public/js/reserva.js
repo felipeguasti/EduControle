@@ -323,13 +323,12 @@ function carregarDetalhesReserva(reservaId) {
     .then((response) => response.json())
     .then((reserva) => {
       console.log("Reserva recebida:", reserva);
-
       // Ajuste para acessar o campo de ID da reserva corretamente
-      const campoIdReserva = document.getElementById("idReserva");
+      const campoIdReserva = document.getElementById("idReserva").value;
       console.log("Campo de ID da reserva:", campoIdReserva);
 
       if (campoIdReserva) {
-        campoIdReserva.value = reserva.id;
+        campoIdReserva = reserva.id;
       } else {
         console.error("Erro: Campo de ID da reserva não encontrado");
       }
