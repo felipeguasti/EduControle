@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dadosFormulario[key] = value;
       }
     });
-
+    console.log(dadosFormulario);
     let url = "/api/reservas";
     let method = "POST";
 

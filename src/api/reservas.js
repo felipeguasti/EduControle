@@ -15,6 +15,7 @@ router.post('/',
   ], 
   async (req, res) => {
     const errors = validationResult(req);
+    console.log('Erro no front');
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -74,7 +75,7 @@ router.put('/:id', getReservaById, async (req, res) => {
   // Atualização parcial
   Object.assign(res.reserva, req.body);
   try {
-      console.log(res.reserva);
+      console.log('Erro no back');
       const updatedReserva = await res.reserva.save();
       res.json(updatedReserva);
   } catch (error) {
