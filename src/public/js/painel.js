@@ -87,9 +87,9 @@ function atualizarCalendarioParaRecurso(recurso) {
                         celulaHorario.innerHTML = `<strong>${horario}</strong>: ${reserva.disponivel ? 'Disponível' : 'Indisponível'}<br>`;
 
                         // Verificar se há professores e se a informação de turmas está disponível
-                        if (reserva.professor && reserva.professor.length > 0 && reserva.turma) {
-                            const professoresFormatados = reserva.professor.map((prof, index) => `${prof} (${reserva.turmas[index]})`).join(', ');
-                            celulaHorario.innerHTML += `Professores:<br>${professoresFormatados}`;
+                        if (reserva.professores && reserva.professores.length > 0 && reserva.turmas) {
+                            const professoresFormatados = reserva.professores.map((prof, index) => `${prof} (${reserva.turmas[index]})`).join(', ');
+                            celulaHorario.innerHTML += `<br>Professores:<br>${professoresFormatados}`;
                         }
                     }
 
@@ -97,10 +97,18 @@ function atualizarCalendarioParaRecurso(recurso) {
                 });
 
                 corpoCalendario.appendChild(linhaHorario);
+              console.log(linhaHorario);
+
+                // Adicionar linha vazia para separar informações de professor e turma
+                const linhaVazia = document.createElement('tr');
+                const celulaVazia = document.createElement('td');
+                linhaVazia.appendChild(celulaVazia);
+                corpoCalendario.appendChild(linhaVazia);
             });
         })
         .catch(error => console.error('Erro ao buscar reservas:', error));
-}    
+}  
+
 
 function obterTurnoAtual() {
     // Criar um objeto de data/hora atual
