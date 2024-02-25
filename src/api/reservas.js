@@ -73,6 +73,7 @@ router.put('/:id', getReservaById, async (req, res) => {
   // Atualização parcial
   Object.assign(res.reserva, req.body);
   try {
+      console.log(res.reserva);
       const updatedReserva = await res.reserva.save();
       res.json(updatedReserva);
   } catch (error) {
@@ -83,7 +84,6 @@ router.put('/:id', getReservaById, async (req, res) => {
 // DELETE request to delete reserva by ID
 router.delete('/:id', getReservaById, async (req, res) => {
   try {
-    console.log(req.reserva); // Verificar se req.reserva está configurado corretamente
     await req.reserva.destroy(); // Excluir a reserva
     res.json({ message: 'Reserva excluída com sucesso' });
   } catch (error) {
