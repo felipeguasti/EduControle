@@ -347,10 +347,15 @@ function carregarDetalhesReserva(reservaId) {
         document.getElementById("turma").value = reserva.turma;
       }
       // Ajuste para acessar o campo de ID da reserva corretamente
-      if (reserva.id) {
-          document.getElementById("idReserva").value = reservaId;
+      const idReservaElement = document.getElementById("idReserva");
+      if (idReservaElement !== null) {
+          idReservaElement.value = reservaId;
+      } else {
+          console.error("Elemento 'idReserva' não encontrado.");
+          console.log(idReservaElement.value);
+
       }
-    
+
       // Rolar para o formulário de reserva se necessário
       document.getElementById("formReserva").scrollIntoView();
       atualizarQuantidadeRecurso();
@@ -360,10 +365,6 @@ function carregarDetalhesReserva(reservaId) {
       console.error("Erro ao buscar dados da reserva:", error)
     );
 }
-
-
-
-
 
   function abrirPopupSelecao(idsReservas, professores, modo) {
     let listaProfessores = "";
