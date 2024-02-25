@@ -323,12 +323,6 @@ function carregarDetalhesReserva(reservaId) {
     .then((response) => response.json())
     .then((reserva) => {
 
-      // Ajuste para acessar o campo de ID da reserva corretamente
-      const campoIdReserva = document.getElementsByName("idReserva");
-      campoIdReserva.value = reservaId;
-      console.log("Id", campoIdReserva);
-
-
       // Verifica e preenche cada campo do formulário se o dado estiver disponível
       if (reserva.data) {
         const formattedDate = new Date(reserva.data)
@@ -352,6 +346,12 @@ function carregarDetalhesReserva(reservaId) {
       if (reserva.turma) {
         document.getElementById("turma").value = reserva.turma;
       }
+      }
+      // Ajuste para acessar o campo de ID da reserva corretamente
+      if (reserva.id) {
+          document.querySelector("#idReserva").value = reserva.id;
+      }
+    
       // Rolar para o formulário de reserva se necessário
       document.getElementById("formReserva").scrollIntoView();
       atualizarQuantidadeRecurso();
