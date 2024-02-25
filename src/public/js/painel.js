@@ -164,7 +164,7 @@ function obterDiasDaSemanaAtual() {
     let datas = [];
     let diaAtual = new Date(dataInicioSemana);
 
-    for (let i = 1; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
         datas.push(new Date(diaAtual));
         diaAtual.setDate(diaAtual.getDate() + 1);
     }
@@ -186,7 +186,7 @@ function criarCabecalhoCalendario() {
 }
 
 function formatarDataParaCabecalho(data) {
-    const diasDaSemana = [ 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
     const diaDaSemana = diasDaSemana[data.getDay()];
     const diaDoMes = data.getDate();
     return `${diaDaSemana} (${diaDoMes})`;

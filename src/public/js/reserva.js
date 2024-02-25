@@ -244,8 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         exibirCarregamento(false);
-        console.log(data);
-        if (data.reservaSalva && data.reservaSalva.id !== undefined) {
+        if (data && data.id !== undefined) {
           alert(
             method === "POST"
               ? "Reserva realizada com sucesso!"
