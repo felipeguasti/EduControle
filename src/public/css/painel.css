@@ -249,13 +249,13 @@ section {
     position: relative;
 }
 
-/*table tr td:nth-child(1) {
+table tr td:nth-child(1) {
     display: none;
 }
 
 table tr td:nth-child(7) {
     display: none;
-}*/
+}
 
 #calendarioSemanal table {
     border-collapse: separate;
