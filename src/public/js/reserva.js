@@ -231,11 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dadosFormulario[key] = value;
       }
     });
-    // Adicionar o ID da reserva se estiver presente no formulário
-    const idReserva = document.getElementById("idReserva").value;
-    if (idReserva) {
-      dadosFormulario.idReserva = idReserva;
-    }
+
     console.log(dadosFormulario);
     let url = "/api/reservas";
     let method = "POST";
@@ -278,14 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Erro ao realizar a reserva.");
       });
   });
-  // Supondo que você tenha uma função para carregar os detalhes da reserva selecionada
-function carregarDetalhesReserva(idReserva) {
-    // Aqui você carrega os detalhes da reserva com o ID fornecido
-    // e preenche o formulário, incluindo o campo oculto idReserva
-    document.getElementById('idReserva').value = idReserva;
-    // Outras ações para preencher o formulário com os detalhes da reserva
-}
-
+  
   function atualizarHorariosDisponiveis() {
     document.getElementById("horariosDisponiveis").value = "";
     document.getElementById("observacoes").value = "";
@@ -333,6 +322,7 @@ function carregarDetalhesReserva(idReserva) {
     fetch(`/api/reservas/${reservaId}`)
       .then((response) => response.json())
       .then((reserva) => {
+      
         // Verifica e preenche cada campo do formulário se o dado estiver disponível
         if (reserva.data) {
           const formattedDate = new Date(reserva.data)

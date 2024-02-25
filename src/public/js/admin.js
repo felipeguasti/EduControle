@@ -36,6 +36,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return true;
     }
+    // Supondo que você tenha uma função para carregar os detalhes da reserva selecionada
+function carregarDetalhesReserva(idReserva) {
+    // Aqui você carrega os detalhes da reserva com o ID fornecido
+    // e preenche o formulário, incluindo o campo oculto idReserva
+    document.getElementById('idReserva').value = idReserva;
+    // Outras ações para preencher o formulário com os detalhes da reserva
+}
+
 
     function enviarFormulario() {
         const dadosFormulario = {
@@ -81,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     function editarAnuncio(id) {
-        console.log("ID do anúncio recebido:", id); // Verificar se o ID está sendo recebido corretamente
+
         fetch(`/admin/anuncios/${id}`)
         .then(response => response.json())
         .then(anuncio => {
