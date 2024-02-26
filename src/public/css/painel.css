@@ -3,10 +3,9 @@
 }
 
 html, body {
-    heigh: 100%;
+    height: 100%;
     margin: 0;
     padding: 0;
-    padding-botton: 50px;
 }
 
 body {
@@ -14,6 +13,7 @@ body {
     font-size: 12px;
     margin: 0;
     padding: 0;
+    padding-bottom: 20px;
     background-image: url('/images/background.webp');
     background-attachment: fixed;
     background-size: cover;
@@ -233,7 +233,8 @@ section {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-height: 90%; /* Defina a altura máxima desejada para o calendário */
+    max-height: 90%;
+    overflow-
 }
 
 #calendarioSemanal {
