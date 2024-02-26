@@ -233,11 +233,10 @@ section {
     align-items: center;
     justify-content: space-between;
     max-height: 90%; /* Defina a altura máxima desejada para o calendário */
-    overflow-y: auto;
 }
 
 #calendarioSemanal {
-    width: 100%;
+    width: 95%;
     border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
     border-spacing: 0; /* Remove cell spacing to maintain the table layout */
     background-color: white;
@@ -249,6 +248,10 @@ section {
     overflow: hidden; /* Ensures the content respects the border radius */
     outline: 0;
     position: relative;
+    overflow-y: auto;
+    overflow-x: auto;
+
+
 }
 
 table tr td:nth-child(1) {
@@ -369,5 +372,9 @@ table tr td:nth-child(7) {
         width: 25px; /* Ou o tamanho que preferir */
         height: auto;
         margin: 5px;
+    }
+    #calendarioSemanal {
+        overflow-x: auto;
+        overflow-y: auto;
     }
 }
