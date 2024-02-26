@@ -369,6 +369,11 @@ table tr td:nth-child(7) {
   transform: translateY(-50%); /* Ajuste fino para centralização vertical */
 }
 
+.disponivel {
+  color: #96cf59;
+  font-weight: bold;
+}
+
 @media screen and (max-width: 768px) {
   html,
   body {
