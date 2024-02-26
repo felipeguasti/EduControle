@@ -241,23 +241,27 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: JSON.stringify(dadosFormulario),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         exibirCarregamento(false);
 
-        // Sucesso na operação POST
-        if (method === "POST" && data && data.id !== undefined) {
+        if (
+          method === "POST" &&
+          data.reservaSalva &&
+          data.reservaSalva.id !== undefined
+        ) {
           alert("Reserva realizada com sucesso!");
           atualizarHorariosDisponiveis();
-        }
-        // Sucesso na operação PUT
-        else if (method === "PUT" && data) {
-          // Aqui você pode adicionar mais condições conforme a lógica de sua API
+        } else if (method === "PUT" && data && data.id !== undefined) {
           alert("Reserva atualizada com sucesso!");
           atualizarHorariosDisponiveis();
-        }
-        // Tratamento de erros
-        else {
+        } else {
+          // Tratamento de erro
           alert(
             "Erro ao realizar a reserva: " +
               (data.message || "Erro desconhecido")
@@ -266,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         exibirCarregamento(false);
-        console.error("Falha na requisição:", error);
+        console.error("Erro durante a requisição fetch:", error);
         alert("Erro ao realizar a reserva.");
       });
   });
