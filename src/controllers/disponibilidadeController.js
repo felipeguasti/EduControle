@@ -8,11 +8,13 @@ const horariosPorTurno = {
 };
 
 const quantidades = {
-    'Tablets': 2,
-    'Chromebooks': 4,
+    'Tablets': 1,
+    'Chromebooks': 3,
     'QuadroInterativo': 1,
     'SalaRecursos': 1,
-    'Biblioteca': 1
+    'Biblioteca': 1,
+    'Xbox': 2,
+    'Switch': 2
 };
 
 // Supondo que este arquivo seja 'controladores/recursoControlador.js'
