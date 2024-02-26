@@ -79,7 +79,7 @@ header h3 {
 }
 
 #calendar-title {
-  font-size: 48px; /* Adjust the size as needed */
+  font-size: 36px; /* Adjust the size as needed */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   font-style: italic; /* Makes the text italic */
   font-family: "Dancing Script", cursive;
@@ -367,6 +367,11 @@ table tr td:nth-child(7) {
   top: 50%; /* Centraliza verticalmente */
   right: 29%; /* Ajuste este valor conforme necessário */
   transform: translateY(-50%); /* Ajuste fino para centralização vertical */
+}
+
+.disponivel {
+  color: #96cf59;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 768px) {
