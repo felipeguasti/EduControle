@@ -399,7 +399,7 @@ table tr td:nth-child(7) {
     height: auto;
     margin: 5px;
   }
-  #calendariaSemanal {
+  #calendarioSemanal {
     overflow-x: auto;
   }
 }
