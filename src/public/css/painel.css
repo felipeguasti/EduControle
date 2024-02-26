@@ -3,9 +3,10 @@
 }
 
 html, body {
-    height: 100%;
+    heigh: 100%;
     margin: 0;
     padding: 0;
+    padding-botton: 50px;
 }
 
 body {
