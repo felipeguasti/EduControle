@@ -1,7 +1,7 @@
 {
-    "name": "equipreserve",
-    "version": "1.0.0",
-    "description": "Sistema de Reserva de Equipamentos e Espaços para EEEEFM Coronel Olímpio Cunha",
+    "name": "educontrole",
+    "version": "2.0.0",
+    "description": "Sistema de gerenciamento de atividades pedagógicas",
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
