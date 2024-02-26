@@ -575,5 +575,8 @@ table tr td:nth-child(6) {
         height: auto;
         margin: 5px;
     }
+    #calendarioSemanal {
+    overflow-x: auto;
+    }
 }
 

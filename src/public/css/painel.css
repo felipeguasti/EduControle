@@ -249,7 +249,7 @@ section {
     position: relative;
 }
 
-table tr td:nth-child(1) {
+/*table tr td:nth-child(1) {
     display: none;
 }
 

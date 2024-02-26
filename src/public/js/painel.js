@@ -186,10 +186,16 @@ function criarCabecalhoCalendario() {
 }
 
 function formatarDataParaCabecalho(data) {
-    const diasDaSemana = [ 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
-    const diaDaSemana = diasDaSemana[data.getDay()];
+    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const diaDaSemana = data.getDay(); // Obtém o índice do dia da semana (0 para domingo, 1 para segunda, etc.)
+    
+    // Verifica se o dia da semana é sábado (6) ou domingo (0)
+    if (diaDaSemana === 0 || diaDaSemana === 6) {
+        return ''; // Retorna uma string vazia para omitir sábado e domingo do cabeçalho
+    }
+
     const diaDoMes = data.getDate();
-    return `${diaDaSemana} (${diaDoMes})`;
+    return `${diasDaSemana[diaDaSemana - 1]} (${diaDoMes})`; // Retorna o dia da semana e o número do dia do mês
 }
 
 
