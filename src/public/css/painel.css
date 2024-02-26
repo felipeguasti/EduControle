@@ -232,6 +232,8 @@ section {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-height: 90%; /* Defina a altura máxima desejada para o calendário */
+    overflow-y: auto;
 }
 
 #calendarioSemanal {
@@ -249,7 +251,7 @@ section {
     position: relative;
 }
 
-/*table tr td:nth-child(1) {
+table tr td:nth-child(1) {
     display: none;
 }
 
