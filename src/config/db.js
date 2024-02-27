@@ -8,9 +8,9 @@ const Sequelize = require('sequelize');
 // const dialect = "mysql";
 
 // Credenciais do banco de dados local (para a área de testes)
-const database = "nome_do_banco_de_dados_local";
-const username = "nome_do_usuario_local";
-const password = "senha_do_usuario_local";
+const database = "u612973268_broadcast";
+const username = "u612973268_broadcast";
+const password = "E1=iTrLXsvk";
 const host = "localhost"; // O MySQL está rodando localmente, então o host é localhost
 const dialect = "mysql";
 

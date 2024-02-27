@@ -13,7 +13,7 @@ const db = require('./src/config/db');
 
 const app = express();
 
-process.env.TZ = 'America/Sao_Paulo';
+process.env.TZ = 'America/Sao_Paulo'; // Definindo o fuso horário para São Paulo
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

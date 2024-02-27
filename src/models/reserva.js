@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db'); // Atualize com o caminho correto para o seu arquivo db.js
+const moment = require('moment');
+
 
 class Reserva extends Model {}
 
@@ -17,7 +19,17 @@ Reserva.init({
     validate: {
       notNull: { msg: 'A data é obrigatória.' },
       isDate: { msg: 'Deve ser uma data válida.' },
-      isAfter: { args: String(new Date()), msg: 'A data da reserva não pode ser no passado.' }
+      isNotPastOrFuture: function(value) {
+        const currentDate = moment();
+        const pastDate = moment(currentDate).subtract(2, 'days'); // Data de ontem
+        const maxDate = moment(currentDate).add(30, 'days'); // Adicionando 30 dias à data atual
+    
+        if (moment(value).isBefore(pastDate)) {
+            throw new Error('A data da reserva não pode ser no passado.');
+        } else if (moment(value).isAfter(maxDate)) {
+            throw new Error('A data da reserva não pode ser mais do que 30 dias no futuro.');
+        }
+      }    
     }
   },
   turno: {

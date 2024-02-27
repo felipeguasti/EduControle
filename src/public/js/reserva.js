@@ -70,30 +70,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const turma = document.getElementById("turma").value;
     const dataReservaDate = new Date(dataReserva);
     const dataAtual = new Date();
+    dataAtual.setDate(dataAtual.getDate() - 1); // Subtrai um dia da data atual
     dataReservaDate.setHours(0, 0, 0, 0);
     dataAtual.setHours(0, 0, 0, 0);
+
+    var dataLimite = new Date();
+    dataLimite.setDate(dataLimite.getDate() + 30); // Adiciona 30 dias à data atual
 
     let mensagemErro = "";
 
     if (dataReservaDate < dataAtual) {
       mensagemErro = "Não é possível selecionar uma data passada.";
-    }
-    if (!recurso) {
+  } else if (dataReservaDate > dataLimite) {
+      mensagemErro = "A reserva não pode ser feita com mais de 30 dias de antecedência.";
+  }
+  if (!recurso) {
       mensagemErro = "Por favor, selecione um recurso para reservar.";
-    }
-    if (!professor) {
+  }
+  if (!professor) {
       mensagemErro = "Por favor, informe o nome do professor.";
-    } else if (!turma) {
+  } else if (!turma) {
       mensagemErro = "Por favor, informe a turma.";
-    }
-
-    if (mensagemErro) {
-      alert(mensagemErro);
-      return false;
-    }
-    return true;
   }
 
+  if (mensagemErro) {
+      alert(mensagemErro);
+      return false;
+  }
+  return true;
+}
   function exibirCarregamento(carregando) {
     const loadingIndicator = document.getElementById("loadingIndicator");
     if (carregando) {
@@ -233,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
       url = `/api/reservas/${dadosFormulario.idReserva}`;
       method = "PUT";
     }
-
+    console.log(dadosFormulario);
     fetch(url, {
       method: method,
       headers: {

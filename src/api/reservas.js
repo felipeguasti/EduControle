@@ -5,29 +5,31 @@ const router = express.Router();
 const Reserva = require('../models/reserva');
 const db = require('../config/db');
 
-
-// POST request to create a new reserva
 router.post('/', 
   [ // Validações
     body('data').isISO8601().withMessage('Data inválida.'),
-     body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
+    body('turno').isIn(['Matutino', 'Vespertino']).withMessage('Turno inválido.'),
     // Adicione mais validações conforme necessário
   ], 
   async (req, res) => {
+    console.log('Dados recebidos do front-end:', req.body); // Adiciona um log para registrar os dados recebidos
+
     const errors = validationResult(req);
-    console.log('Erro no front');
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        const novaReserva = new Reserva(req.body);
-        const reservaSalva = await novaReserva.save();
-        res.status(201).json({ reservaSalva }); // Modified to include success field
+      const novaReserva = new Reserva(req.body);
+      const reservaSalva = await novaReserva.save();
+      console.log('Dados inseridos no banco de dados:', reservaSalva); // Adiciona um log para registrar os dados inseridos no banco de dados
+      res.status(201).json({ reservaSalva }); // Modified to include success field
     } catch (error) {
-        res.status(400).json({ message: `Erro ao criar reserva: ${error.message}` }); // Modified to include success field
+      console.error('Erro ao criar reserva:', error); // Adiciona um log para registrar erros durante a criação da reserva
+      res.status(400).json({ message: `Erro ao criar reserva: ${error.message}` }); // Modified to include success field
     }
 });
+
 
 // GET request to fetch all reservas
 router.get('/', async (req, res) => {
