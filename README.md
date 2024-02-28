@@ -26,8 +26,10 @@ Para iniciar o servidor após a instalação, execute:
 
 1. Inicie o banco de dados MySQL (O comando pode variar dependendo do sistema operacional):
    sudo service mysql start
+
 2. Para rodar o servidor do EduControle:
    npm start
+
 3. Acesse `http://localhost:3000` para utilizar a aplicação.
 
 ## Contribuição
