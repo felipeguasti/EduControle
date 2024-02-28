@@ -21,14 +21,14 @@ Para instalar e configurar o EduControle, siga estas etapas:
 5. Execute o script `syncModels.js` para forçar a gravação das tabelas do banco de dados:
    node syncModels.js
 
-6. Inicie o banco de dados MySQL (O comando pode variar dependendo do sistema operacional):
-   sudo service mysql start
-
-7. Para rodar o servidor do EduControle:
-   npm start
-
 ## Uso
-Para iniciar o servidor após a instalação, execute: npm start Acesse `http://localhost:3000` para utilizar a aplicação.
+Para iniciar o servidor após a instalação, execute: 
+
+1. Inicie o banco de dados MySQL (O comando pode variar dependendo do sistema operacional):
+   sudo service mysql start
+2. Para rodar o servidor do EduControle:
+   npm start
+3. Acesse `http://localhost:3000` para utilizar a aplicação.
 
 ## Contribuição
 Contribuições são bem-vindas! Para contribuir com o projeto, siga estas etapas: 1. Fork o repositório. 2. Crie uma nova branch: git checkout -b minha-nova-feature. 3. Faça suas alterações e commit: git commit -am 'Adiciona alguma feature'. 4. Envie para a branch original: git push origin minha-nova-feature. 5. Crie uma pull request.
