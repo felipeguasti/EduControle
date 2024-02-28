@@ -4,7 +4,28 @@
 EduControle é um sistema de reserva de equipamentos e espaços desenvolvido para a EEEEFM Coronel Olímpio Cunha. Este sistema facilita a reserva de diversos recursos, como tablets, chromebooks, quadros interativos, entre outros, por parte dos usuários.
 
 ## Instalação
-Para instalar e configurar o EduControle, siga estas etapas: git clone https://github.com/felipeguasti/EduControle cd EduControle npm install
+
+Para instalar e configurar o EduControle, siga estas etapas:
+
+1. Clone o repositório:
+   git clone https://github.com/felipeguasti/EduControle
+
+2. Entre no diretório do projeto:
+   cd EduControle
+
+3. Instale as dependências do projeto:
+   npm install
+
+4. Baixe e configure o MySQL em seu sistema, se ainda não estiver instalado.
+
+5. Execute o script `syncModels.js` para forçar a gravação das tabelas do banco de dados:
+   node syncModels.js
+
+6. Inicie o banco de dados MySQL (O comando pode variar dependendo do sistema operacional):
+   sudo service mysql start
+
+7. Para rodar o servidor do EduControle:
+   npm start
 
 ## Uso
 Para iniciar o servidor após a instalação, execute: npm start Acesse `http://localhost:3000` para utilizar a aplicação.
