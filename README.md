@@ -37,14 +37,14 @@ Contribuições são bem-vindas! Para contribuir com o projeto, siga estas etapa
 
 ## Versionamento
 ### Versão 1.0 (já finalizada)
-- Desenvolvimento do sistema de reserva de equipamentos e espaços.
-- Criação de interfaces de usuário para reservas e administração.
-- Configuração da base de dados para gerenciamento de reservas e usuários.
-- Estabelecimento das regras de negócio para reservas e cancelamentos.
+- ✅ Desenvolvimento do sistema de reserva de equipamentos e espaços.
+- ✅ Criação de interfaces de usuário para reservas e administração.
+- ✅ Configuração da base de dados para gerenciamento de reservas e usuários.
+- ✅ Estabelecimento das regras de negócio para reservas e cancelamentos.
 
 ### Versão 2.0 (em andamento)
-- Introdução de um limite de 30 dias para as reservas, garantindo uma maior rotatividade dos equipamentos.
-- Melhoria na navegação das páginas de anúncios, com botões para avançar e voltar, proporcionando uma experiência de usuário mais fluida.
+- ✅ Introdução de um limite de 30 dias para as reservas, garantindo uma maior rotatividade dos equipamentos.
+- ✅ Melhoria na navegação das páginas de anúncios, com botões para avançar e voltar, proporcionando uma experiência de usuário mais fluida.
 - Lançamento do painel do refeitório e da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - Otimização da área administrativa, tornando-a mais intuitiva e eficiente para os gestores.
 - Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.

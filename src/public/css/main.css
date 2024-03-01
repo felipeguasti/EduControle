@@ -538,6 +538,32 @@ table tr td:nth-child(6) {
     cursor: pointer;
 }
 
+#paginacaoAnuncios {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  #paginacaoAnuncios button {
+    background-color: #005f6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #paginacaoAnuncios button:hover {
+    background-color: #003366;
+  }
+  
+  #paginacaoAnuncios button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+
 
 /* Estilos responsivos para dispositivos móveis */
 @media screen and (max-width: 768px) {

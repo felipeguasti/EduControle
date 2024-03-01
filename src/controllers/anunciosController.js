@@ -80,13 +80,38 @@ exports.deletarAnuncio = async (req, res) => {
 
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
+        const pagina = parseInt(req.query.pagina) || 1;
+        const limite = 10;
+        const offset = (pagina - 1) * limite;
+
         const anunciosRecentes = await Anuncio.findAll({
             order: [['dataPublicacao', 'DESC']],
-            limit: 10
+            limit: limite,
+            offset: offset
         });
+
         res.json(anunciosRecentes);
     } catch (error) {
         console.error('Erro ao listar anúncios recentes:', error);
         res.status(500).json({ message: 'Erro ao listar anúncios recentes.' });
     }
 };
+
+
+exports.contarTotalAnuncios = async (req, res) => {
+    try {
+        console.log("Requisição recebida para contar total de anúncios");
+        const anuncios = await Anuncio.findAll();
+        console.log("Anúncios encontrados:", anuncios); // Adicione este log para verificar se a consulta está retornando resultados
+        const total = anuncios.length;
+        console.log("Total de anúncios:", total);
+        res.json({ total });
+    } catch (error) {
+        console.error("Erro ao buscar anúncios:", error);
+        res.status(500).send({ message: "Erro ao buscar anúncios" });
+    }
+};
+
+
+
+

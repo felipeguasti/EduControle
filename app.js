@@ -48,6 +48,12 @@ app.get('/painel', (req, res) => {
     res.render('painel', { recurso });
 });
 
+// Middleware para registrar requisições
+app.use((req, res, next) => {
+    console.log(`${new Date().toLocaleString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 
 // Nova rota para buscar reservas por semana
 app.get('/api/disponibilidade/:recurso/semana', disponibilidadeController.buscarReservasPorSemana);
