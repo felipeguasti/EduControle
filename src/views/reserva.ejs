@@ -58,18 +58,6 @@
                 <div id="listaProfessores"></div>
             </div>
         </div> 
-        <script>
-            function fecharPopupProfessores() {
-                document.getElementById('popupProfessores').style.display = 'none';
-            }
-            // Definir um objeto global para armazenar as funções relacionadas ao popup
-            const PopupUtils = {
-                carregarDetalhesReserva: function(idsReserva) {
-                    // Implemente a lógica para carregar os detalhes da reserva
-                    console.log("Detalhes da reserva carregados para:", idsReserva);
-                }
-            };
-            </script>       
         </div>
         <div id="calendar-title">Reservas da Semana</div>
         <div id="calendarioSemanal">
@@ -129,5 +117,17 @@
         </div>
     </footer>          
     <script src="/js/reserva.js"></script>
+    <script>
+        function fecharPopupProfessores() {
+            document.getElementById('popupProfessores').style.display = 'none';
+        }
+        // Definir um objeto global para armazenar as funções relacionadas ao popup
+        const PopupUtils = {
+            carregarDetalhesReserva: function(idsReserva) {
+                // Implemente a lógica para carregar os detalhes da reserva
+                console.log("Detalhes da reserva carregados para:", idsReserva);
+            }
+        };
+        </script>       
 </body>
 </html>

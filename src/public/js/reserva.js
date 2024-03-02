@@ -321,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector(".close")
     .addEventListener("click", fecharPopupProfessores);
-
+    
   function carregarDetalhesReserva(reservaId) {
     fetch(`/api/reservas/${reservaId}`)
       .then((response) => response.json())
@@ -355,8 +355,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (idReservaElement) {
           idReservaElement.value = reservaId;
         } else {
-          console.error("Elemento 'idReserva' não encontrado.");
-          // Criar o campo oculto se não existir
+          // Se o elemento não existir, crie e adicione ao formulário
           const hiddenIdField = document.createElement("input");
           hiddenIdField.setAttribute("type", "hidden");
           hiddenIdField.setAttribute("id", "idReserva");
@@ -364,15 +363,12 @@ document.addEventListener("DOMContentLoaded", function () {
           hiddenIdField.value = reservaId;
           document.getElementById("formReserva").appendChild(hiddenIdField);
         }
-
         // Rolar para o formulário de reserva se necessário
         document.getElementById("formReserva").scrollIntoView();
         atualizarQuantidadeRecurso();
         buscarHorariosDisponiveis();
       })
-      .catch((error) =>
-        console.error("Erro ao buscar dados da reserva:", error)
-      );
+      .catch((error) => console.error("Erro ao buscar dados da reserva:", error));
   }
 
   function abrirPopupSelecao(idsReservas, professores, modo) {
