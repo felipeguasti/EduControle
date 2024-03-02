@@ -188,10 +188,15 @@ function criarCabecalhoCalendario() {
 function formatarDataParaCabecalho(data) {
     const diasDaSemana = [ 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
     const diaDaSemana = diasDaSemana[data.getDay()];
-    const diaDoMes = data.getDate();
-    return `${diaDaSemana} (${diaDoMes + 1})`;
-}
+    let novaData = new Date(data);
+    novaData.setDate(novaData.getDate() + 1); // Incrementa a data em um dia
 
+    let dia = novaData.getDate();
+    let mes = novaData.getMonth() + 1; // getMonth() retorna um índice baseado em zero
+    let ano = novaData.getFullYear();
+
+    return `${diaDaSemana} (${dia < 10 ? '0' + dia : dia})`;
+}
 
 function obterHorarios() {
     return ['7:00', '7:50', '8:40', '9:50', '10:40', '11:30', '13:00', '13:50', '14:40', '15:30', '16:40', '17:30'];

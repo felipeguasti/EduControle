@@ -238,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function () {
       url = `/api/reservas/${dadosFormulario.idReserva}`;
       method = "PUT";
     }
-    console.log(dadosFormulario);
     fetch(url, {
       method: method,
       headers: {
@@ -324,10 +323,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", fecharPopupProfessores);
 
   function carregarDetalhesReserva(reservaId) {
-    console.log(
-      "Iniciando carregamento dos detalhes da reserva com ID:",
-      reservaId
-    );
     fetch(`/api/reservas/${reservaId}`)
       .then((response) => response.json())
       .then((reserva) => {

@@ -11,18 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Outros ouvintes de eventos conforme necessário
 });
 
-document.addEventListener('DOMContentLoaded', function() {    
-    carregarAnunciosRecentes();
-
-    // Exemplo de ouvinte de evento para um botão
-    document.querySelectorAll('.btnReservar').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const recurso = this.getAttribute('data-recurso');
-            window.location.href = `/reserva?recurso=${recurso}`;
-        });
-    });        
-    // Outros ouvintes de eventos conforme necessário
+document.querySelectorAll('button[data-recurso]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const recurso = this.getAttribute('data-recurso');
+        window.location.href = `/reserva?recurso=${recurso}`;
+    });
 });
+
+
+document.querySelectorAll('button[data-recurso]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const recurso = this.getAttribute('data-recurso');
+        window.location.href = `/reserva?recurso=${recurso}`;
+    });
+});
+        
+    // Outros ouvintes de eventos conforme necessário
 
 let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 10; // Número de anúncios por página
