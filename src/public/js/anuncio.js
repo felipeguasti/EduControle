@@ -10,21 +10,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    const btnsEditar = document.querySelectorAll('.btn-editar');
+    const btnsEditar = document.querySelectorAll('.edit-reserva-icon');
     btnsEditar.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.onclick = function() {
             const id = this.getAttribute('data-id');
             editarAnuncio(id);
-        });
+        };
     });
-
-    const btnsExcluir = document.querySelectorAll('.btn-excluir');
+    
+    const btnsExcluir = document.querySelectorAll('.delete-reserva-icon');
     btnsExcluir.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.onclick = function() {
             const id = this.getAttribute('data-id');
             excluirAnuncio(id);
-        });
+        };
     });
+        
 
     function validarFormulario() {
         const tituloAnuncio = document.getElementById('tituloAnuncio').value;
