@@ -4,44 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Área Administrativa</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
     <header>
         <h1>Área Administrativa - Gestão de Anúncios</h1>
         <h3>EEEFM Coronel Olímpio Cunha</h3>
-        <a href="/" class="btn-voltar">← Voltar</a>
+        <a href="/" class="btn-voltar">← Voltar</a>       
+        <nav>
+            <ul>
+                <li><a class="active" href="#" onclick="limparEstilo(); carregarConteudoAnuncios(); this.classList.add('active'); return false;">Anúncios</a></li>
+                <li><a href="#" onclick="limparEstilo(); carregarConteudoRefeitorio(); this.classList.add('active'); return false;">Refeitório</a></li>
+            <!-- Adicione outros links conforme necessário -->
+            </ul>
+        </nav>
     </header>
-    <section>
-        <form id="formAnuncio" method="post" action="/admin">
-            <label for="tituloAnuncio">Título do Anúncio:</label>
-            <input type="text" id="tituloAnuncio" name="tituloAnuncio" required>
-        
-            <label for="conteudoAnuncio">Conteúdo do Anúncio:</label>
-            <textarea id="conteudoAnuncio" name="conteudoAnuncio" required></textarea>
-        
-            <button type="submit">Adicionar Anúncio</button>
-        </form>        
-    </section>
-    <section>
-        <h2>Anúncios Publicados</h2>
-        <div id="listaAnuncios">
-          <% if (anuncios && anuncios.length > 0) { %>
-              <% anuncios.forEach(anuncio => { %>
-                  <div class="anuncio-container">
-                      <h3><%= anuncio.tituloAnuncio %></h3>
-                      <p><%= anuncio.conteudoAnuncio %></p>
-                      <% console.log("ID do anúncio:", anuncio._id); %> <!-- Adicionar este console.log para verificar o ID do anúncio -->
-                      <button class="btn-editar" data-id="<%= anuncio.id %>">Editar</button>
-                      <button class="btn-excluir" data-id="<%= anuncio.id %>">Excluir</button>
-                  </div>
-              <% }); %>
-          <% } else { %>
-              <p>Nenhum anúncio encontrado.</p>
-          <% } %>
-      </div>
-
-    </section>
+    <div id="adminContentSection"></div>
     <footer>
         <div class="container-footer">
             <div class="footer-content">
@@ -85,18 +63,5 @@
         </div>
     </footer>    
     <script src="/js/admin.js"></script>
-    <script>
-        // Script de validação do formulário
-        document.getElementById('formAnuncio').addEventListener('submit', function(e) {
-            const tituloAnuncio = document.getElementById('tituloAnuncio').value;
-            const conteudoAnuncio = document.getElementById('conteudoAnuncio').value;
-
-                if (!tituloAnuncio || !conteudoAnuncio) {
-                    alert('Por favor, preencha todos os campos.');
-                    e.preventDefault(); // Impede o envio do formulário
-            }
-            // Implementar funções editarAnuncio e excluirAnuncio em admin.js
-        });
-    </script>
 </body>
 </html>

@@ -1,0 +1,109 @@
+<% if (!onlyContent) { %>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Administração do Refeitório</title>
+        <link rel="stylesheet" href="/css/admin.css">
+    </head>
+    <body>
+        <header>
+            <h1>Área Administrativa - Gestão de Anúncios</h1>
+            <h3>Página toda</h3>
+            <a href="/" class="btn-voltar">← Voltar</a>       
+            <nav>
+                <ul>
+                <li><a href="/admin">Anúncios</a></li>
+                <li><a href="/admin/adminRefeitorio" class="active">Refeitório</a></li>
+                <!-- Adicione outros links conforme necessário -->
+                </ul>
+            </nav>
+        </header>
+        <footer>
+            <div class="container-footer">
+                <div class="footer-content">
+                    <div class="footer-section about">
+                        <h3>Sistema de Reserva de Equipamentos e Espaços</h3>
+                        <p>Este sistema é utilizado para a reserva de equipamentos e espaços da escola EEEFM Coronel Olímpio Cunha. Acesse as funcionalidades através dos menus principais.</p>
+                        <button onclick="location.href='/sobre'">Saiba mais</button>
+                    </div>
+                    <div class="footer-section links">
+                        <h3>Links Úteis</h3>
+                        <ul>
+                            <li><a href="/" class="pencil-icon">Página Inicial</a></li>
+                            <li><a href="/reserva?recurso=Tablets" class="pencil-icon">Reserva de Tablets</a></li>
+                            <li><a href="/reserva?recurso=Chromebooks" class="pencil-icon">Reserva de Chromebooks</a></li>
+                            <li><a href="/reserva?recurso=QuadroInterativo" class="pencil-icon">Reserva de Quadro Interativo</a></li>
+                            <li><a href="/reserva?recurso=Biblioteca" class="pencil-icon">Reserva da Biblioteca</a></li>
+                            <li><a href="/reserva?recurso=SalaRecursos" class="pencil-icon">Reserva da Sala de Recursos</a></li>
+                            <li><a href="/painel" class="pencil-icon">Exibir o painel</a></li>
+                            <!-- Adicione mais links conforme necessário -->
+                        </ul>
+                    </div>
+                    <div class="footer-section contact">
+                        <h3>Contato</h3>
+                        <p>Para suporte ou informações, entre em contato:</p>
+                        <div class="imageContact">
+                            <a href="https://www.instagram.com/" target="_blank">
+                                <img src="/images/insta.png" alt="Instagram">
+                            </a>
+                            <a href="mailto:contato@felipeguasti.com.br">
+                                <img src="/images/email.png" alt="Email">
+                            </a>
+                            <a href="https://wa.me/5527998873776" target="_blank">
+                                <img src="/images/whatsapp.png" alt="WhatsApp">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    Sistema de Reserva | Designed by <a href="http://www.felipeguasti.com.br">Felipe Guasti</a> &#169; All rights reserved
+                </div>
+            </div>
+        </footer>
+        <script src="/js/admin.js"></script>
+    </body>
+    </html>
+    
+<% } %>
+<section>
+    <h1>Atualização do Refeitório</h1>
+    <form id="formRefeitorio" action="/api/refeitorio/update" method="post">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required>
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" required></textarea>
+
+        <label for="imagemUrl">URL da Imagem:</label>
+        <input type="text" id="imagemUrl" name="imagemUrl">
+
+        <label for="videoUrl">URL do Vídeo:</label>
+        <input type="text" id="videoUrl" name="videoUrl">
+
+        <label for="videoComSom">Vídeo com Som:</label>
+        <select id="videoComSom" name="videoComSom">
+        <option value="true">Sim</option>
+        <option value="false" selected>Não</option>
+        </select>
+
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno">
+        <option value="matutino">Matutino</option>
+        <option value="vespertino">Vespertino</option>
+        <option value="ambos">Ambos</option>
+        </select>
+
+        <label for="dataPostagem">Data de Postagem:</label>
+        <input type="date" id="dataPostagem" name="dataPostagem">
+
+        <button type="submit">Atualizar</button>    
+    </form>
+</section>
+<section>
+    <h2>Informativos Publicados</h2>
+    <div id="informativoList"></div>  
+</section>
+
+<% if (!onlyContent) { %>
+    <!-- Fechamento de tags abertas antes, se necessário -->
+<% } %>

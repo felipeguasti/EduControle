@@ -81,7 +81,7 @@ exports.deletarAnuncio = async (req, res) => {
 exports.listarAnunciosRecentes = async (req, res) => {
     try {
         const pagina = parseInt(req.query.pagina) || 1;
-        const limite = 10;
+        const limite = 8;
         const offset = (pagina - 1) * limite;
 
         const anunciosRecentes = await Anuncio.findAll({
@@ -111,6 +111,20 @@ exports.contarTotalAnuncios = async (req, res) => {
         res.status(500).send({ message: "Erro ao buscar anúncios" });
     }
 };
+
+exports.renderAdminAnuncios = async (req, res) => {
+    try {
+        const anuncios = await Anuncio.findAll({
+            order: [['dataPublicacao', 'DESC']]
+        });
+        const onlyContent = req.query.section === 'content';
+        res.render('anuncios', { anuncios, onlyContent });
+    } catch (error) {
+        console.error('Erro ao renderizar página de administração de anúncios:', error);
+        res.status(500).send('Erro ao renderizar página de administração de anúncios');
+    }
+};
+
 
 
 

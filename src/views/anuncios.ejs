@@ -1,0 +1,108 @@
+<% if (!onlyContent) { %>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Administração do Refeitório</title>
+        <link rel="stylesheet" href="/css/admin.css">
+    </head>
+    <body>
+        <header>
+            <h1>Área Administrativa - Gestão de Anúncios</h1>
+            <h3>Página toda</h3>
+            <a href="/" class="btn-voltar">← Voltar</a>       
+            <nav>
+                <ul>
+                <li><a href="/admin">Anúncios</a></li>
+                <li><a href="/admin/adminRefeitorio" class="active">Refeitório</a></li>
+                <!-- Adicione outros links conforme necessário -->
+                </ul>
+            </nav>
+        </header>
+        <section>
+            <h1>Atualização dos Anúncios da TV dos Professores</h1>
+            <form id="formAnuncio" method="post" action="/admin/anuncios/criar">
+                <label for="tituloAnuncio">Título do Anúncio:</label>
+                <input type="text" id="tituloAnuncio" name="tituloAnuncio" required>
+                
+                <label for="conteudoAnuncio">Conteúdo do Anúncio:</label>
+                <textarea id="conteudoAnuncio" name="conteudoAnuncio" required></textarea>
+            
+                <button type="submit">Adicionar Anúncio</button>
+            </form>
+                
+        </section>
+        <section>
+            <h2>Anúncios Publicados</h2>
+            <div id="listaAnuncios">
+                <% if (anuncios && anuncios.length > 0) { %>
+                    <% anuncios.forEach((anuncio, index) => { %>
+                        <div class="anuncio-container">
+                            <h3><%= anuncio.tituloAnuncio %></h3>
+                            <p><%= anuncio.conteudoAnuncio %></p>
+                            <% const dataPublicacao = new Date(anuncio.dataPublicacao); %>
+                            <% const dataFormatada = dataPublicacao.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); %>
+                            <h6>Publicado em <%= dataFormatada %>.</h6>
+                            <button class="btn-editar" data-id="<%= anuncio.id %>">Editar</button>
+                            <button class="btn-excluir" data-id="<%= anuncio.id %>">Excluir</button>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>Nenhum anúncio encontrado.</p>
+                <% } %>            
+            <div id="paginacaoAnuncios">
+                <button id="btnRecuar">Recuar</button>
+                <button id="btnAvancar">Avançar</button>
+            </div>
+
+          </div> 
+        </section>       
+        <footer>
+            <div class="container-footer">
+                <div class="footer-content">
+                    <!-- Conteúdo do rodapé -->
+                </div>
+                <div class="footer-bottom">
+                    Sistema de Reserva | Designed by <a href="http://www.felipeguasti.com.br">Felipe Guasti</a> &#169; All rights reserved
+                </div>
+            </div>
+        </footer>
+        <script src="/js/admin.js"></script>
+    </body>
+    </html>
+<% } else { %>
+    <section>
+        <h1>Atualização dos Anúncios da TV dos Professores</h1>
+        <form id="formAnuncio" method="post" action="/admin">
+            <label for="tituloAnuncio">Título do Anúncio:</label>
+            <input type="text" id="tituloAnuncio" name="tituloAnuncio" required>
+        
+            <label for="conteudoAnuncio">Conteúdo do Anúncio:</label>
+            <textarea id="conteudoAnuncio" name="conteudoAnuncio" required></textarea>
+        
+            <button type="submit">Adicionar Anúncio</button>
+        </form>        
+    </section>
+    <section>
+        <h2>Anúncios Publicados</h2>
+        <div id="listaAnuncios">
+            <% if (anuncios && anuncios.length > 0) { %>
+                <% anuncios.forEach((anuncio, index) => { %>
+                    <div class="anuncio-container">
+                        <h3><%= anuncio.tituloAnuncio %></h3>
+                        <p><%= anuncio.conteudoAnuncio %></p>
+                        <% const dataPublicacao = new Date(anuncio.dataPublicacao); %>
+                        <% const dataFormatada = dataPublicacao.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); %>
+                        <h6>Publicado em <%= dataFormatada %>.</h6>
+                        <button class="btn-editar" data-id="<%= anuncio.id %>">Editar</button>
+                        <button class="btn-excluir" data-id="<%= anuncio.id %>">Excluir</button>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum anúncio encontrado.</p>
+            <% } %>        
+        <div id="paginacaoAnuncios">
+            <button id="btnRecuar">Recuar</button>
+            <button id="btnAvancar">Avançar</button>
+        </div>
+    </section>
+<% } %>

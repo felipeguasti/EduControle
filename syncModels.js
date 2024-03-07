@@ -3,6 +3,8 @@ const Reserva = require('./src/models/reserva');
 const Recado = require('./src/models/recado');
 const Anuncio = require('./src/models/anuncio');
 const Usuario = require('./src/models/Usuario');
+const Refeitorio = require('./src/models/refeitorio');
+
 
 async function sincronizarModelos() {
   try {

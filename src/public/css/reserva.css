@@ -34,11 +34,7 @@ header {
     color: white;
     text-align: center;
     padding: 80px 0;
-    border-bottom: 5px solid white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    margin-bottom: 0; /* Remove a margem inferior do cabeçalho */
-    position: relative;
-
+    border-bottom: 5px solid #2d4156;
 }
 header h1 {
     padding:0;
@@ -54,15 +50,8 @@ header h1, header h3 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-nav {
-    display: block;
-    text-align: center;
-    padding: 20px 0;
-}
-
 section {
     margin: 20px;
-    padding-top: 30px;
 }
 
 form {
@@ -87,6 +76,11 @@ select {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
+}
+nav {
+    display: block;
+    text-align: center;
+    padding: 50px 0px;
 }
 
 button {
@@ -277,14 +271,14 @@ footer {
 }
 
 .anuncio-container {
-    background-color: rgba(255, 255, 255, 0.9); /* Branco com 50% de transparência */
+    background-color: rgba(255, 255, 255, 0.5); /* Branco com 50% de transparência */
     margin-bottom: 10px; /* Espaçamento entre os anúncios */
     padding: 10px; /* Espaçamento interno */
     border-radius: 5px; /* Bordas arredondadas */
 }
 
 #conteudoAnuncios {
-    background-color: rgba(255, 255, 255, 0.9); /* White background with 50% transparency */
+    background-color: rgba(255, 255, 255, 0.5); /* White background with 50% transparency */
     padding: 2px 30px 2px 30px;
 }
 
@@ -315,36 +309,235 @@ footer {
     display: inline;
 }
 
+.simbolo-disponivel {
+    color: green;
+    margin-left: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.simbolo-indisponivel {
+    color: red;
+    margin-left: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
 .texto-status {
     font-size: 0.8em; /* Tamanho da fonte ajustado */
     margin-left: 5px; /* Espaçamento para separar do símbolo */
     text-align: center;
 }
 
-#paginacaoAnuncios {
-    text-align: center;
-    margin-top: 20px;
-}
-  
-#paginacaoAnuncios button {
-    background-color: #005f6b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-  
-#paginacaoAnuncios button:hover {
-background-color: #003366;
+/* Alinhamento e estilo para as labels dos horários */
+label[for^="horario"] {
+    display: inline-block; /* Alinhamento inline */
+    margin-right: 10px; /* Espaço entre a label e o próximo elemento */
 }
 
-#paginacaoAnuncios button:disabled {
-background-color: #cccccc;
-cursor: not-allowed;
+/* Estilização adicional para elementos interativos */
+button:hover, input[type='radio']:hover {
+    cursor: pointer;
+    opacity: 0.8; /* Ligeira transparência ao passar o mouse */
 }
+
+#horariosDisponiveis {
+    background-color: #f9f9f9; /* Fundo claro */
+    padding: 15px; /* Espaço interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-top: 20px; /* Espaço acima do container */
+}
+
+.horario-item {
+    display: flex;
+    align-items:center;
+    padding:10px;
+    margin-bottom: 10px; /* Espaçamento entre itens */
+    border: 1px solid #ddd; /* Borda sutil */
+    padding: 10px; /* Espaço interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: transform 0.2s; /* Transição suave */
+}
+
+.horario-item:hover {
+    transform: scale(1.03); /* Efeito de zoom ao passar o mouse */
+}
+
+
+.horario-item label {
+    display: inline-block; /* Certifica-se de que o label tem uma largura e altura */
+    width: 60px; /* Ajuste a largura conforme necessário */
+    line-height: 15px; /* Ajusta a altura da linha para corresponder à altura da caixa de seleção */
+    font-size: 1.2em;
+    margin-bottom: 7px;
+}
+
+.horario-item input[type="radio"] {
+    width: 15px; /* Defina a largura desejada */
+    height: 15px; /* Defina a altura desejada */
+    transform: scale(1.5); /* Aumentar o tamanho */
+    margin-right: 10px; /* Espaçamento à direita */
+}
+
+#calendarioSemanal table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+#calendarioSemanal th {
+    border: 1px solid #005f6b;
+    border-right: 1px solid #ddd;
+    padding: 8px;
+    &:first-child {
+        border-left: 1px solid #005f6b;
+    }
+    &:last-child {
+        border-right: 1px solid #005f6b;
+    }
+}
+
+#calendarioSemanal td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.disponivel {
+    font-style: italic;
+    color: green;
+}
+
+/* Oculta as células correspondentes aos dias de sábado (dia-semana-6) e domingo (dia-semana-0) */
+table tr td:nth-child(7) {
+    display: none;
+}
+
+table tr td:nth-child(6) {
+    display: none;
+}
+
+#calendarioSemanal {
+    width: 100%;
+    border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
+    border-spacing: 0; /* Remove cell spacing to maintain the table layout */
+    background-color: none;
+    border: none;
+    outline-offset: 0px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensures the content respects the border radius */
+    outline: 0;
+}
+
+#calendarioSemanal thead th {
+    background-color: #005f6b;
+    color: #d6e6e8;
+    padding: 10px;
+    text-align: center;
+    /* Add border-radius to the first and last th for rounded corners */
+    &:first-child {
+        border-top-left-radius: 5px;
+    }
+    &:last-child {
+        border-top-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td {
+    background-color: #fff;
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+    /* Add border-radius to the first and last td in the last tr for rounded corners */
+    &:first-child {
+        border-bottom-left-radius: 5px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 5px;
+    }
+}
+
+#calendarioSemanal tbody td.disponivel {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+#calendarioSemanal tbody td:not(.disponivel) {
+    background-color: #f9f9f9;
+    color: #a0a0a0;
+}
+
+#calendarioSemanal tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#calendar-title {
+    font-size: 48px; /* Adjust the size as needed */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-style: italic; /* Makes the text italic */
+    font-family: 'Indie Flower', cursive; /* Add other styles like font-size, color as needed */
+    color: #2d4156; /* Choose a color that fits your design */
+    font-weight: bold; /* Make the title bold */
+    text-align: center; /* Center align the title */
+    padding: 10px 0; /* Add some padding above and below the title */
+    margin: 10px 0px; /* Space below the title before the table starts */
+    display: block; /* By default, caption is table-caption, which can't have margin/padding */
+}
+
+.icon-container {
+    display: block; /* Isso forçará o contêiner a ocupar uma linha inteira */
+    margin-top: 5px; /* Espaço acima dos ícones */
+}
+
+.edit-reserva-icon, .delete-reserva-icon {
+    width: 20px; /* Ajuste o tamanho conforme necessário */
+    height: 20px; /* Ajuste o tamanho conforme necessário */
+    cursor: pointer;
+    margin-right: 5px; /* Espaçamento entre os ícones */
+}
+
+/* Estilização adicional se necessário */
+.edit-reserva-icon:hover, .delete-reserva-icon:hover {
+    opacity: 0.8;
+}
+
+/* Estilo para o popup modal */
+.popup-container {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 
 /* Estilos responsivos para dispositivos móveis */
 @media screen and (max-width: 768px) {

@@ -6,9 +6,11 @@ const bodyParser = require('body-parser');
 const reservasRoutes = require('./src/api/reservas');
 const recadosRoutes = require('./src/routes/recados');
 const anunciosRoutes = require('./src/routes/anuncios'); // Importação da nova rota de anúncios
+const adminsRoutes = require('./src/routes/admins'); // Importação da nova rota de anúncios
 const painelRoutes = require('./src/api/painel'); 
 const disponibilidadeRoutes = require('./src/api/disponibilidade');
 const disponibilidadeController = require('./src/controllers/disponibilidadeController');
+const refeitorioRoutes = require ('./src/api/refeitorio');
 const db = require('./src/config/db');
 
 const app = express();
@@ -28,10 +30,13 @@ app.set('views', './src/views');  // Define o diretório das views
 // Definindo as rotas
 app.use('/api/reservas', reservasRoutes);
 app.use('/api/recados', recadosRoutes);
-app.use('/admin', anunciosRoutes); // Rota de administração para anúncios
+app.use('/admin', adminsRoutes); // Rota de administração
+app.use('/admin/anuncios', anunciosRoutes); // Rota de administração para anúncios
 app.use('/api/disponibilidade', disponibilidadeRoutes);
 app.use('/reservas', disponibilidadeRoutes);
 app.use('/painel', painelRoutes);
+app.use('/api/refeitorio', refeitorioRoutes);
+app.use('/admin', refeitorioRoutes);
 
 // Rota inicial atualizada para renderizar index.ejs
 app.get('/', (req, res) => {
@@ -48,6 +53,11 @@ app.get('/painel', (req, res) => {
     res.render('painel', { recurso });
 });
 
+// Rota para painel do refeitório
+app.get('/refeitorio', (req, res) => {
+    res.render('refeitorio');
+});
+
 // Middleware para registrar requisições
 app.use((req, res, next) => {
     console.log(`${new Date().toLocaleString()} - ${req.method} ${req.url}`);
@@ -59,7 +69,6 @@ app.use((req, res, next) => {
 app.get('/api/disponibilidade/:recurso/semana', disponibilidadeController.buscarReservasPorSemana);
 // Rota para buscar reservas por semana no painel
 app.get('/api/disponibilidade/:recurso/painel', disponibilidadeController.buscarReservasPorSemanaPainel);
-
 
 // Inicializando o servidor
 const PORT = process.env.PORT || 3000;

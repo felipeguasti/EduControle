@@ -29,7 +29,7 @@ document.querySelectorAll('button[data-recurso]').forEach(btn => {
     // Outros ouvintes de eventos conforme necessário
 
 let paginaAtual = 1; // Mantém controle da página atual de anúncios
-const totalAnuncios = 10; // Número de anúncios por página
+const totalAnuncios = 8; // Número de anúncios por página
 
 document.addEventListener('DOMContentLoaded', function() {
     carregarAnunciosRecentes(paginaAtual);
