@@ -28,36 +28,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    const adminContentSection = document.getElementById('adminContentSection');
-
-    adminContentSection.addEventListener('click', function(event) {
-        const target = event.target;
-
-        if (target.classList.contains('btn-editar')) {
-            const id = target.getAttribute('data-id');
-            editarAnuncio(id);
-        } else if (target.classList.contains('btn-excluir')) {
-            const id = target.getAttribute('data-id');
-            excluirAnuncio(id);
-        }
-        
-        if (target.id === 'btnRecuar') {
-            recuarAnuncios();
-            carregarConteudoAnuncios(paginaAtual);
-        } else if (target.id === 'btnAvancar') {
-            avancarAnuncios();
-            carregarConteudoAnuncios(paginaAtual);
-        }
-
-    });   
     
-    if (loadSectionButton) {
-        loadSectionButton.addEventListener('click', carregarConteudoRefeitorio);
+    if (target.classList.contains('btn-editar')) {
+        const id = target.getAttribute('data-id');
+        editarAnuncio(id);
+    } else if (target.classList.contains('btn-excluir')) {
+        const id = target.getAttribute('data-id');
+        excluirAnuncio(id);
     }
-
-    if (loadAnunciosButton) {
-
-        loadSectionButton.addEventListener('click', carregarConteudoAnuncios);
+    
+    if (target.id === 'btnRecuar') {
+        recuarAnuncios();
+        carregarConteudoAnuncios(paginaAtual);
+    } else if (target.id === 'btnAvancar') {
+        avancarAnuncios();
+        carregarConteudoAnuncios(paginaAtual);
     }
 
     const btnsEditar = document.querySelectorAll('.edit-reserva-icon');
@@ -78,15 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
-
-function carregarConteudoRefeitorio() {
-    fetch('/admin/refeitorio?section=content')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('adminContentSection').innerHTML = html;
-        })
-        .catch(error => console.error('Erro ao carregar a seção do refeitório:', error));
-}
 
 function validarFormulario() {
     const tituloAnuncio = document.getElementById('tituloAnuncio').value;
@@ -197,18 +173,38 @@ let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 8; // Número de anúncios por página
 
 function carregarConteudoAnuncios(pagina) {
-    fetch(`/admin/anuncios/listar?section=content&pagina=${pagina}`)
-        .then(response => response.text())
-        .then(html => {
-            const adminContentSection = document.getElementById('adminContentSection');
-            if (adminContentSection) {
-                adminContentSection.innerHTML = html;
-            } else {
-                console.error('Elemento adminContentSection não encontrado');
-            }
+    fetch(`/admin/anuncios/listar?format=json&pagina=${pagina}`)
+        .then(response => response.json())
+        .then(anuncios => {
+            console.log(anuncios); // Adicione esta linha para logar os anúncios recebidos
+            const listaAnunciosDiv = document.getElementById('listaAnuncios');
+            listaAnunciosDiv.innerHTML = ''; // Limpa o conteúdo atual
+            anuncios.forEach((anuncio, index) => {
+                const dataPublicacao = new Date(anuncio.dataPublicacao);
+                const dataFormatada = dataPublicacao.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const anuncioElement = document.createElement('div');
+                anuncioElement.classList.add('anuncio-container');
+                anuncioElement.innerHTML = `
+                    <h3>${anuncio.tituloAnuncio}</h3>
+                    <p> id="anuncio${index + 1} ${anuncio.conteudoAnuncio}</p>
+                    <h6>Publicado em ${dataFormatada}.</h6>
+                `;
+                listaAnunciosDiv.appendChild(anuncioElement);
+            });
+            return anuncios;
+        }).then(() => {
+            atualizarVisibilidadeBotoes(); 
         })
         .catch(error => console.error('Erro ao carregar a seção de anúncios:', error));
 }
+
 
 
 function adicionarDataPublicacao() {

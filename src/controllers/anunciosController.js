@@ -114,18 +114,29 @@ exports.contarTotalAnuncios = async (req, res) => {
 
 exports.renderAdminAnuncios = async (req, res) => {
     try {
+        const pagina = parseInt(req.query.pagina) || 1;
+        const limite = 8;
+        const offset = (pagina - 1) * limite;
+
         const anuncios = await Anuncio.findAll({
-            order: [['dataPublicacao', 'DESC']]
+            order: [['dataPublicacao', 'DESC']],
+            limit: limite,
+            offset: offset
         });
+
         const onlyContent = req.query.section === 'content';
-        res.render('anuncios', { anuncios, onlyContent });
+        const responseFormat = req.query.format;
+
+        if (!onlyContent && !responseFormat) {
+            res.render('anuncios', { anuncios: anuncios, paginaAtual: pagina, onlyContent: false });
+        } else if (onlyContent && !responseFormat) {
+            res.render('anuncios', { anuncios: anuncios, paginaAtual: pagina, onlyContent: true });
+        } else if (responseFormat === 'json') {
+            res.json({ anuncios: anuncios, paginaAtual: pagina });
+        }
+
     } catch (error) {
         console.error('Erro ao renderizar página de administração de anúncios:', error);
         res.status(500).send('Erro ao renderizar página de administração de anúncios');
     }
 };
-
-
-
-
-

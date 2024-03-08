@@ -8,16 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `/reserva?recurso=${recurso}`;
         });
     });        
-    // Outros ouvintes de eventos conforme necessário
 });
-
-document.querySelectorAll('button[data-recurso]').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const recurso = this.getAttribute('data-recurso');
-        window.location.href = `/reserva?recurso=${recurso}`;
-    });
-});
-
 
 document.querySelectorAll('button[data-recurso]').forEach(btn => {
     btn.addEventListener('click', function() {

@@ -1,23 +1,5 @@
 <% if (!onlyContent) { %>
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Administração do Refeitório</title>
-        <link rel="stylesheet" href="/css/admin.css">
-    </head>
-    <body>
-        <header>
-            <h1>Área Administrativa - Gestão de Anúncios</h1>
-            <h3>Página toda</h3>
-            <a href="/" class="btn-voltar">← Voltar</a>       
-            <nav>
-                <ul>
-                <li><a href="/admin">Anúncios</a></li>
-                <li><a href="/admin/adminRefeitorio" class="active">Refeitório</a></li>
-                <!-- Adicione outros links conforme necessário -->
-                </ul>
-            </nav>
-        </header>
+    <%- include('partials/headerAnuncios') %>
         <section>
             <h1>Atualização dos Anúncios da TV dos Professores</h1>
             <form id="formAnuncio" method="post" action="/admin/anuncios/criar">
@@ -51,23 +33,11 @@
                 <% } %>
             </div> 
             <div id="paginacaoAnuncios">
-                <button id="btnRecuar">Recuar</button>
-                <button id="btnAvancar">Avançar</button>
+                <button id="btnRecuar" onclick="recuarAnuncios(pagina)">Recuar</button>
+                <button id="btnAvancar" onclick="avancarAnuncios(pagina)">Avançar</button>
             </div>
-        </section>             
-        <footer>
-            <div class="container-footer">
-                <div class="footer-content">
-                    <!-- Conteúdo do rodapé -->
-                </div>
-                <div class="footer-bottom">
-                    Sistema de Reserva | Designed by <a href="http://www.felipeguasti.com.br">Felipe Guasti</a> &#169; All rights reserved
-                </div>
-            </div>
-        </footer>
-        <script src="/js/admin.js"></script>
-    </body>
-    </html>
+        </section>        
+    <%- include('partials/footerAnuncios') %>             
 <% } else { %>
     <section>
         <h1>Atualização dos Anúncios da TV dos Professores</h1>
@@ -101,9 +71,9 @@
             <% } %>
         </div> 
         <div id="paginacaoAnuncios">
-            <button id="btnRecuar">Recuar</button>
-            <button id="btnAvancar">Avançar</button>
+            <button id="btnRecuar" onclick="recuarAnuncios(pagina)">Recuar</button>
+            <button id="btnAvancar" onclick="avancarAnuncios(pagina)">Avançar</button>
         </div>
     </section>
-    
+    <script src="/js/anuncios.js"></script>
 <% } %>
