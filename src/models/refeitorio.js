@@ -20,6 +20,10 @@ const Refeitorio = db.define('refeitorio', {
         type: Sequelize.STRING,
         allowNull: true
     },
+    imagemFile: {
+        type: Sequelize.STRING,
+        allowNull: true // No formulário, o campo é usado para upload de imagem
+    },
     videoUrl: {
         type: Sequelize.STRING,
         allowNull: true
@@ -33,7 +37,14 @@ const Refeitorio = db.define('refeitorio', {
         allowNull: false,
         defaultValue: 'matutino' // Valor padrão pode ser 'matutino' ou 'vespertino'
     },
-    // Campo adicionado para capturar a data de postagem desejada
+    dataInicio: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
+    dataFim: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
     dataPostagem: {
         type: Sequelize.DATE,
         allowNull: true,

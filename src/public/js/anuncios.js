@@ -29,21 +29,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     
-    if (target.classList.contains('btn-editar')) {
-        const id = target.getAttribute('data-id');
-        editarAnuncio(id);
-    } else if (target.classList.contains('btn-excluir')) {
-        const id = target.getAttribute('data-id');
-        excluirAnuncio(id);
-    }
-    
-    if (target.id === 'btnRecuar') {
-        recuarAnuncios();
-        carregarConteudoAnuncios(paginaAtual);
-    } else if (target.id === 'btnAvancar') {
-        avancarAnuncios();
-        carregarConteudoAnuncios(paginaAtual);
-    }
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+        if (target.classList.contains('btn-editar')) {
+            const id = target.getAttribute('data-id');
+            editarAnuncio(id);
+        } else if (target.classList.contains('btn-excluir')) {
+            const id = target.getAttribute('data-id');
+            excluirAnuncio(id);
+        }
+    });
+
 
     const btnsEditar = document.querySelectorAll('.edit-reserva-icon');
     btnsEditar.forEach(btn => {
@@ -173,36 +169,45 @@ let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 8; // Número de anúncios por página
 
 function carregarConteudoAnuncios(pagina) {
-    fetch(`/admin/anuncios/listar?format=json&pagina=${pagina}`)
-        .then(response => response.json())
-        .then(anuncios => {
-            console.log(anuncios); // Adicione esta linha para logar os anúncios recebidos
-            const listaAnunciosDiv = document.getElementById('listaAnuncios');
-            listaAnunciosDiv.innerHTML = ''; // Limpa o conteúdo atual
-            anuncios.forEach((anuncio, index) => {
-                const dataPublicacao = new Date(anuncio.dataPublicacao);
-                const dataFormatada = dataPublicacao.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+    return new Promise((resolve, reject) => {
+        fetch(`/admin/anuncios/listar?format=json&pagina=${pagina}`)
+            .then(response => response.json())
+            .then(data => {
+                const anuncios = data.anuncios;
+                const listaAnunciosDiv = document.getElementById('listaAnuncios');
+                listaAnunciosDiv.innerHTML = ''; // Limpa o conteúdo atual
+                if (Array.isArray(anuncios)) {
+                    anuncios.forEach((anuncio, index) => {
+                        const dataPublicacao = new Date(anuncio.dataPublicacao);
+                        const dataFormatada = dataPublicacao.toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
 
-                const anuncioElement = document.createElement('div');
-                anuncioElement.classList.add('anuncio-container');
-                anuncioElement.innerHTML = `
-                    <h3>${anuncio.tituloAnuncio}</h3>
-                    <p> id="anuncio${index + 1} ${anuncio.conteudoAnuncio}</p>
-                    <h6>Publicado em ${dataFormatada}.</h6>
-                `;
-                listaAnunciosDiv.appendChild(anuncioElement);
+                        const anuncioElement = document.createElement('div');
+                        anuncioElement.classList.add('anuncio-container');
+                        anuncioElement.innerHTML = `
+                            <h3>${anuncio.tituloAnuncio}</h3>
+                            <p>${anuncio.conteudoAnuncio}</p>
+                            <h6>Publicado em ${dataFormatada}.</h6>
+                        `;
+                        listaAnunciosDiv.appendChild(anuncioElement);
+                    });
+                    resolve(anuncios); // Resolvendo a promessa com os anúncios
+                } else {
+                    console.error('Os dados de anúncios não estão no formato esperado.');
+                    reject(new Error('Os dados de anúncios não estão no formato esperado.'));
+                }
+                atualizarVisibilidadeBotoes(); // Atualiza a visibilidade dos botões após carregar os anúncios
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a seção de anúncios:', error);
+                reject(error); // Rejeita a promessa em caso de erro
             });
-            return anuncios;
-        }).then(() => {
-            atualizarVisibilidadeBotoes(); 
-        })
-        .catch(error => console.error('Erro ao carregar a seção de anúncios:', error));
+    });
 }
 
 
@@ -234,30 +239,25 @@ function limparEstilo() {
 
 function recuarAnuncios() {
     if (paginaAtual > 1) {
-        paginaAtual--;
+        paginaAtual--; // Decrementa a página atual apenas uma vez
         carregarConteudoAnuncios(paginaAtual).then(() => {
-            scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após recuar
-            atualizarVisibilidadeBotoes();  // Chamada após retornar para a página anterior
         });
     }
+    scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após recuar
+    atualizarVisibilidadeBotoes();  // Chamada após retornar para a página anterior
 }
 
 function avancarAnuncios() {
-    paginaAtual++;
-    carregarConteudoAnuncios(paginaAtual).then(anuncios => {
-        scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após avançar
-        atualizarVisibilidadeBotoes();  // Chamada após avançar para a próxima página
-        if (!anuncios || anuncios.length < totalAnuncios) {
-            document.getElementById('btnAvancar').disabled = true;
-        }
-        // Adicione qualquer outra lógica necessária após carregar os anúncios
-    }).catch(error => {
-        console.error('Erro ao carregar anúncios:', error);
+    paginaAtual++; // Incrementa a página atual antes de carregar o conteúdo
+    carregarConteudoAnuncios(paginaAtual).then(() => {
     });
+    scrollToFirstAnuncio();
+    atualizarVisibilidadeBotoes();
 }
 
+
 function scrollToFirstAnuncio() {
-    const firstAnuncio = document.getElementById('anunciosRecentes');
+    const firstAnuncio = document.getElementById('conteudoAnuncio');
     if (firstAnuncio) {
         firstAnuncio.scrollIntoView({ behavior: 'smooth' });
     }

@@ -2,7 +2,7 @@
     <%- include('partials/headerAnuncios') %>
         <section>
             <h1>Atualização dos Anúncios da TV dos Professores</h1>
-            <form id="formAnuncio" method="post" action="/admin/anuncios/criar">
+            <form id="formAnuncio" method="post" action="/admin">
                 <label for="tituloAnuncio">Título do Anúncio:</label>
                 <input type="text" id="tituloAnuncio" name="tituloAnuncio" required>
                 
@@ -33,8 +33,8 @@
                 <% } %>
             </div> 
             <div id="paginacaoAnuncios">
-                <button id="btnRecuar" onclick="recuarAnuncios(pagina)">Recuar</button>
-                <button id="btnAvancar" onclick="avancarAnuncios(pagina)">Avançar</button>
+                <button id="btnRecuar" onclick="recuarAnuncios()">Recuar</button>
+                <button id="btnAvancar" onclick="avancarAnuncios()">Avançar</button>
             </div>
         </section>        
     <%- include('partials/footerAnuncios') %>             
@@ -71,8 +71,8 @@
             <% } %>
         </div> 
         <div id="paginacaoAnuncios">
-            <button id="btnRecuar" onclick="recuarAnuncios(pagina)">Recuar</button>
-            <button id="btnAvancar" onclick="avancarAnuncios(pagina)">Avançar</button>
+            <button id="btnRecuar" onclick="recuarAnuncios()">Recuar</button>
+            <button id="btnAvancar" onclick="avancarAnuncios()">Avançar</button>
         </div>
     </section>
     <script src="/js/anuncios.js"></script>

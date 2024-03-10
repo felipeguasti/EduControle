@@ -40,14 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = target.getAttribute('data-id');
             excluirAnuncio(id);
         }
-        
-        if (target.id === 'btnRecuar') {
-            recuarAnuncios();
-            carregarConteudoAnuncios(paginaAtual);
-        } else if (target.id === 'btnAvancar') {
-            avancarAnuncios();
-            carregarConteudoAnuncios(paginaAtual);
-        }
 
     });   
     
@@ -197,18 +189,26 @@ let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 8; // Número de anúncios por página
 
 function carregarConteudoAnuncios(pagina) {
-    fetch(`/admin/anuncios/listar?section=content&pagina=${pagina}`)
-        .then(response => response.text())
-        .then(html => {
-            const adminContentSection = document.getElementById('adminContentSection');
-            if (adminContentSection) {
-                adminContentSection.innerHTML = html;
-            } else {
-                console.error('Elemento adminContentSection não encontrado');
-            }
-        })
-        .catch(error => console.error('Erro ao carregar a seção de anúncios:', error));
+    return new Promise((resolve, reject) => {
+        fetch(`/admin/anuncios/listar?section=content&pagina=${pagina}`)
+            .then(response => response.text())
+            .then(html => {
+                const adminContentSection = document.getElementById('adminContentSection');
+                if (adminContentSection) {
+                    adminContentSection.innerHTML = html;
+                    resolve(); // Resolvendo a promessa se o conteúdo for carregado com sucesso
+                } else {
+                    console.error('Elemento adminContentSection não encontrado');
+                    reject(new Error('Elemento adminContentSection não encontrado')); // Rejeitando a promessa se o elemento não for encontrado
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar a seção de anúncios:', error);
+                reject(error); // Rejeitando a promessa em caso de erro durante o carregamento do conteúdo
+            });
+    });
 }
+
 
 
 function adicionarDataPublicacao() {
@@ -238,21 +238,24 @@ function limparEstilo() {
 
 function recuarAnuncios() {
     if (paginaAtual > 1) {
-        paginaAtual--;
+        paginaAtual--; // Decrementa a página atual apenas uma vez
         carregarConteudoAnuncios(paginaAtual).then(() => {
-            scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após recuar
-            atualizarVisibilidadeBotoes();  // Chamada após retornar para a página anterior
         });
     }
+    scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após recuar
+    atualizarVisibilidadeBotoes();  // Chamada após retornar para a página anterior
 }
 
 function avancarAnuncios() {
-    paginaAtual++;
-    carregarConteudoAnuncios(paginaAtual).then(anuncios => {
+    const nextPage = paginaAtual + 1; // Incrementa a página atual para carregar a próxima página de anúncios
+    carregarConteudoAnuncios(nextPage).then(anuncios => {
+        paginaAtual = nextPage; // Atualiza a página atual depois de carregar os anúncios da próxima página
         scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após avançar
-        atualizarVisibilidadeBotoes();  // Chamada após avançar para a próxima página
+        atualizarVisibilidadeBotoes(); // Chamada após avançar para a próxima página
         if (!anuncios || anuncios.length < totalAnuncios) {
             document.getElementById('btnAvancar').disabled = true;
+        } else {
+            document.getElementById('btnAvancar').disabled = false; // Habilita o botão de avanço se houver mais anúncios a serem carregados
         }
         // Adicione qualquer outra lógica necessária após carregar os anúncios
     }).catch(error => {
@@ -261,7 +264,7 @@ function avancarAnuncios() {
 }
 
 function scrollToFirstAnuncio() {
-    const firstAnuncio = document.getElementById('anunciosRecentes');
+    const firstAnuncio = document.getElementById('conteudoAnuncio');
     if (firstAnuncio) {
         firstAnuncio.scrollIntoView({ behavior: 'smooth' });
     }

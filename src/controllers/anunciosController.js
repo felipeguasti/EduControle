@@ -100,11 +100,8 @@ exports.listarAnunciosRecentes = async (req, res) => {
 
 exports.contarTotalAnuncios = async (req, res) => {
     try {
-        console.log("Requisição recebida para contar total de anúncios");
         const anuncios = await Anuncio.findAll();
-        console.log("Anúncios encontrados:", anuncios); // Adicione este log para verificar se a consulta está retornando resultados
         const total = anuncios.length;
-        console.log("Total de anúncios:", total);
         res.json({ total });
     } catch (error) {
         console.error("Erro ao buscar anúncios:", error);

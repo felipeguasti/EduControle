@@ -2,6 +2,7 @@ const Refeitorio = require('../models/refeitorio');
 const path = require('path');
 const fs = require('fs');
 const sequelize = require('../config/db'); // Certifique-se de que sequelize está importado
+const moment = require('moment');
 
 const getTurnoAtual = () => {
     const now = new Date();
@@ -37,22 +38,45 @@ exports.listarInformativos = async (req, res) => {
 };
 
 exports.criarInformativo = async (req, res) => {
-    const { titulo, mensagem, imagemUrl, videoUrl, videoComSom, turno, dataPostagem } = req.body;
+    const { titulo, mensagem, imagemUrl, imagemFile, videoUrl, videoComSom, turno, dataInicio, dataFim, dataPostagem } = req.body;
+    console.log(req.body);
     try {
+        let dataExpiracao = null;
+
+        // Verifica a data de início do anúncio
+        let dataInicioAnuncio = dataInicio ? moment(dataInicio) : moment();
+        if (dataInicioAnuncio.isBefore(moment(), 'day')) {
+            dataInicioAnuncio = moment();
+            return res.status(400).send({ error: "A data de início é anterior à data atual. Usando a data atual como data de início." });
+        }
+
+        // Verifica a data de término do anúncio
+        if (dataFim) {
+            const dataTerminoAnuncio = moment(dataFim);
+            if (dataTerminoAnuncio.isBefore(dataInicioAnuncio, 'day')) {
+                return res.status(400).send({ error: "A data de término não pode ser anterior à data de início do anúncio." });
+            }
+            dataExpiracao = dataTerminoAnuncio.endOf('day');
+        }
+
         const novoInformativo = await Refeitorio.create({
             titulo,
             mensagem,
             imagemUrl,
+            imagemFile,
             videoUrl,
             videoComSom,
             turno,
+            dataInicio: dataInicioAnuncio.toDate(),
+            dataFim: dataExpiracao ? dataExpiracao.toDate() : null,
             dataPostagem
         });
         res.status(201).send(novoInformativo);
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        res.status(500).send({ error: "Erro ao criar o informativo. Por favor, tente novamente mais tarde." });
     }
 };
+
 
 exports.atualizarInformativo = async (req, res) => {
     const { titulo, mensagem, imagemUrl, videoUrl, videoComSom, turno, dataPostagem } = req.body;

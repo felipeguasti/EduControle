@@ -7,8 +7,8 @@
     </head>
     <body>
         <header>
-            <h1>Área Administrativa - Gestão de Anúncios</h1>
-            <h3>Página toda</h3>
+            <h1>Área Administrativa</h1>
+            <h3>EEEFM Coronel Olímpio Cunha</h3>
             <a href="/" class="btn-voltar">← Voltar</a>       
             <nav>
                 <ul>
@@ -18,92 +18,97 @@
                 </ul>
             </nav>
         </header>
-        <footer>
-            <div class="container-footer">
-                <div class="footer-content">
-                    <div class="footer-section about">
-                        <h3>Sistema de Reserva de Equipamentos e Espaços</h3>
-                        <p>Este sistema é utilizado para a reserva de equipamentos e espaços da escola EEEFM Coronel Olímpio Cunha. Acesse as funcionalidades através dos menus principais.</p>
-                        <button onclick="location.href='/sobre'">Saiba mais</button>
-                    </div>
-                    <div class="footer-section links">
-                        <h3>Links Úteis</h3>
-                        <ul>
-                            <li><a href="/" class="pencil-icon">Página Inicial</a></li>
-                            <li><a href="/reserva?recurso=Tablets" class="pencil-icon">Reserva de Tablets</a></li>
-                            <li><a href="/reserva?recurso=Chromebooks" class="pencil-icon">Reserva de Chromebooks</a></li>
-                            <li><a href="/reserva?recurso=QuadroInterativo" class="pencil-icon">Reserva de Quadro Interativo</a></li>
-                            <li><a href="/reserva?recurso=Biblioteca" class="pencil-icon">Reserva da Biblioteca</a></li>
-                            <li><a href="/reserva?recurso=SalaRecursos" class="pencil-icon">Reserva da Sala de Recursos</a></li>
-                            <li><a href="/painel" class="pencil-icon">Exibir o painel</a></li>
-                            <!-- Adicione mais links conforme necessário -->
-                        </ul>
-                    </div>
-                    <div class="footer-section contact">
-                        <h3>Contato</h3>
-                        <p>Para suporte ou informações, entre em contato:</p>
-                        <div class="imageContact">
-                            <a href="https://www.instagram.com/" target="_blank">
-                                <img src="/images/insta.png" alt="Instagram">
-                            </a>
-                            <a href="mailto:contato@felipeguasti.com.br">
-                                <img src="/images/email.png" alt="Email">
-                            </a>
-                            <a href="https://wa.me/5527998873776" target="_blank">
-                                <img src="/images/whatsapp.png" alt="WhatsApp">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    Sistema de Reserva | Designed by <a href="http://www.felipeguasti.com.br">Felipe Guasti</a> &#169; All rights reserved
-                </div>
-            </div>
-        </footer>
-        <script src="/js/admin.js"></script>
-    </body>
-    </html>
+        <section>
+            <h1>Atualização das TV's do Refeitório</h1>
+            <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" name="titulo" required>
+        
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" name="mensagem" required></textarea>
+        
+                <label for="imagemUrl">URL da Imagem:</label>
+                <input type="text" id="imagemUrl" name="imagemUrl">
     
-<% } %>
-<section>
-    <h1>Atualização do Refeitório</h1>
-    <form id="formRefeitorio" action="/api/refeitorio/update" method="post">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required>
+                <!-- Campo para upload de imagem, corrigindo o id -->
+                <label for="imagemFile">Upload de Imagem:</label>
+                <input type="file" id="imagemFile" name="imagemFile" accept="image/*" />
+        
+                <label for="videoUrl">URL do Vídeo:</label>
+                <input type="text" id="videoUrl" name="videoUrl">
+        
+                <div class="checkbox-container">
+                    <label for="videoComSom">Reproduzir vídeo com som:</label>
+                    <input type="checkbox" id="videoComSom" name="videoComSom" />
+                </div>
+                </select>
+        
+                <label for="turno">Turno:</label>
+                <select id="turno" name="turno" required>
+                <option value="matutino">Matutino</option>
+                <option value="vespertino">Vespertino</option>
+                <option value="ambos">Ambos</option>
+                </select>
+        
+                <label for="dataInicio">Data de Início do Anúncio:</label>
+                <input type="date" id="dataInicio" name="dataInicio">
+    
+                <label for="dataFim">Data de Término do Anúncio:</label>
+                <input type="date" id="dataFim" name="dataFim">
+    
+                <button type="submit">Publicar Informativo</button>
+            </form>
+        </section>
+        <section>
+            <h2>Informativos Publicados</h2>
+            <div id="informativoList"></div>  
+        </section>
+        <%- include('partials/footerRefeitorio') %>             
+<% } else { %>
+    <section>
+        <h1>Atualização das TV's do Refeitório</h1>
+        <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required>
+    
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" required></textarea>
+    
+            <label for="imagemUrl">URL da Imagem:</label>
+            <input type="text" id="imagemUrl" name="imagemUrl">
 
-        <label for="mensagem">Mensagem:</label>
-        <textarea id="mensagem" name="mensagem" required></textarea>
+            <!-- Campo para upload de imagem, corrigindo o id -->
+            <label for="imagemFile">Upload de Imagem:</label>
+            <input type="file" id="imagemFile" name="imagemFile" accept="image/*" />
+    
+            <label for="videoUrl">URL do Vídeo:</label>
+            <input type="text" id="videoUrl" name="videoUrl">
+    
+            <div class="checkbox-container">
+                <label for="videoComSom">Reproduzir vídeo com som:</label>
+                <input type="checkbox" id="videoComSom" name="videoComSom" />
+            </div>
+            </select>
+    
+            <label for="turno">Turno:</label>
+            <select id="turno" name="turno" required>
+            <option value="matutino">Matutino</option>
+            <option value="vespertino">Vespertino</option>
+            <option value="ambos">Ambos</option>
+            </select>
+    
+            <label for="dataInicio">Data de Início do Anúncio:</label>
+            <input type="date" id="dataInicio" name="dataInicio">
 
-        <label for="imagemUrl">URL da Imagem:</label>
-        <input type="text" id="imagemUrl" name="imagemUrl">
+            <label for="dataFim">Data de Término do Anúncio:</label>
+            <input type="date" id="dataFim" name="dataFim">
+            <input type="hidden" id="dataPostagem" name="dataPostagem">
 
-        <label for="videoUrl">URL do Vídeo:</label>
-        <input type="text" id="videoUrl" name="videoUrl">
-
-        <label for="videoComSom">Vídeo com Som:</label>
-        <select id="videoComSom" name="videoComSom">
-        <option value="true">Sim</option>
-        <option value="false" selected>Não</option>
-        </select>
-
-        <label for="turno">Turno:</label>
-        <select id="turno" name="turno">
-        <option value="matutino">Matutino</option>
-        <option value="vespertino">Vespertino</option>
-        <option value="ambos">Ambos</option>
-        </select>
-
-        <label for="dataPostagem">Data de Postagem:</label>
-        <input type="date" id="dataPostagem" name="dataPostagem">
-
-        <button type="submit">Atualizar</button>    
-    </form>
-</section>
-<section>
-    <h2>Informativos Publicados</h2>
-    <div id="informativoList"></div>  
-</section>
-
-<% if (!onlyContent) { %>
-    <!-- Fechamento de tags abertas antes, se necessário -->
+            <button type="submit">Publicar Informativo</button>
+        </form>
+    </section>
+    <section>
+        <h2>Informativos Publicados</h2>
+        <div id="informativoList"></div>  
+    </section>
 <% } %>
