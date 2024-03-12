@@ -48,7 +48,7 @@ Contribuições são bem-vindas! Para contribuir com o projeto, siga estas etapa
 - Lançamento do painel do refeitório e da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - Otimização da área administrativa, tornando-a mais intuitiva e eficiente para os gestores.
 - Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.
-- Aprimoramento da visualização de anúncios na página do administrador, com opções para avançar e recuar, facilitando a gestão de conteúdo.
+- ✅ Aprimoramento da visualização de anúncios na página do administrador, com opções para avançar e recuar, facilitando a gestão de conteúdo.
 - Desenvolvimento do lobby de aplicativos, que se tornará a nova página inicial, reorganizando o acesso aos diferentes sistemas e serviços.
 - A atual página inicial será renomeada para "Equipamentos", e um ícone no lobby será adicionado para acessar o sistema de reservas de equipamentos.
 
