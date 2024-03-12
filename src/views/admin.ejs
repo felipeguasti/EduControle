@@ -13,12 +13,13 @@
         <a href="/" class="btn-voltar">← Voltar</a>       
         <nav>
             <ul>
-                <li><a class="active" href="#" onclick="limparEstilo(); carregarConteudoAnuncios(); this.classList.add('active'); return false;">Anúncios</a></li>
-                <li><a href="#" onclick="limparEstilo(); carregarConteudoRefeitorio(); this.classList.add('active'); return false;">Refeitório</a></li>
+                <li><a id="linkAnuncios" class="active" href="#">Anúncios</a></li>
+                <li><a id="linkRefeitorio" href="#">Refeitório</a></li>
             <!-- Adicione outros links conforme necessário -->
             </ul>
         </nav>
     </header>
+    <div id="loadingIndicator">Carregando...</div>
     <div id="adminContentSection"></div>
     <footer>
         <div class="container-footer">
@@ -62,6 +63,6 @@
             </div>
         </div>
     </footer>    
-    <script src="/js/admin.js"></script>
+    <script src="/js/admin.js" type="module"></script>
 </body>
 </html>

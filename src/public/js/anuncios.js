@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadSectionButton = document.getElementById('loadRefeitorioSection');
     const loadAnunciosButton = document.getElementById('loadAnunciosSection');
 
+    if (typeof window.isAdminScriptLoaded === 'undefined' || window.isAdminScriptLoaded === false) {
+        carregarConteudoListaAnuncios(paginaAtual);
+        const btnRecuar = document.getElementById('btnRecuar');
+        btnRecuar.addEventListener('click', recuarAnuncios);
+        const btnAvancar = document.getElementById('btnAvancar');
+        btnAvancar.addEventListener('click', avancarAnuncios);
+    }
+
     if (formAnuncio) {
         formAnuncio.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -13,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // Script de validação do formulário
     if (formAnuncio) {
         formAnuncio.addEventListener('submit', function(event) {
@@ -27,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     
     document.addEventListener('click', function(event) {
         const target = event.target;
@@ -39,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
             excluirAnuncio(id);
         }
     });
-
 
     const btnsEditar = document.querySelectorAll('.edit-reserva-icon');
     btnsEditar.forEach(btn => {
@@ -56,8 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
             excluirAnuncio(id);
         };
     });
-
-
 });
 
 function validarFormulario() {
@@ -71,7 +74,7 @@ function validarFormulario() {
     return true;
 }
 
-function enviarFormulario() {
+export function enviarFormulario() {
     const dadosFormulario = {
         tituloAnuncio: document.getElementById('tituloAnuncio').value,
         conteudoAnuncio: document.getElementById('conteudoAnuncio').value
@@ -101,19 +104,18 @@ function enviarFormulario() {
     .then(data => {
         if (method === 'POST') {
             alert('Anúncio adicionado com sucesso!');
-            location.reload(); // Recarrega a página
         } else {
             alert('Anúncio atualizado com sucesso!');
-            location.reload(); // Recarrega a página
         }
-        // Limpar formulário ou outras ações após o sucesso
+        // Recarrega os anúncios na página atual
+        carregarConteudoListaAnuncios(paginaAtual);
     })
     .catch(error => {
         alert('Erro: ' + error.message);
     });
 }    
 
-function editarAnuncio(id) {
+export function editarAnuncio(id) {
     fetch(`/admin/anuncios/mostrar/${id}`)
     .then(response => response.json())
     .then(anuncio => {
@@ -142,19 +144,14 @@ function editarAnuncio(id) {
     });
 }
 
-function excluirAnuncio(id) {
+export function excluirAnuncio(id) {
     if (confirm('Tem certeza que deseja excluir este anúncio?')) {
         fetch(`/admin/anuncios/${id}`, { method: 'DELETE' })
         .then(response => {
             if (response.ok) {
                 alert('Anúncio excluído com sucesso!');
-                location.reload(); // Recarrega a página
-
-                // Localizar e remover o elemento HTML do anúncio
-                const anuncioElement = document.querySelector(`.anuncio[data-id="${id}"]`);
-                if (anuncioElement) {
-                    anuncioElement.remove();
-                }
+                // Recarrega os anúncios na página atual
+                carregarConteudoListaAnuncios(paginaAtual);
             } else {
                 alert('Falha ao excluir o anúncio.');
             }
@@ -168,7 +165,7 @@ function excluirAnuncio(id) {
 let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 8; // Número de anúncios por página
 
-function carregarConteudoAnuncios(pagina) {
+export function carregarConteudoListaAnuncios(pagina) {
     return new Promise((resolve, reject) => {
         fetch(`/admin/anuncios/listar?format=json&pagina=${pagina}`)
             .then(response => response.json())
@@ -193,6 +190,8 @@ function carregarConteudoAnuncios(pagina) {
                             <h3>${anuncio.tituloAnuncio}</h3>
                             <p>${anuncio.conteudoAnuncio}</p>
                             <h6>Publicado em ${dataFormatada}.</h6>
+                            <img src="/images/editar.png" class="edit-reserva-icon" data-id="${anuncio.id}" alt="Editar Anúncio">
+                            <img src="/images/excluir.png" class="delete-reserva-icon" data-id="${anuncio.id}" alt="Excluir Anúncio">
                         `;
                         listaAnunciosDiv.appendChild(anuncioElement);
                     });
@@ -202,6 +201,8 @@ function carregarConteudoAnuncios(pagina) {
                     reject(new Error('Os dados de anúncios não estão no formato esperado.'));
                 }
                 atualizarVisibilidadeBotoes(); // Atualiza a visibilidade dos botões após carregar os anúncios
+                mostrarNumeroPagina(pagina);
+                adicionarEventListenersEditarExcluir(); // Adiciona event listeners aos novos ícones de editar e excluir
             })
             .catch(error => {
                 console.error('Erro ao carregar a seção de anúncios:', error);
@@ -210,9 +211,28 @@ function carregarConteudoAnuncios(pagina) {
     });
 }
 
+function adicionarEventListenersEditarExcluir() {
+    const btnsEditar = document.querySelectorAll('.edit-reserva-icon');
+    btnsEditar.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            editarAnuncio(id);
+        });
+    });
+
+    const btnsExcluir = document.querySelectorAll('.delete-reserva-icon');
+    btnsExcluir.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            excluirAnuncio(id);
+        });
+    });
+}
 
 
-function adicionarDataPublicacao() {
+
+
+export function adicionarDataPublicacao() {
     const anunciosContainers = document.querySelectorAll('.anuncio-container');
     anunciosContainers.forEach(container => {
         const dataPublicacaoElement = container.querySelector('.data-publicacao');
@@ -230,48 +250,61 @@ function adicionarDataPublicacao() {
     });
 }
 
-function limparEstilo() {
+export function limparEstilo() {
     var links = document.querySelectorAll('nav ul li a');
     links.forEach(function(link) {
         link.classList.remove('active');
     });
 }
 
-function recuarAnuncios() {
+export function recuarAnuncios() {
     if (paginaAtual > 1) {
         paginaAtual--; // Decrementa a página atual apenas uma vez
-        carregarConteudoAnuncios(paginaAtual).then(() => {
+        carregarConteudoListaAnuncios(paginaAtual).then(() => {
         });
     }
     scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após recuar
     atualizarVisibilidadeBotoes();  // Chamada após retornar para a página anterior
 }
 
-function avancarAnuncios() {
-    paginaAtual++; // Incrementa a página atual antes de carregar o conteúdo
-    carregarConteudoAnuncios(paginaAtual).then(() => {
+export function avancarAnuncios() {
+    const nextPage = paginaAtual + 1; // Incrementa a página atual para carregar a próxima página de anúncios
+    carregarConteudoListaAnuncios(nextPage).then(anuncios => {
+        paginaAtual = nextPage; // Atualiza a página atual depois de carregar os anúncios da próxima página
+        scrollToFirstAnuncio(); // Rolando para o primeiro anúncio após avançar
+        atualizarVisibilidadeBotoes(); // Chamada após avançar para a próxima página
+        if (!anuncios || anuncios.length < totalAnuncios) {
+            document.getElementById('btnAvancar').disabled = true;
+        } else {
+            document.getElementById('btnAvancar').disabled = false; // Habilita o botão de avanço se houver mais anúncios a serem carregados
+        }
+        // Adicione qualquer outra lógica necessária após carregar os anúncios
+    }).catch(error => {
+        console.error('Erro ao carregar anúncios:', error);
     });
-    scrollToFirstAnuncio();
-    atualizarVisibilidadeBotoes();
 }
 
-
-function scrollToFirstAnuncio() {
+export function scrollToFirstAnuncio() {
     const firstAnuncio = document.getElementById('conteudoAnuncio');
     if (firstAnuncio) {
         firstAnuncio.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
-function atualizarVisibilidadeBotoes() {
+export function mostrarNumeroPagina(pagina) {
     fetch('/admin/anuncios/total')
     .then(response => response.json())
     .then(data => {
-        const totalPaginas = Math.ceil(data.total / totalAnuncios);
-        document.getElementById('btnRecuar').disabled = paginaAtual <= 1;
-        document.getElementById('btnAvancar').disabled = paginaAtual >= totalPaginas;
+        const totalPaginas = Math.ceil(data.total / totalAnuncios); // Calculamos o número total de páginas com base no número total de anúncios
+        const paginaAtual = pagina;
+        document.getElementById('numeroPagina').innerText= `Página ${paginaAtual} de ${totalPaginas}`;
+
+        atualizarVisibilidadeBotoes(totalPaginas, paginaAtual);
     })
-    .catch(error => console.error('Erro ao buscar o total de anúncios:', error));
+    .catch(error => console.error('Erro ao buscar o total de páginas:', error));
 }
 
-carregarConteudoAnuncios(paginaAtual);
+export function atualizarVisibilidadeBotoes(totalPaginas, paginaAtual) {
+    document.getElementById('btnRecuar').disabled = paginaAtual <= 1;
+    document.getElementById('btnAvancar').disabled = paginaAtual >= totalPaginas;
+}

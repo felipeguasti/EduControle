@@ -15,5 +15,6 @@ router.get('/mostrar/:id', anunciosController.obterAnuncioPorId);
 router.delete('/:id', anunciosController.deletarAnuncio);
 // Rota para renderizar a página de administração do refeitório
 router.get('/listar', anunciosController.renderAdminAnuncios);
+router.get('/filtrar', anunciosController.listarAnunciosPorPagina);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-let formData = new FormData();
+let formData;
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("informativoForm");
   const informativoList = document.getElementById("informativoList");
@@ -9,17 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputVideoUrl = document.getElementById("videoUrl");
   const inputVideoComSom = document.getElementById("videoComSom");
   const inputTurno = document.getElementById("turno");
-  let editandoId = null;
+  const hoje = new Date().toISOString().split('T')[0];
+  let editandoId = null;  
+  formData = new FormData(); 
 
-  // Event listener para mudanças no campo de imagem file
   inputImagemFile.addEventListener("change", function () {
-      if (this.files.length > 0 && this.files[0].size > 3145728) {
-          alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
-          this.value = "";
-      } else if (this.files.length > 0) {
-          // Limpar o campo de vídeo URL se um arquivo de imagem for selecionado
-          inputVideoUrl.value = "";
-      }
+    console.log("Input imagem file change event");
+    console.log("Selected file:", this.files[0]);
+    console.log("Form data before setting:", formData.get("imagemFile"));
+    formData.set("imagemFile", this.files[0]);
+    console.log("Form data after setting:", formData.get("imagemFile"));
   });
 
   inputImagemUrl.addEventListener("input", function () {
@@ -103,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   //Envio informativo para o banco de dados
   function loadInformativos() {
-    fetch("/api/refeitorio")
+    fetch("/api/refeitorio/listar")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Erro ao carregar informativos. Por favor, tente novamente mais tarde.");
@@ -178,116 +177,127 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`/api/refeitorio/${id}`)
       .then((response) => response.json())
       .then((informativo) => {
+        // Restaurar campos ocultos
+        inputImagemFile.removeAttribute("hidden");
+        document.querySelector('label[for="imagemFile"]').removeAttribute("style");
+        formData.set("imagemFile", "");
+        inputVideoUrl.removeAttribute("hidden");
+        document.querySelector('label[for="videoUrl"]').removeAttribute("style");
+        formData.set("videoUrl", "");
+        inputVideoComSom.removeAttribute("hidden");
+        document.querySelector('label[for="videoComSom"]').removeAttribute("style");
+        formData.set("videoComSom", "");
+
         inputTitulo.value = informativo.titulo;
         inputMensagem.value = informativo.mensagem;
         inputImagemUrl.value = informativo.imagemUrl || "";
         inputVideoUrl.value = informativo.videoUrl || "";
         inputVideoComSom.checked = informativo.videoComSom || false;
         inputTurno.value = informativo.turno;
-        editandoId = id;
 
-        // Mover a tela para o topo
+        // Formatar as datas antes de atribuí-las aos inputs
+        if (informativo.dataInicio) {
+          const dataInicio = new Date(informativo.dataInicio).toISOString().split('T')[0];
+          document.getElementById("dataInicio").value = dataInicio;
+        }
+
+        if (informativo.dataFim) {
+          const dataFim = new Date(informativo.dataFim).toISOString().split('T')[0];
+          document.getElementById("dataFim").value = dataFim;
+        }
+        editandoId = id;
         window.scrollTo(0, 0);
+        const btnSubmit = document.querySelector('button[type="submit"]');
+        btnSubmit.textContent = 'Editar Informativo';
       })
       .catch((error) => {
         console.error("Erro ao carregar informativo para edição", error);
       });
   }
 
+  
+
   window.editInformativo = editInformativo;
 
-  inputImagemFile.addEventListener("change", function () {
-    if (this.files.length > 0 && this.files[0].size > 3145728) {
-      alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
-      this.value = "";
-    } else if (this.files.length > 0) {
-      const formData = new FormData();
-      formData.append("imagem", this.files[0]);
+  let imagemFile = null;
 
-      fetch("/api/refeitorio", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          inputImagemUrl.value = data.imageUrl;
-        })
-        .catch((error) => {
-          alert("Erro ao fazer upload da imagem");
-        });
-    }
+  inputImagemFile.addEventListener("change", function () {
+      if (this.files.length > 0 && this.files[0].size > 3145728) {
+          alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
+          this.value = "";
+      } else if (this.files.length > 0) {
+          imagemFile = this.files[0];
+      }
   });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    formData = new FormData(informativoForm);
-    // Se estiver editando, incluir o ID de edição
-    if (editandoId !== null) {
-        formData.append("id", editandoId);
+    const formData = new FormData();
+    formData.append("titulo", inputTitulo.value);
+    formData.append("mensagem", inputMensagem.value);
+    formData.append("videoUrl", inputVideoUrl.value);
+    formData.append("videoComSom", inputVideoComSom.checked.toString());
+    formData.append("turno", inputTurno.value);
+    formData.append("dataInicio", document.getElementById("dataInicio").value);
+
+    const dataFimValue = document.getElementById("dataFim").value;
+    if (dataFimValue) {
+        formData.append("dataFim", dataFimValue);
+    } else {
+        formData.append("dataFim", "");
     }
 
-    // Adicionar os novos campos de data de início e término ao FormData
-    const dataInicio = document.getElementById("dataInicio").value;
-    const dataFim = document.getElementById("dataFim").value;
+    formData.append("dataPostagem", hoje);
 
-    // Verificar se a data de início está no passado
-    const hoje = new Date().toISOString().split('T')[0];
-    if (!dataInicio || dataInicio < hoje) {
-        // Verificar se o formData já possui o campo dataInicio
-        if (!formData.has("dataInicio")) {
-            formData.append("dataInicio", hoje);
-        } else {
-            // Atualizar o valor do campo dataInicio
-            formData.set("dataInicio", hoje);
-        }
+    // Adiciona a imagem apenas se estiver presente e não estiver editando
+    if (imagemFile && !editandoId) {
+        formData.append("imagemFile", imagemFile);
     }
 
-    // Verificar se a data de término é anterior à data de início
-    if (dataInicio && dataFim && dataFim < dataInicio) {
-        alert("A data de término não pode ser anterior à data de início.");
-        return; // Abortar o envio do formulário
+    let url = '/api/refeitorio';
+    let method = 'POST';
+
+    if (editandoId) {
+        url += `/${editandoId}`;
+        method = 'PUT';
     }
 
-    // Adicionar o campo videoComSom ao FormData
-    const inputVideoComSom = document.getElementById("videoComSom");
-    formData.append("videoComSom", inputVideoComSom.checked ? "true" : "false");
-
-    // Definir a data da postagem como a data atual
-    const dataPostagem = hoje;
-    formData.append("dataPostagem", dataPostagem);
-
-    fetch("/api/refeitorio", {
-        method: "POST",
+    fetch(url, {
+        method: method,
         body: formData,
     })
-    .then((response) => {
+    .then(response => {
         if (!response.ok) {
             throw new Error("Falha ao enviar o informativo");
         }
         return response.json();
     })
-    .then((data) => {
+    .then(data => {
+        if (method === 'POST') {
+            alert("Informativo enviado com sucesso!");
+        } else if (method === 'PUT') {
+            alert("Informativo atualizado com sucesso!");
+            editandoId = null; // Reset editandoId após a atualização
+        }
         loadInformativos();
         form.reset();
-        editandoId = null;
-    })
-    .catch((error) => {
-        // Verifica se há uma mensagem de erro retornada pelo servidor
-        if (error.response && error.response.data && error.response.data.error) {
-            // Se houver, exibe a mensagem de erro retornada pelo servidor
-            alert("Erro ao enviar o informativo: " + error.response.data.error);
-        } else {
-            // Se não houver mensagem de erro específica, exibe uma mensagem genérica
-            alert("Erro ao enviar o informativo. Por favor, tente novamente mais tarde.");
-        }
-    });
 
-    console.log("Depois de ter enviado:");
-    formData.forEach(function(value, key) {
-        console.log(key + ": " + value);
+        // Remova o atributo hidden dos campos ocultos
+        inputImagemUrl.removeAttribute("hidden");
+        document.querySelector('label[for="imagemUrl"]').removeAttribute("style");
+        inputImagemFile.removeAttribute("hidden");
+        document.querySelector('label[for="imagemFile"]').removeAttribute("style");
+        inputVideoUrl.removeAttribute("hidden");
+        document.querySelector('label[for="videoUrl"]').removeAttribute("style");
+        inputVideoComSom.removeAttribute("hidden");
+        document.querySelector('label[for="videoComSom"]').removeAttribute("style");
+    })    
+    .catch(error => {
+        alert("Erro ao enviar o informativo: " + error.message);
     });
   });
+
 
   loadInformativos();
 });

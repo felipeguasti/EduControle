@@ -137,3 +137,22 @@ exports.renderAdminAnuncios = async (req, res) => {
         res.status(500).send('Erro ao renderizar página de administração de anúncios');
     }
 };
+
+exports.listarAnunciosPorPagina = async (req, res) => {
+    try {
+        const pagina = parseInt(req.query.pagina) || 1;
+        const limite = 8;
+        const offset = (pagina - 1) * limite;
+
+        const anuncios = await Anuncio.findAll({
+            order: [['dataPublicacao', 'DESC']],
+            limit: limite,
+            offset: offset
+        });
+
+        res.json(anuncios);
+    } catch (error) {
+        console.error('Erro ao listar anúncios por página:', error);
+        res.status(500).json({ message: 'Erro ao listar anúncios por página.' });
+    }
+};

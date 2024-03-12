@@ -20,7 +20,7 @@
         </header>
         <section>
             <h1>Atualização das TV's do Refeitório</h1>
-            <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm">
+            <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm" enctype="multipart/form-data">
                 <label for="titulo">Título:</label>
                 <input type="text" id="titulo" name="titulo" required>
         
@@ -55,8 +55,9 @@
     
                 <label for="dataFim">Data de Término do Anúncio:</label>
                 <input type="date" id="dataFim" name="dataFim">
+                <input type="hidden" id="dataPostagem" name="dataPostagem">
     
-                <button type="submit">Publicar Informativo</button>
+                <button type="submit" id="submitButton">Publicar Informativo</button>
             </form>
         </section>
         <section>
@@ -67,7 +68,7 @@
 <% } else { %>
     <section>
         <h1>Atualização das TV's do Refeitório</h1>
-        <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm">
+        <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm" enctype="multipart/form-data">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" required>
     
@@ -104,7 +105,7 @@
             <input type="date" id="dataFim" name="dataFim">
             <input type="hidden" id="dataPostagem" name="dataPostagem">
 
-            <button type="submit">Publicar Informativo</button>
+            <button type="submit" id="submitButton">Publicar Informativo</button>
         </form>
     </section>
     <section>

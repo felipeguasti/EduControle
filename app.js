@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
 
 // Importação de rotas
 const reservasRoutes = require('./src/api/reservas');
@@ -17,8 +19,8 @@ const app = express();
 
 process.env.TZ = 'America/Sao_Paulo'; // Definindo o fuso horário para São Paulo
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Servir arquivos estáticos 
 app.use(express.static('./src/public'));
@@ -26,6 +28,24 @@ app.use(express.static('./src/public'));
 // Configura o Express para usar EJS como template engine
 app.set('view engine', 'ejs');
 app.set('views', './src/views');  // Define o diretório das views
+
+// Configuração do Multer
+const upload = multer({ 
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, path.join(__dirname, '..', 'src', 'public', 'images', 'uploads'));
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + '-' + file.originalname);
+        }
+    }),
+    fileFilter: (req, file, cb) => {
+        if (file.fieldname !== 'imagemFile') {
+            return cb(new Error('Campo de arquivo inválido.'));
+        }
+        cb(null, true);
+    }
+});
 
 // Definindo as rotas
 app.use('/api/reservas', reservasRoutes);
@@ -58,12 +78,24 @@ app.get('/refeitorio', (req, res) => {
     res.render('refeitorio');
 });
 
+// Configuração para servir arquivos estáticos na pasta 'js'
+app.use('/js', express.static(path.join(__dirname, 'src', 'public', 'js')));
+
 // Middleware para registrar requisições
 app.use((req, res, next) => {
     console.log(`${new Date().toLocaleString()} - ${req.method} ${req.url}`);
     next();
 });
 
+app.use((error, req, res, next) => {
+    if (error instanceof multer.MulterError) {
+        console.error('Erro do Multer:', error);
+        res.status(400).json({ error: 'Erro de upload de arquivo.' });
+    } else {
+        console.error('Erro desconhecido:', error);
+        res.status(500).json({ error: 'Erro interno do servidor.' });
+    }
+});
 
 // Nova rota para buscar reservas por semana
 app.get('/api/disponibilidade/:recurso/semana', disponibilidadeController.buscarReservasPorSemana);
