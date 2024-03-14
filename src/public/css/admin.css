@@ -25,6 +25,9 @@ body::before {
     z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
 }
 
+h2 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra com deslocamento de 2px horizontal e 2px vertical, borrão de 4px e cor preta com 50% de transparência */
+}
 
 header {
     background-image: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(255, 20, 147, 0.5)), url('/images/header.jpg');    background-repeat: no-repeat;
@@ -609,6 +612,106 @@ nav ul li a:hover, nav ul li a.active {
 
 nav ul li .btnActive {
     border: 3px white solid;
+}
+
+.tituloPublicados {
+    margin-top: 40px; /* Adiciona 20 pixels de espaço acima do título */
+}
+
+#informativoList,
+#programadosList {
+    background-color: rgba(255, 255, 255, 0.8); /* branco com 0.8 de transparência */
+    padding: 10px; /* Adapte o preenchimento conforme necessário */
+    border-radius: 5px; /* Adicione borda arredondada */
+    box-sizing: border-box;
+}
+
+
+/* Estilo para os contêineres de informativo */
+.informativo-container {
+    border: 2px solid #96cf59; /* Cor da borda para informativos */
+    padding: 20px;
+    margin: 10px;
+    width: calc(33.33% - 20px); /* Define a largura para ocupar 1/3 da largura do container pai */
+    display: inline-block;
+    vertical-align: top; /* Alinha os contêineres no topo */
+    box-sizing: border-box; /* Garante que a largura inclua o padding */
+    background-color: #f9f9f9; /* Cor de fundo dos contêineres */
+}
+
+/* Estilo para os contêineres de informativo programado */
+.programado-container {
+    border: 2px solid #3a9fe9; /* Cor da borda para programados */
+    padding: 20px;
+    margin: 10px;
+    width: calc(33.33% - 20px); /* Define a largura para ocupar 1/3 da largura do container pai */
+    display: inline-block;
+    vertical-align: top; /* Alinha os contêineres no topo */
+    box-sizing: border-box; /* Garante que a largura inclua o padding */
+    background-color: #f9f9f9; /* Cor de fundo dos contêineres */
+}
+
+.informativo-container,
+.programado-container {
+    min-height: auto; /* Adicione esta linha */
+}
+
+.informativo-container img,
+.programado-container img {
+    width: 100%; /* Define a largura da imagem como 100% do container */
+    height: 200px; /* Define a altura da imagem como 100% do container */
+    object-fit: cover; /* Redimensiona e corta a imagem para caber dentro do contêiner mantendo sua proporção */
+    object-position: top; /* Define a posição da imagem para que a parte superior seja sempre visível */
+    display: block; /* Remove espaços extras abaixo da imagem */
+    margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
+}
+
+
+/* Estilos para os botões de edição e exclusão */
+.delete-button,
+.edit-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 30px; /* Defina o tamanho desejado para os ícones */
+    height: 30px; /* Defina o tamanho desejado para os ícones */
+    text-indent: -9999px; /* Oculta o texto ao mover para fora da tela */
+}
+
+/* Estilo para o botão de excluir */
+.delete-button {
+    background-image: url('/images/excluir.png'); /* Caminho para o ícone de excluir */
+    background-size: cover;
+}
+
+/* Estilo para o botão de editar */
+.edit-button {
+    background-image: url('/images/editar.png'); /* Caminho para o ícone de editar */
+    background-size: cover;
+}
+
+/* Estilo para o container principal */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo para o turno */
+.turno-indicacao {
+    margin-right: 10px; /* Adiciona um espaçamento à direita dos botões */
+}
+
+/* Estilo para o container dos botões */
+.buttons-container {
+    display: flex;
+}
+
+/* Estilo para os botões de editar e excluir */
+.delete-button,
+.edit-button {
+    margin-right: 10px; /* Adiciona uma margem à direita do ícone de editar */
 }
 
 /* Estilos responsivos para dispositivos móveis */

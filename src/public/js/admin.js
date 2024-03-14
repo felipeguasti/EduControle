@@ -11,11 +11,23 @@ import {
     avancarAnuncios 
 } from '../js/anuncios.js';
 
+import { 
+    loadInformativos,
+    deleteInformativo,
+    editInformativo,
+    alternarCamposDeEntrada,
+    alternarCampo,
+    alternarCamposDeArquivo,
+    alternarCamposDeVideo,
+    registrarOuvintesDeEventos
+} from '../js/refeitorio.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loadRefeitorioButton = document.getElementById('loadRefeitorioSection');
     const loadAnunciosButton = document.getElementById('loadAnunciosSection');
     const adminContentSection = document.getElementById('adminContentSection');
+    const linkAnuncios = document.getElementById('linkAnuncios');
+    const linkRefeitorio = document.getElementById('linkRefeitorio');
     
     
     if (loadRefeitorioButton) {
@@ -26,25 +38,27 @@ document.addEventListener('DOMContentLoaded', function() {
         loadAnunciosButton.addEventListener('click', carregarConteudoAnuncios);
     }
 
-    // Seleciona os links de anúncios e refeitório
-    const linkAnuncios = document.getElementById('linkAnuncios');
-    const linkRefeitorio = document.getElementById('linkRefeitorio');
+    // Adiciona event listener para o link de refeitório
+    if (document.getElementById('linkRefeitorio')) {
+        const linkRefeitorio = document.getElementById('linkRefeitorio');
+        linkRefeitorio.addEventListener('click', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do link
+            limparEstilo(); // Limpa os estilos de todos os links
+            carregarConteudoRefeitorio(); // Carrega o conteúdo do refeitório
+            this.classList.add('active'); // Adiciona a classe 'active' ao link atual
+        });
+    }
 
     // Adiciona event listener para o link de anúncios
-    linkAnuncios.addEventListener('click', function(event) {
-        event.preventDefault(); // Impede o comportamento padrão do link
-        limparEstilo(); // Limpa os estilos de todos os links
-        carregarConteudoAnuncios(); // Carrega o conteúdo dos anúncios
-        this.classList.add('active'); // Adiciona a classe 'active' ao link atual
-    });
-
-    // Adiciona event listener para o link de refeitório
-    linkRefeitorio.addEventListener('click', function(event) {
-        event.preventDefault(); // Impede o comportamento padrão do link
-        limparEstilo(); // Limpa os estilos de todos os links
-        carregarConteudoRefeitorio(); // Carrega o conteúdo do refeitório
-        this.classList.add('active'); // Adiciona a classe 'active' ao link atual
-    });
+    if (document.getElementById('linkAnuncios')) {
+        const linkAnuncios = document.getElementById('linkAnuncios');
+        linkAnuncios.addEventListener('click', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do link
+            limparEstilo(); // Limpa os estilos de todos os links
+            carregarConteudoAnuncios(paginaAtual); // Carrega o conteúdo dos anúncios
+            this.classList.add('active'); // Adiciona a classe 'active' ao link atual
+        });
+    }
 
     function mostrarLoading() {
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -68,17 +82,32 @@ document.addEventListener('DOMContentLoaded', function() {
         mostrarLoading(); // Mostrar indicador de carregamento antes de iniciar o carregamento
     
         try {
-            const refeitorioModule = await import('../js/refeitorio.js');
+            // Remova a importação do módulo refeitorio aqui
+            // const refeitorioModule = await import('../js/refeitorio.js');
             const response = await fetch('/api/refeitorio?section=content');
             const html = await response.text();
             document.getElementById('adminContentSection').innerHTML = html;
+    
+            //Variáveis da página
+            const inputImagemUrl = document.getElementById("imagemUrl");
+            const inputImagemFile = document.getElementById("imagemFile");
+            const inputVideoUrl = document.getElementById("videoUrl");
+            const inputVideoComSom = document.getElementById("videoComSom");
+
+            // Chame a função registrarOuvintesDeEventos passando as funções apropriadas como argumentos
+                registrarOuvintesDeEventos(
+                alternarCamposDeEntrada,
+                alternarCamposDeArquivo,
+                alternarCamposDeVideo
+            );
+            
         } catch (error) {
             console.error('Erro ao carregar a seção do refeitório:', error);
         } finally {
             esconderLoading(); // Esconder indicador de carregamento após o término do carregamento
         }
     }
-    
+        
     async function carregarConteudoAnuncios(pagina) {
         mostrarLoading(); // Mostrar indicador de carregamento antes de iniciar o carregamento
     
@@ -125,4 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     carregarConteudoAnuncios(paginaAtual);
+
+
 });

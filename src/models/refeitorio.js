@@ -22,7 +22,7 @@ const Refeitorio = db.define('refeitorio', {
     },
     imagemFile: {
         type: Sequelize.STRING,
-        allowNull: true // No formulário, o campo é usado para upload de imagem
+        allowNull: true 
     },
     videoUrl: {
         type: Sequelize.STRING,

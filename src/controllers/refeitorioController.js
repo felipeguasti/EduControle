@@ -14,6 +14,10 @@ exports.listarInformativos = async (req, res) => {
     try {
         const turnoAtual = getTurnoAtual();
         const filtroTurno = req.query.filtroTurno === 'true';
+        const filtroProgramados = req.query.filtroProgramados === 'true';
+        const filtroPublicados = req.query.filtroPublicados === 'true';
+        const filtroExpirados = req.query.filtroExpirados === 'true';
+        const filtroPainel = req.query.filtroPainel === 'true';
         
         let query = 'SELECT * FROM refeitorios';
         let replacements = {};
@@ -22,6 +26,24 @@ exports.listarInformativos = async (req, res) => {
             query += ' WHERE turno = :turnoAtual OR turno = "ambos"';
             replacements = { turnoAtual };
         }
+
+        if (filtroProgramados) {
+            query += ' WHERE dataInicio > NOW()';
+        }        
+        
+        if (filtroPublicados) {
+            query += ' WHERE (dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())';
+        }      
+        
+        if (filtroExpirados) {
+            query += ' WHERE dataFim < NOW()';
+        }
+        
+        
+        if (filtroPainel) {
+            query += ' WHERE ((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())) AND (turno = :turnoAtual OR turno = "ambos")';
+            replacements = { turnoAtual };
+        }  
 
         const refeitorios = await sequelize.query(query, {
             replacements: replacements,
@@ -43,6 +65,7 @@ exports.criarInformativo = async (req, res) => {
     const imagemFile = req.file;
 
     try {
+        
         let dataExpiracao = null;
         let imagemFinalUrl = imagemUrl;
 
@@ -75,6 +98,11 @@ exports.criarInformativo = async (req, res) => {
             dataFim: dataExpiracao,
             dataPostagem
         };
+
+        if ((imagemFile || imagemUrl) && titulo && mensagem && turno && dataPostagem) {
+            const novoInformativo = await Refeitorio.create(novoInformativoData);
+            return res.status(201).send(novoInformativo);
+        }        
 
         // Verificar se é apenas o envio da imagem ou o envio do formulário completo
         if (imagemFile && titulo && mensagem && turno && dataPostagem) {

@@ -229,9 +229,6 @@ function adicionarEventListenersEditarExcluir() {
     });
 }
 
-
-
-
 export function adicionarDataPublicacao() {
     const anunciosContainers = document.querySelectorAll('.anuncio-container');
     anunciosContainers.forEach(container => {
