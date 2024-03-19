@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const sequelize = require('../config/db'); 
 const moment = require('moment');
+const { Op } = require('sequelize');
 
 const getTurnoAtual = () => {
     const now = new Date();
@@ -19,42 +20,66 @@ exports.listarInformativos = async (req, res) => {
         const filtroExpirados = req.query.filtroExpirados === 'true';
         const filtroPainel = req.query.filtroPainel === 'true';
         
+        // Parâmetros de paginação
+        const pagina = parseInt(req.query.page) || 1; // Alterei para 'page' conforme a solicitação HTTP
+        const limite = parseInt(req.query.limite) || 10; // Número de resultados por página (padrão: 10)
+        const offset = (pagina - 1) * limite; // Corrigido o cálculo do offset
+        let whereClause = ''; // Adicionado uma string vazia para a cláusula WHERE
+        let replacements = {}; // Mantido o objeto vazio para os replacements
         let query = 'SELECT * FROM refeitorios';
-        let replacements = {};
 
         if (filtroTurno) {
-            query += ' WHERE turno = :turnoAtual OR turno = "ambos"';
-            replacements = { turnoAtual };
+            whereClause = appendToWhereClause(whereClause, '(turno = :turnoAtual OR turno = "ambos")');
+            replacements.turnoAtual = turnoAtual;
         }
-
-        if (filtroProgramados) {
-            query += ' WHERE dataInicio > NOW()';
-        }        
         
+        if (filtroProgramados) {
+            whereClause = appendToWhereClause(whereClause, 'DATE(dataInicio) > CURDATE()');
+        }        
+                
         if (filtroPublicados) {
-            query += ' WHERE (dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())';
+            whereClause = appendToWhereClause(whereClause, '(dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())');
         }      
         
         if (filtroExpirados) {
-            query += ' WHERE dataFim < NOW()';
+            whereClause = appendToWhereClause(whereClause, 'dataFim < NOW()');
         }
         
-        
         if (filtroPainel) {
-            query += ' WHERE ((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())) AND (turno = :turnoAtual OR turno = "ambos")';
-            replacements = { turnoAtual };
-        }  
+            whereClause = appendToWhereClause(whereClause, '((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())) AND (turno = :turnoAtual OR turno = "ambos")');
+            replacements.turnoAtual = turnoAtual;
+        }
+        
+        // Adiciona a cláusula WHERE à consulta se houver alguma cláusula adicionada
+        if (whereClause) {
+            query += ' WHERE ' + whereClause;
+        }
+        
+        // Função auxiliar para adicionar cláusulas à cláusula WHERE
+        function appendToWhereClause(whereClause, condition) {
+            if (whereClause !== '') {
+                whereClause += ' AND '; // Adiciona um "AND" se a cláusula WHERE já tiver condições
+            }
+            return whereClause + condition;
+        }
+
+        // Adicionar cláusulas de paginação
+        query += ` LIMIT ${limite} OFFSET ${offset}`;
+
+        replacements = { turnoAtual };
 
         const refeitorios = await sequelize.query(query, {
             replacements: replacements,
             type: sequelize.QueryTypes.SELECT 
         });
+
         res.send(refeitorios);
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: error.message });
     }
 };
+
 
 exports.criarInformativo = async (req, res) => {
     console.log("Recebida requisição POST em '/api/refeitorio'");
@@ -206,5 +231,47 @@ exports.buscarInformativoPorId = async (req, res) => {
         res.json(informativo);
     } catch (error) {
         res.status(500).send({ error: error.message });
+    }
+};
+
+exports.calcularTotalPaginas = async (req, res) => {
+    try {
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0); // Ajuste para comparação de datas sem horário.
+        const limite = 10;
+        console.log("Data de hoje ajustada:", hoje);
+
+        let whereClause = {};
+
+        if (req.query.tipo === 'programados') {
+            whereClause.dataInicio = { [Op.gt]: hoje };
+            console.log("Filtrando programados");
+        } else if (req.query.tipo === 'publicados') {
+            whereClause[Op.or] = [
+                {
+                    [Op.and]: [
+                      { dataInicio: { [Op.lte]: hoje } },
+                      { dataFim: { [Op.or]: [{ [Op.gte]: hoje }, { [Op.is]: null }] } }
+                    ]
+                }
+            ];
+            console.log("Filtrando publicados");
+        } else {
+            console.log("Tipo inválido: ", req.query.tipo);
+            return res.status(400).send({ message: "Tipo inválido." });
+        }
+
+        console.log("Where Clause: ", whereClause);
+
+        const total = await Refeitorio.count({ where: whereClause });
+        console.log("Total contado: ", total);
+
+        const totalPaginas = Math.ceil(total / limite);
+        console.log("Total de páginas: ", totalPaginas);
+
+        res.json({ totalPaginas });
+    } catch (error) {
+        console.error("Erro detalhado ao calcular total de páginas: ", error);
+        res.status(500).send({ message: "Erro ao calcular total de páginas", error: error.message });
     }
 };

@@ -61,10 +61,26 @@
             </form>
         </section>
         <section>
-            <h2 >Informativos Programados</h2>
-            <div id="programadosList"></div>  
-            <h2 class="tituloPublicados">Informativos Publicados</h2>
-            <div id="informativoList"></div>
+            <h2>Informativos Programados</h2>
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div id="programadosList"></div>
+                </div>
+                <div class="carousel-controls">
+                    <button id="recuarProgramados" class="prev carousel-control-button">Anterior</button>
+                    <button id="avancarProgramados" class="next carousel-control-button">Próximo</button> 
+                </div>
+            </div>
+            <h2>Informativos Publicados</h2>
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div id="informativoList"></div>
+                </div>
+                <div class="carousel-controls">
+                    <button id="recuarPublicados" class="prev carousel-control-button">Anterior</button>
+                    <button id="avancarPublicados" class="next carousel-control-button">Próximo</button> 
+                </div>                 
+            </div>
         </section>
         <%- include('partials/footerRefeitorio') %>             
 <% } else { %>
@@ -112,8 +128,24 @@
     </section>
     <section>
         <h2>Informativos Programados</h2>
-        <div id="programadosList"></div>  
-        <h2 class="tituloPublicados">Informativos Publicados</h2>
-        <div id="informativoList"></div>
+        <div class="carousel">
+            <div class="carousel-inner">
+                <div id="programadosList"></div>
+            </div>
+            <div class="carousel-controls">
+                <button id="recuarProgramados" class="prev carousel-control-button">Anterior</button>
+                <button id="avancarProgramados" class="next carousel-control-button">Próximo</button> 
+            </div>
+        </div>
+        <h2>Informativos Publicados</h2>
+        <div class="carousel">
+            <div class="carousel-inner">
+                <div id="informativoList"></div>
+            </div>
+            <div class="carousel-controls">
+                <button id="recuarPublicados" class="prev carousel-control-button">Anterior</button>
+                <button id="avancarPublicados" class="next carousel-control-button">Próximo</button> 
+            </div>                 
+        </div>
     </section>
 <% } %>

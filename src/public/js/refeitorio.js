@@ -5,7 +5,7 @@ let inputImagemFile;
 let inputVideoUrl;
 let inputVideoComSom;
 let inputMensagem;
-let inputTurno;
+let inputTurno = 'Matutino';
 let editandoId;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const hoje = new Date().toISOString().split('T')[0];
     editandoId = null;  
     formData = new FormData(); 
+
     window.deleteInformativo = deleteInformativo;
     window.editInformativo = editInformativo;
 
@@ -42,6 +43,22 @@ document.addEventListener("DOMContentLoaded", function () {
     inputVideoComSom.addEventListener("change", function () {
         inputImagemFile.value = "";
     });
+    
+    document.getElementById("avancarPublicados").addEventListener("click", async () => {
+        await avancarPaginaPublicados();
+    });
+    
+    document.getElementById("recuarPublicados").addEventListener("click", async () => {
+        await recuarPaginaPublicados();
+    });
+    
+    document.getElementById("avancarProgramados").addEventListener("click", async () => {
+        await avancarPaginaProgramados();
+    });
+    
+    document.getElementById("recuarProgramados").addEventListener("click", async () => {
+        await recuarPaginaProgramados();
+    });    
 
     let imagemFile = null;
     inputImagemFile.addEventListener("change", function () {
@@ -124,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 editandoId = null; // Reset editandoId após a atualização
             }
             loadInformativos();
+            loadProgramados();
             limparFormulario(); // Limpa o formulário
 
             // Remova o atributo hidden dos campos ocultos
@@ -140,8 +158,12 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Erro ao enviar o informativo: " + error.message);
         });
     });
-  loadInformativos();
-  loadProgramados();
+    loadInformativos();
+    loadProgramados();
+    const totalPaginasPublicados = getTotalPaginasPublicados();
+    atualizarBotoesPaginacao('publicados', totalPaginasPublicados);
+    const totalPaginasProgramados = getTotalPaginasProgramados();
+    atualizarBotoesPaginacao('programados', totalPaginasProgramados);
 });
 
 // Define as funções que registram os ouvintes de eventos
@@ -212,9 +234,17 @@ export function alternarCampo(elemento, nomeCampo, esconder = false) {
     }
 }
 
+export function formatarData(data) {
+    const dataObj = new Date(data);
+    const dia = String(dataObj.getDate()).padStart(2, '0');
+    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+    const ano = dataObj.getFullYear();
+    return `${dia}.${mes}.${ano}`;
+}
+
 //Envio informativo para o banco de dados
-export function loadInformativos() {
-    fetch("/api/refeitorio/listar?filtroPublicados=true")
+export function loadInformativos(page = 1) {
+    fetch(`/api/refeitorio/listar?filtroPublicados=true&page=${page}`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Erro ao carregar informativos. Por favor, tente novamente mais tarde.");
@@ -254,6 +284,11 @@ export function loadInformativos() {
 
                 const container = document.createElement('div');
                 container.classList.add('informativo-container');
+                const dataPostagem = informativo.dataPostagem;
+                const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
+                const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
+                const mensagemInicio = dataInicioFormatada ? `Publicado no dia ${dataInicioFormatada}` : `Publicado no dia ${dataPostagem}`;
+                const mensagemFim = dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada';
 
                 container.innerHTML = `
                     <h3>${informativo.titulo}</h3>
@@ -264,8 +299,9 @@ export function loadInformativos() {
                         : ""
                     }
                     ${videoContent}
-                    <div class="container">
-                        <span class="turno-indicacao"><b>${turno}</b></span>
+                    <h6>${mensagemInicio} e ${mensagemFim}</h6>
+                    <div class="container-infooter">
+                            <span class="turno-indicacao"><b>${turno}</b></span>
                         <div class="buttons-container">
                             <button class="delete-button" onclick="deleteInformativo(${
                             informativo.id
@@ -275,7 +311,6 @@ export function loadInformativos() {
                             })">Editar</button>
                         </div>
                     </div>`;
-                        
 
                 informativoList.appendChild(container);
             });
@@ -285,11 +320,11 @@ export function loadInformativos() {
     });
 }
 
-export function loadProgramados() {
-    fetch("/api/refeitorio/listar?filtroProgramados=true")
+export function loadProgramados(page = 1) {
+    fetch(`/api/refeitorio/listar?filtroProgramados=true&page=${page}`)
         .then((response) => {
             if (!response.ok) {
-                throw new Error("Erro ao carregar informativos. Por favor, tente novamente mais tarde.");
+                throw new Error("Erro ao carregar informativos programados. Por favor, tente novamente mais tarde.");
             }
             return response.json();
         })
@@ -326,6 +361,11 @@ export function loadProgramados() {
 
                 const container = document.createElement('div');
                 container.classList.add('programado-container');
+                const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
+                const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
+                const mensagemInicio = dataInicioFormatada ? `Será publicado no dia ${dataInicioFormatada}` : 'com data de publicação indeterminada';
+                const mensagemFim = dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada';
+
 
                 container.innerHTML = `
                     <h3>${informativo.titulo}</h3>
@@ -336,8 +376,9 @@ export function loadProgramados() {
                         : ""
                     }
                     ${videoContent}
-                    <div class="container">
-                        <span class="turno-indicacao"><b>${turno}</b></span>
+                    <h6>${mensagemInicio} e ${mensagemFim}</h6>
+                    <div class="container-infooter">
+                            <span class="turno-indicacao"><b>${turno}</b></span>
                         <div class="buttons-container">
                             <button class="delete-button" onclick="deleteInformativo(${
                             informativo.id
@@ -421,4 +462,77 @@ export function limparFormulario() {
     editandoId = null;
     const btnSubmit = document.querySelector('button[type="submit"]');
     btnSubmit.textContent = 'Enviar Informativo';
+}
+
+let paginaAtualPublicados = 1;
+let paginaAtualProgramados = 1; 
+const itensPorPagina = 10;
+
+export function atualizarBotoesPaginacao(tipo, totalPaginas) {
+    const botaoRecuar = document.getElementById(`recuar${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+    const botaoAvancar = document.getElementById(`avancar${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+
+    if (botaoRecuar && botaoAvancar) {
+        // Desabilita o botão recuar se estamos na primeira página
+        botaoRecuar.disabled = paginaAtualPublicados === 1;
+        botaoRecuar.classList.toggle('disabled', paginaAtualPublicados === 1);
+
+        // Desabilita o botão avançar se estamos na última página ou só existe uma página
+        botaoAvancar.disabled = paginaAtualPublicados >= totalPaginas || totalPaginas <= 1;
+        botaoAvancar.classList.toggle('disabled', paginaAtualPublicados >= totalPaginas || totalPaginas <= 1);
+    }
+}
+
+export async function avancarPaginaPublicados() {
+    const totalPaginas = await getTotalPaginasPublicados();
+    if (paginaAtualPublicados < totalPaginas) {
+        paginaAtualPublicados++;
+        loadInformativos(paginaAtualPublicados);
+        atualizarBotoesPaginacao('publicados', totalPaginas);
+    }
+}
+
+export async function recuarPaginaPublicados() {
+    if (paginaAtualPublicados > 1) { 
+        paginaAtualPublicados--;
+        loadInformativos(paginaAtualPublicados); 
+        const totalPaginas = await getTotalPaginasPublicados();
+        atualizarBotoesPaginacao('publicados', totalPaginas);
+    }
+}
+
+export async function avancarPaginaProgramados() {
+    const totalPaginas = await getTotalPaginasProgramados();
+    if (paginaAtualProgramados < totalPaginas) {
+        paginaAtualProgramados++; 
+        loadProgramados(paginaAtualProgramados);
+        atualizarBotoesPaginacao('programados', totalPaginas);
+    }
+}
+
+export async function recuarPaginaProgramados() {
+    if (paginaAtualProgramados > 1) {
+        paginaAtualProgramados--; 
+        loadProgramados(paginaAtualProgramados); 
+        const totalPaginas = await getTotalPaginasProgramados();
+        atualizarBotoesPaginacao('programados', totalPaginas);
+    }
+}
+
+export async function getTotalPaginasPublicados() {
+    const response = await fetch(`/api/refeitorio/total?tipo=publicados`);
+    if (!response.ok) {
+        throw new Error('Erro ao buscar total de páginas para publicados');
+    }
+    const data = await response.json();
+    return data.totalPaginas;
+}
+
+export async function getTotalPaginasProgramados() {
+    const response = await fetch(`/api/refeitorio/total?tipo=programados`);
+    if (!response.ok) {
+        throw new Error('Erro ao buscar total de páginas para programados');
+    }
+    const data = await response.json();
+    return data.totalPaginas;
 }

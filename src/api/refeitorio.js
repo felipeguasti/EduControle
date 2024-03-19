@@ -21,6 +21,9 @@ router.get('/listar', refeitorioController.listarInformativos);
 // Rota para criar um novo informativo (refeição)
 router.post('/', upload.single('imagemFile'), refeitorioController.criarInformativo);
 
+// Rota para renderizar a página de administração do refeitório
+router.get('/total', refeitorioController.calcularTotalPaginas);
+
 // Rota para atualizar um informativo existente (refeição)
 router.put('/:id', upload.single('imagemFile'), refeitorioController.atualizarInformativo);
 

@@ -624,6 +624,7 @@ nav ul li .btnActive {
     padding: 10px; /* Adapte o preenchimento conforme necessário */
     border-radius: 5px; /* Adicione borda arredondada */
     box-sizing: border-box;
+    width: 100%;
 }
 
 
@@ -692,15 +693,10 @@ nav ul li .btnActive {
 }
 
 /* Estilo para o container principal */
-.container {
+.container-infooter {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-/* Estilo para o turno */
-.turno-indicacao {
-    margin-right: 10px; /* Adiciona um espaçamento à direita dos botões */
 }
 
 /* Estilo para o container dos botões */
@@ -713,6 +709,55 @@ nav ul li .btnActive {
 .edit-button {
     margin-right: 10px; /* Adiciona uma margem à direita do ícone de editar */
 }
+
+.carousel {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.carousel-inner {
+    display: flex;
+}
+
+.carousel-item {
+    flex: 0 0 auto;
+    width: 300px; /* largura de cada item */
+    margin-right: 10px; /* espaço entre os itens */
+}
+
+.prev,
+.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    color: #3B3C3A;
+    border: none;
+    cursor: pointer;
+}
+
+.prev:hover,
+.next:hover {
+    background-color: #003366;
+    color:white;
+    border: none;
+    cursor: pointer;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 /* Estilos responsivos para dispositivos móveis */
 @media screen and (max-width: 768px) {
