@@ -22,8 +22,10 @@ exports.listarInformativos = async (req, res) => {
         
         // Parâmetros de paginação
         const pagina = parseInt(req.query.page) || 1; // Alterei para 'page' conforme a solicitação HTTP
-        const limite = parseInt(req.query.limite) || 10; // Número de resultados por página (padrão: 10)
+        const limite = parseInt(req.query.limite) || 4; // Número de resultados por página (padrão: 10)
+        const paginasParaCarregar = 2; // Pré-carregar a página atual e a próxima
         const offset = (pagina - 1) * limite; // Corrigido o cálculo do offset
+        let totalLimite = limite * paginasParaCarregar; // Carregando duas páginas por vez
         let whereClause = ''; // Adicionado uma string vazia para a cláusula WHERE
         let replacements = {}; // Mantido o objeto vazio para os replacements
         let query = 'SELECT * FROM refeitorios';
@@ -64,7 +66,7 @@ exports.listarInformativos = async (req, res) => {
         }
 
         // Adicionar cláusulas de paginação
-        query += ` LIMIT ${limite} OFFSET ${offset}`;
+        query += ` LIMIT ${totalLimite} OFFSET ${offset}`;
 
         replacements = { turnoAtual };
 
@@ -146,8 +148,6 @@ exports.criarInformativo = async (req, res) => {
         return res.status(500).send({ error: "Erro ao criar o informativo. Por favor, tente novamente mais tarde." });
     }
 };
-
-
 
 exports.atualizarInformativo = async (req, res) => {
     const { titulo, mensagem, imagemUrl, videoUrl, videoComSom, turno, dataInicio, dataFim, dataPostagem } = req.body;
@@ -237,24 +237,16 @@ exports.buscarInformativoPorId = async (req, res) => {
 exports.calcularTotalPaginas = async (req, res) => {
     try {
         const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0); // Ajuste para comparação de datas sem horário.
-        const limite = 10;
-        console.log("Data de hoje ajustada:", hoje);
+        hoje.setHours(0, 0, 0, 0);
+        const limite = 4;
 
-        let whereClause = {};
+        let whereClause = "";
 
         if (req.query.tipo === 'programados') {
-            whereClause.dataInicio = { [Op.gt]: hoje };
+            whereClause = 'DATE(dataInicio) > CURDATE()';
             console.log("Filtrando programados");
         } else if (req.query.tipo === 'publicados') {
-            whereClause[Op.or] = [
-                {
-                    [Op.and]: [
-                      { dataInicio: { [Op.lte]: hoje } },
-                      { dataFim: { [Op.or]: [{ [Op.gte]: hoje }, { [Op.is]: null }] } }
-                    ]
-                }
-            ];
+            whereClause = '(dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())';
             console.log("Filtrando publicados");
         } else {
             console.log("Tipo inválido: ", req.query.tipo);
@@ -263,7 +255,8 @@ exports.calcularTotalPaginas = async (req, res) => {
 
         console.log("Where Clause: ", whereClause);
 
-        const total = await Refeitorio.count({ where: whereClause });
+        // Converta whereClause para uma condição Sequelize entendível
+        const total = await Refeitorio.count({ where: sequelize.literal(whereClause) });
         console.log("Total contado: ", total);
 
         const totalPaginas = Math.ceil(total / limite);

@@ -1,6 +1,8 @@
 window.isAdminScriptLoaded = true;
 let paginaAtual = 1; // Mantém controle da página atual de anúncios
 const totalAnuncios = 8; // Número de anúncios por página
+let imagemFile = null;
+
 import { 
     carregarConteudoListaAnuncios,
     enviarFormulario,
@@ -13,13 +15,30 @@ import {
 
 import { 
     loadInformativos,
+    displayInformativos,
+    fillInformativoContainer,
+    loadProgramados,
+    displayProgramados,
+    fillProgramadoContainer,
     deleteInformativo,
     editInformativo,
+    limparFormulario,
     alternarCamposDeEntrada,
     alternarCampo,
     alternarCamposDeArquivo,
     alternarCamposDeVideo,
-    registrarOuvintesDeEventos
+    registrarOuvintesDeEventos,
+    formatarData,
+    atualizarBotoesPaginacao,
+    avancarPaginaPublicados, 
+    recuarPaginaPublicados,
+    avancarPaginaProgramados,
+    recuarPaginaProgramados,
+    getTotalPaginasPublicados,
+    getTotalPaginasProgramados,
+    quillContainer,
+    enviarInformativo,
+    inicializar
 } from '../js/refeitorio.js';
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -28,25 +47,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const adminContentSection = document.getElementById('adminContentSection');
     const linkAnuncios = document.getElementById('linkAnuncios');
     const linkRefeitorio = document.getElementById('linkRefeitorio');
-    
-    
-    if (loadRefeitorioButton) {
-        loadRefeitorioButton.addEventListener('click', carregarConteudoRefeitorio);
-    }
+    limparEstilo();
 
-    if (loadAnunciosButton) {
-        loadAnunciosButton.addEventListener('click', carregarConteudoAnuncios);
-    }
-
-    // Adiciona event listener para o link de refeitório
-    if (document.getElementById('linkRefeitorio')) {
-        const linkRefeitorio = document.getElementById('linkRefeitorio');
-        linkRefeitorio.addEventListener('click', function(event) {
-            event.preventDefault(); // Impede o comportamento padrão do link
-            limparEstilo(); // Limpa os estilos de todos os links
-            carregarConteudoRefeitorio(); // Carrega o conteúdo do refeitório
-            this.classList.add('active'); // Adiciona a classe 'active' ao link atual
-        });
+    const secaoAtiva = sessionStorage.getItem('secaoAtiva');
+    if (secaoAtiva === 'anuncios') {
+        carregarConteudoAnuncios(paginaAtual);
+        linkAnuncios.classList.add('active');
+    } else if (secaoAtiva === 'refeitorio') {
+        carregarConteudoRefeitorio();
+        linkRefeitorio.classList.add('active');
+    } else {
+        carregarConteudoAnuncios(paginaAtual); // Carrega anúncios por padrão
     }
 
     // Adiciona event listener para o link de anúncios
@@ -56,6 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault(); // Impede o comportamento padrão do link
             limparEstilo(); // Limpa os estilos de todos os links
             carregarConteudoAnuncios(paginaAtual); // Carrega o conteúdo dos anúncios
+            this.classList.add('active'); // Adiciona a classe 'active' ao link atual
+        });
+    }
+
+    // Adiciona event listener para o link de refeitório
+    if (document.getElementById('linkRefeitorio')) {
+        const linkRefeitorio = document.getElementById('linkRefeitorio');
+        linkRefeitorio.addEventListener('click', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do link
+            limparEstilo(); // Limpa os estilos de todos os links
+            carregarConteudoRefeitorio(); // Carrega o conteúdo do refeitório
             this.classList.add('active'); // Adiciona a classe 'active' ao link atual
         });
     }
@@ -75,36 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
             loadingIndicator.style.display = 'none';
         } else {
             console.error('Elemento de indicador de carregamento não encontrado.');
-        }
-    }
-    
-    async function carregarConteudoRefeitorio() {
-        mostrarLoading(); // Mostrar indicador de carregamento antes de iniciar o carregamento
-    
-        try {
-            // Remova a importação do módulo refeitorio aqui
-            // const refeitorioModule = await import('../js/refeitorio.js');
-            const response = await fetch('/api/refeitorio?section=content');
-            const html = await response.text();
-            document.getElementById('adminContentSection').innerHTML = html;
-    
-            //Variáveis da página
-            const inputImagemUrl = document.getElementById("imagemUrl");
-            const inputImagemFile = document.getElementById("imagemFile");
-            const inputVideoUrl = document.getElementById("videoUrl");
-            const inputVideoComSom = document.getElementById("videoComSom");
-
-            // Chame a função registrarOuvintesDeEventos passando as funções apropriadas como argumentos
-                registrarOuvintesDeEventos(
-                alternarCamposDeEntrada,
-                alternarCamposDeArquivo,
-                alternarCamposDeVideo
-            );
-            
-        } catch (error) {
-            console.error('Erro ao carregar a seção do refeitório:', error);
-        } finally {
-            esconderLoading(); // Esconder indicador de carregamento após o término do carregamento
         }
     }
         
@@ -145,7 +137,68 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             esconderLoading(); // Esconder indicador de carregamento após o término do carregamento
         }
+        sessionStorage.setItem('secaoAtiva', 'anuncios'); 
     }    
+
+    async function carregarConteudoRefeitorio() {
+        mostrarLoading(); 
+        
+        try {
+            const response = await fetch('/api/refeitorio?section=content');
+            const html = await response.text();
+            adminContentSection.innerHTML = html;
+            const inputImagemFile = document.getElementById("imagemFile");
+            const inputImagemUrl = document.getElementById("imagemUrl");
+            const inputTitulo = document.getElementById("titulo");
+            const inputMensagem = document.getElementById("mensagem");
+            const inputVideoUrl = document.getElementById("videoUrl");
+            const inputVideoComSom = document.getElementById("videoComSom");
+            const inputTurno = document.getElementById("turno");
+            
+            //Listeners da página            
+            document.getElementById("avancarPublicados").addEventListener("click", async () => {
+                await avancarPaginaPublicados();
+            });
+            
+            document.getElementById("recuarPublicados").addEventListener("click", async () => {
+                await recuarPaginaPublicados();
+            });
+            
+            document.getElementById("avancarProgramados").addEventListener("click", async () => {
+                await avancarPaginaProgramados();
+            });
+            
+            document.getElementById("recuarProgramados").addEventListener("click", async () => {
+                await recuarPaginaProgramados();
+            });    
+    
+            inputImagemFile.addEventListener("change", function () {
+                if (this.files.length > 0 && this.files[0].size > 3145728) {
+                    alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
+                    this.value = "";
+                } else if (this.files.length > 0) {
+                    imagemFile = this.files[0];
+                }
+            });
+    
+            // Chame a função registrarOuvintesDeEventos passando as funções apropriadas como argumentos
+            registrarOuvintesDeEventos(
+                alternarCamposDeEntrada,
+                alternarCamposDeArquivo,
+                alternarCamposDeVideo
+            );
+            inicializar();
+            quillContainer();
+            
+        } catch (error) {
+            console.error('Erro ao carregar a seção do refeitório:', error);
+        } finally {
+            esconderLoading(); // Esconder indicador de carregamento após o término do carregamento
+        }
+        loadInformativos();
+        loadProgramados();    
+        sessionStorage.setItem('secaoAtiva', 'refeitorio');
+    }
 
     function limparEstilo() {
         var links = document.querySelectorAll('nav ul li a');
@@ -153,7 +206,4 @@ document.addEventListener('DOMContentLoaded', function() {
             link.classList.remove('active');
         });
     }
-    carregarConteudoAnuncios(paginaAtual);
-
-
 });

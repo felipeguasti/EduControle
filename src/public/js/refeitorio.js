@@ -7,10 +7,15 @@ let inputVideoComSom;
 let inputMensagem;
 let inputTurno = 'Matutino';
 let editandoId;
+let recuarProgramados;
+let avancarPublicados;
+let recuarPublicados;
+let avancarProgramados;
+let conteudoQuill;
+let form;
 
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("informativoForm");
-    const informativoList = document.getElementById("informativoList");
+    const hoje = new Date().toISOString().split('T')[0];
     inputImagemFile = document.getElementById("imagemFile");
     inputImagemUrl = document.getElementById("imagemUrl");
     inputTitulo = document.getElementById("titulo");
@@ -18,153 +23,235 @@ document.addEventListener("DOMContentLoaded", function () {
     inputVideoUrl = document.getElementById("videoUrl");
     inputVideoComSom = document.getElementById("videoComSom");
     inputTurno = document.getElementById("turno");
-    const hoje = new Date().toISOString().split('T')[0];
+    recuarProgramados = document.getElementById("recuarProgramados");
+    avancarPublicados = document.getElementById("avancarPublicados");
+    recuarPublicados = document.getElementById("recuarPublicados");
+    avancarProgramados = document.getElementById("avancarProgramados");
+    const informativoList = document.getElementById("informativoList");
+    const programadosList = document.getElementById("programadosList");
+
+    if (typeof window.isAdminScriptLoaded === 'undefined' || window.isAdminScriptLoaded === false) {
+        const informativoList = document.getElementById("informativoList");
+        const programadosList = document.getElementById("programadosList");
+    }
+    
+    if (typeof window.isAdminScriptLoaded === 'undefined' || window.isAdminScriptLoaded === false) {
+        loadInformativos();
+        loadProgramados();
+        quillContainer();
+    }
+
     editandoId = null;  
     formData = new FormData(); 
 
     window.deleteInformativo = deleteInformativo;
     window.editInformativo = editInformativo;
-
-    inputImagemFile.addEventListener("change", function () {
-    console.log("Input imagem file change event");
-    console.log("Selected file:", this.files[0]);
-    console.log("Form data before setting:", formData.get("imagemFile"));
-    formData.set("imagemFile", this.files[0]);
-    console.log("Form data after setting:", formData.get("imagemFile"));
-    });
-
+    
     //Listeners da página
-    inputImagemUrl.addEventListener("blur", alternarCamposDeEntrada); // Adicionando o evento blur
-    inputImagemFile.addEventListener("change", alternarCamposDeArquivo);
-    inputVideoUrl.addEventListener("input", alternarCamposDeVideo);
-    inputVideoUrl.addEventListener("input", function () {
-        inputImagemFile.value = "";
-    });
-    inputVideoComSom.addEventListener("change", function () {
-        inputImagemFile.value = "";
-    });
-    
-    document.getElementById("avancarPublicados").addEventListener("click", async () => {
-        await avancarPaginaPublicados();
-    });
-    
-    document.getElementById("recuarPublicados").addEventListener("click", async () => {
-        await recuarPaginaPublicados();
-    });
-    
-    document.getElementById("avancarProgramados").addEventListener("click", async () => {
-        await avancarPaginaProgramados();
-    });
-    
-    document.getElementById("recuarProgramados").addEventListener("click", async () => {
-        await recuarPaginaProgramados();
-    });    
-
-    let imagemFile = null;
-    inputImagemFile.addEventListener("change", function () {
-        if (this.files.length > 0 && this.files[0].size > 3145728) {
-            alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
-            this.value = "";
-        } else if (this.files.length > 0) {
-            imagemFile = this.files[0];
-        }
-    });
-
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const dataInicio = new Date(document.getElementById("dataInicio").value);
-        const dataFim = new Date(document.getElementById("dataFim").value);
-        const hoje = new Date();
-        hoje.setDate(hoje.getDate() - 1); // Subtrai um dia da data atual
-        hoje.setHours(0, 0, 0, 0);
-
-        // Verifica se a data inicial é no passado
-        if (dataInicio < hoje) {
-            alert("A data inicial não pode ser no passado.");
-            return;
-        }
-
-        // Verifica se a data final é anterior à data inicial
-        if (dataFim && dataFim < dataInicio) {
-            alert("A data final não pode ser anterior à data inicial de postagem.");
-            return;
-        }
-        console.log("Enviando formulário...");
-
-        const formData = new FormData();
-        formData.append("titulo", inputTitulo.value);
-        formData.append("mensagem", inputMensagem.value);
-        formData.append("imagemUrl", inputImagemUrl.value);
-        formData.append("videoUrl", inputVideoUrl.value);
-        formData.append("videoComSom", inputVideoComSom.checked.toString());
-        formData.append("turno", inputTurno.value);
-        formData.append("dataInicio", document.getElementById("dataInicio").value);
-
-        const dataFimValue = document.getElementById("dataFim").value;
-        if (dataFimValue) {
-            formData.append("dataFim", dataFimValue);
-        } else {
-            formData.append("dataFim", "");
-        }
-
-        formData.append("dataPostagem", hoje);
-
-        // Adiciona a imagem apenas se estiver presente e não estiver editando
-        if (imagemFile && !editandoId) {
-            formData.append("imagemFile", imagemFile);
-        }
-
-        let url = '/api/refeitorio';
-        let method = 'POST';
-
-        if (editandoId) {
-            url += `/${editandoId}`;
-            method = 'PUT';
-        }
-        fetch(url, {
-            method: method,
-            body: formData,
-        })
-        .then(response => {
-            console.log("Resposta recebida:", response);
-            if (!response.ok) {
-                throw new Error("Falha ao enviar o informativo");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (method === 'POST') {
-                alert("Informativo enviado com sucesso!");
-            } else if (method === 'PUT') {
-                alert("Informativo atualizado com sucesso!");
-                editandoId = null; // Reset editandoId após a atualização
-            }
-            loadInformativos();
-            loadProgramados();
-            limparFormulario(); // Limpa o formulário
-
-            // Remova o atributo hidden dos campos ocultos
-            inputImagemUrl.removeAttribute("hidden");
-            document.querySelector('label[for="imagemUrl"]').removeAttribute("style");
-            inputImagemFile.removeAttribute("hidden");
-            document.querySelector('label[for="imagemFile"]').removeAttribute("style");
-            inputVideoUrl.removeAttribute("hidden");
-            document.querySelector('label[for="videoUrl"]').removeAttribute("style");
-            inputVideoComSom.removeAttribute("hidden");
-            document.querySelector('label[for="videoComSom"]').removeAttribute("style");
-        })    
-        .catch(error => {
-            alert("Erro ao enviar o informativo: " + error.message);
+    if (inputImagemFile) {
+        inputImagemFile.addEventListener("change", function () {
+        console.log("Input imagem file alterado");
+        console.log("Arquivo selecionado:", this.files[0]);    
+        console.log("Input imagem file change event");
+        console.log("Selected file:", this.files[0]);
+        console.log("Form data before setting:", formData.get("imagemFile"));
+        formData.set("imagemFile", this.files[0]);
+        console.log("Form data after setting:", formData.get("imagemFile"));
+        
         });
-    });
-    loadInformativos();
-    loadProgramados();
+    }
+    if (inputImagemUrl) {
+        inputImagemUrl.addEventListener("blur", alternarCamposDeEntrada); // Adicionando o evento blur
+    }
+    if (inputImagemFile) {
+        inputImagemFile.addEventListener("change", alternarCamposDeArquivo);
+    }
+    if (inputVideoUrl) {
+        inputVideoUrl.addEventListener("input", alternarCamposDeVideo);
+    }
+    if (inputVideoUrl) {
+        inputVideoUrl.addEventListener("input", function () {
+            inputImagemFile.value = "";
+        });
+    }
+    if (inputVideoComSom) {
+        inputVideoComSom.addEventListener("change", function () {
+            inputImagemFile.value = "";
+        });
+    }
+    if (avancarPublicados) {
+        avancarPublicados.addEventListener("click", async () => {
+            await avancarPaginaPublicados();
+        });    
+    }
+    if (recuarPublicados) {
+        recuarPublicados.addEventListener("click", async () => {
+            await recuarPaginaPublicados();
+        });
+    }
+    if (avancarProgramados) {
+        avancarProgramados.addEventListener("click", async () => {
+            await avancarPaginaProgramados();
+        });
+    }
+    if (recuarProgramados) {
+        recuarProgramados.addEventListener("click", async () => {
+            await recuarPaginaProgramados();
+        });    
+    }
+    let imagemFile = null;
+    if (recuarProgramados) {
+        inputImagemFile.addEventListener("change", function () {
+            if (this.files.length > 0 && this.files[0].size > 3145728) {
+                alert("O arquivo é muito grande! O tamanho máximo é de 3MB.");
+                this.value = "";
+            } else if (this.files.length > 0) {
+                imagemFile = this.files[0];
+            }
+        });
+    }
+    if (typeof window.isAdminScriptLoaded === 'undefined' || window.isAdminScriptLoaded === false) {
+        form = document.getElementById("informativoForm");
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                enviarInformativo();
+            });
+        }
+    }
     const totalPaginasPublicados = getTotalPaginasPublicados();
     atualizarBotoesPaginacao('publicados', totalPaginasPublicados);
     const totalPaginasProgramados = getTotalPaginasProgramados();
     atualizarBotoesPaginacao('programados', totalPaginasProgramados);
 });
+
+export function inicializar() {
+    form = document.getElementById("informativoForm");
+
+    if (!form) {
+        console.error("Formulário informativoForm não encontrado!");
+        return;
+    }
+
+    inputImagemFile = document.getElementById("imagemFile");
+    inputImagemUrl = document.getElementById("imagemUrl");
+    inputTitulo = document.getElementById("titulo");
+    inputMensagem = document.getElementById("mensagem");
+    inputVideoUrl = document.getElementById("videoUrl");
+    inputVideoComSom = document.getElementById("videoComSom");
+    inputTurno = document.getElementById("turno");
+
+    // Adiciona os event listeners se os elementos correspondentes forem encontrados
+    if (inputImagemFile) {
+        inputImagemFile.addEventListener("change", function () {
+            console.log("Input imagem file alterado");
+            console.log("Arquivo selecionado:", this.files[0]);
+            // Atualiza o formData com o arquivo
+            formData.set("imagemFile", this.files[0]);
+        });
+    }
+
+    // Adicione aqui outros event listeners conforme necessário...
+
+    // Listener para o evento submit do formulário
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        console.log("Evento submit capturado");
+        enviarInformativo();
+    });
+
+    // Se houver mais lógica de inicialização, coloque aqui
+}
+
+
+export function enviarInformativo () {
+    const dataInicio = new Date(document.getElementById("dataInicio").value);
+    const dataFim = new Date(document.getElementById("dataFim").value);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    // Verifica se a data inicial é no passado
+    if (dataInicio < hoje) {
+        console.log("A data inicial é no passado");
+        alert("A data inicial não pode ser no passado.");
+        return;
+    }else{
+        console.log("A data inicial está correta");
+    }
+
+    // Verifica se a data final é anterior à data inicial
+    if (dataFim && dataFim < dataInicio) {
+        alert("A data final não pode ser anterior à data inicial de postagem.");
+        return;
+    }
+    
+    console.log("Enviando formulário...");
+    const conteudoQuill = document.querySelector('.ql-editor').innerHTML;
+    const formData = new FormData();
+    formData.append("titulo", inputTitulo.value);
+    formData.append("mensagem", conteudoQuill);
+    formData.append("imagemUrl", inputImagemUrl.value);
+    formData.append("videoUrl", inputVideoUrl.value);
+    formData.append("videoComSom", inputVideoComSom.checked.toString());
+    formData.append("turno", inputTurno.value);
+    formData.append("dataInicio", document.getElementById("dataInicio").value);
+
+    const dataFimValue = document.getElementById("dataFim").value;
+    if (dataFimValue) {
+        formData.append("dataFim", dataFimValue);
+    } else {
+        formData.append("dataFim", "");
+    }
+
+    const dataPostagemFormatada = hoje.toISOString().split('T')[0];
+    formData.append("dataPostagem", dataPostagemFormatada);
+
+    if (imagemFile && !editandoId) {
+        formData.append("imagemFile", imagemFile);
+    }
+
+    let url = '/api/refeitorio';
+    let method = 'POST';
+
+    if (editandoId) {
+        url += `/${editandoId}`;
+        method = 'PUT';
+    }
+    console.log("Preparando para enviar a requisição fetch");
+    fetch(url, {
+        method: method,
+        body: formData,
+    })
+    .then(response => {
+        console.log("Resposta recebida:", response);
+        if (!response.ok) {
+            throw new Error("Falha ao enviar o informativo");
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (method === 'POST') {
+            alert("Informativo enviado com sucesso!");
+        } else if (method === 'PUT') {
+            alert("Informativo atualizado com sucesso!");
+            editandoId = null; // Reset editandoId após a atualização
+        }
+        loadInformativos();
+        loadProgramados();
+        limparFormulario(); // Limpa o formulário após o envio
+    })
+    .catch(error => {
+        alert("Erro ao enviar o informativo: " + error.message);
+    });
+}
+
+
+export function quillContainer () {
+    const quill = new Quill('#editor', {
+        placeholder: 'Escreva a sua mensagem aqui...',
+        theme: 'snow', // or 'bubble'
+    });
+}
 
 // Define as funções que registram os ouvintes de eventos
 export function registrarOuvintesDeEventos(alternarCamposDeEntrada, alternarCamposDeArquivo, alternarCamposDeVideo) {
@@ -186,7 +273,6 @@ export function registrarOuvintesDeEventos(alternarCamposDeEntrada, alternarCamp
 }
 
 export function alternarCamposDeEntrada() {
-    console.log(inputImagemUrl);
     if (inputImagemUrl.value.trim() === "") {
         alternarCampo(inputImagemFile, 'imagemFile');
         alternarCampo(inputVideoUrl, 'videoUrl');
@@ -242,159 +328,219 @@ export function formatarData(data) {
     return `${dia}.${mes}.${ano}`;
 }
 
-//Envio informativo para o banco de dados
+let bufferInformativos = [];
+let bufferIndex = 0;
+
 export function loadInformativos(page = 1) {
-    fetch(`/api/refeitorio/listar?filtroPublicados=true&page=${page}`)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Erro ao carregar informativos. Por favor, tente novamente mais tarde.");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            informativoList.innerHTML = "";
-            if (data.length === 0) {
-                informativoList.innerHTML = "<p>Não tem informativos publicados.</p>";
-                return;
-            }
-            data.forEach((informativo) => {
-                const turno =
-                    informativo.turno === "matutino"
-                    ? "Matutino"
-                    : informativo.turno === "vespertino"
-                    ? "Vespertino"
-                    : "Ambos";
-                let videoContent = "";
-
-                if (informativo.videoUrl) {
-                    if (informativo.videoUrl.includes("youtube")) {
-                        const videoId = informativo.videoUrl.split("v=")[1];
-                        const autoplay = "&autoplay=1";
-                        const loop = "&loop=1";
-                        const mute = informativo.videoComSom ? "" : "&mute=1";
-                        const embedUrl = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}${autoplay}${loop}${mute}&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0`;
-
-                        videoContent = `<iframe width="100%" height="480" src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-                    } else {
-                        videoContent = `<video src="${informativo.videoUrl}" ${
-                            informativo.videoComSom ? "controls" : "muted"
-                        } loop autoplay></video>`;
-                    }
+    // Verifica se já temos dados pré-carregados disponíveis no buffer
+    if (bufferIndex < bufferInformativos.length) {
+        // Exibe os dados do buffer
+        displayInformativos(bufferInformativos.slice(bufferIndex, bufferIndex + itensPorPagina));
+        bufferIndex += itensPorPagina;
+    } else {
+        // Se não houver dados no buffer, faz a requisição para carregar mais
+        fetch(`/api/refeitorio/listar?filtroPublicados=true&page=${page}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro ao carregar informativos. Por favor, tente novamente mais tarde.");
                 }
-
-                const container = document.createElement('div');
-                container.classList.add('informativo-container');
-                const dataPostagem = informativo.dataPostagem;
-                const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
-                const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
-                const mensagemInicio = dataInicioFormatada ? `Publicado no dia ${dataInicioFormatada}` : `Publicado no dia ${dataPostagem}`;
-                const mensagemFim = dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada';
-
-                container.innerHTML = `
-                    <h3>${informativo.titulo}</h3>
-                    <p>${informativo.mensagem}</p>
-                    ${
-                        informativo.imagemUrl
-                        ? `<img src="${informativo.imagemUrl}" alt="Imagem do Informativo" class="informativo-imagem">`
-                        : ""
-                    }
-                    ${videoContent}
-                    <h6>${mensagemInicio} e ${mensagemFim}</h6>
-                    <div class="container-infooter">
-                            <span class="turno-indicacao"><b>${turno}</b></span>
-                        <div class="buttons-container">
-                            <button class="delete-button" onclick="deleteInformativo(${
-                            informativo.id
-                            })">Excluir</button>
-                            <button class="edit-button" onclick="editInformativo(${
-                            informativo.id
-                            })">Editar</button>
-                        </div>
-                    </div>`;
-
-                informativoList.appendChild(container);
+                return response.json();
+            })
+            .then(data => {
+                // Reinicia o buffer com os novos dados carregados
+                bufferInformativos = data;
+                bufferIndex = 0;
+                displayInformativos(bufferInformativos.slice(bufferIndex, bufferIndex + itensPorPagina));
+                bufferIndex += itensPorPagina;
+            })
+            .catch(error => {
+                alert(error.message);
             });
-        })
-        .catch((error) => {
-            alert(error.message);
+    }
+}
+
+export function displayInformativos(informativos, pageIndex, totalInformativos) {
+    if (!informativoList) {
+        console.error("informativoList não encontrado no DOM.");
+        return;
+    }
+    informativoList.innerHTML = "";
+    if (informativos.length === 0) {
+        informativoList.innerHTML = "<p>Não tem informativos publicados.</p>";
+        return;
+    }
+
+    // Adiciona o último informativo da página anterior se não for a primeira página
+    if (pageIndex > 1) {
+        const lastOfPreviousIndex = (pageIndex - 2) * informativos.length + (informativos.length - 1);
+        const lastOfPrevious = totalInformativos[lastOfPreviousIndex];
+        const container = document.createElement('div');
+        container.classList.add('informativo-container', 'item-pela-metade');
+        
+        // Preenchimento do container com informações do lastOfPrevious
+        fillInformativoContainer(container, lastOfPrevious);
+
+        informativoList.appendChild(container);
+    }
+
+    informativos.forEach((informativo, index) => {
+        const container = document.createElement('div');
+        container.classList.add('informativo-container');
+
+        // Preenchimento do container com informações do informativo
+        fillInformativoContainer(container, informativo);
+
+        // Na primeira página, marca o último informativo para ser exibido pela metade
+        if (pageIndex === 1 && index === informativos.length - 1) {
+            container.classList.add('item-pela-metade');
+        }
+
+        informativoList.appendChild(container);
     });
 }
 
+
+export function fillInformativoContainer(container, informativo) {
+    const turno = informativo.turno === "matutino" ? "Matutino" :
+                  informativo.turno === "vespertino" ? "Vespertino" : "Ambos";
+
+    let videoContent = "";
+    if (informativo.videoUrl) {
+        if (informativo.videoUrl.includes("youtube")) {
+            const videoId = informativo.videoUrl.split("v=")[1];
+            const autoplay = "&autoplay=1";
+            const loop = "&loop=1";
+            const mute = informativo.videoComSom ? "" : "&mute=1";
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}${autoplay}${loop}${mute}&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0`;
+
+            videoContent = `<iframe width="100%" height="480" src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        } else {
+            videoContent = `<video src="${informativo.videoUrl}" ${
+                informativo.videoComSom ? "controls" : "muted"
+            } loop autoplay></video>`;
+        }
+    }
+
+    const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
+    const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
+    const mensagemInicio = dataInicioFormatada ? `Publicado no dia ${dataInicioFormatada}` : "Publicado recentemente";
+    const mensagemFim = dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada';
+
+    container.innerHTML = `
+        <h3>${informativo.titulo}</h3>
+        <p>${informativo.mensagem}</p>
+        ${informativo.imagemUrl ? `<img src="${informativo.imagemUrl}" alt="Imagem do Informativo" class="informativo-imagem">` : ""}
+        ${videoContent}
+        <h6>${mensagemInicio} e <br />${mensagemFim}</h6>
+        <div class="container-infooter">
+            <span class="turno-indicacao"><b>${turno}</b></span>
+            <div class="buttons-container">
+                <button class="delete-button" onclick="deleteInformativo(${informativo.id})">Excluir</button>
+                <button class="edit-button" onclick="editInformativo(${informativo.id})">Editar</button>
+            </div>
+        </div>`;
+}
+
+let bufferProgramados = [];
+let bufferProgramadosIndex = 0;
+
 export function loadProgramados(page = 1) {
-    fetch(`/api/refeitorio/listar?filtroProgramados=true&page=${page}`)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Erro ao carregar informativos programados. Por favor, tente novamente mais tarde.");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            programadosList.innerHTML = "";
-            if (data.length === 0) {
-                programadosList.innerHTML = "<p>Não tem informativos programados.</p>";
-                return;
-            }
-            data.forEach((informativo) => {
-                const turno =
-                    informativo.turno === "matutino"
-                    ? "Matutino"
-                    : informativo.turno === "vespertino"
-                    ? "Vespertino"
-                    : "Ambos";
-                let videoContent = "";
-
-                if (informativo.videoUrl) {
-                    if (informativo.videoUrl.includes("youtube")) {
-                        const videoId = informativo.videoUrl.split("v=")[1];
-                        const autoplay = "&autoplay=1";
-                        const loop = "&loop=1";
-                        const mute = informativo.videoComSom ? "" : "&mute=1";
-                        const embedUrl = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}${autoplay}${loop}${mute}&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0`;
-
-                        videoContent = `<iframe width="100%" height="480" src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-                    } else {
-                        videoContent = `<video src="${informativo.videoUrl}" ${
-                            informativo.videoComSom ? "controls" : "muted"
-                        } loop autoplay></video>`;
-                    }
+    if (bufferProgramadosIndex < bufferProgramados.length) {
+        displayProgramados(bufferProgramados.slice(bufferProgramadosIndex, bufferProgramadosIndex + itensPorPagina));
+        bufferProgramadosIndex += itensPorPagina;
+    } else {
+        fetch(`/api/refeitorio/listar?filtroProgramados=true&page=${page}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro ao carregar informativos programados. Por favor, tente novamente mais tarde.");
                 }
-
-                const container = document.createElement('div');
-                container.classList.add('programado-container');
-                const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
-                const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
-                const mensagemInicio = dataInicioFormatada ? `Será publicado no dia ${dataInicioFormatada}` : 'com data de publicação indeterminada';
-                const mensagemFim = dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada';
-
-
-                container.innerHTML = `
-                    <h3>${informativo.titulo}</h3>
-                    <p>${informativo.mensagem}</p>
-                    ${
-                        informativo.imagemUrl
-                        ? `<img src="${informativo.imagemUrl}" alt="Imagem do Informativo" class="informativo-imagem">`
-                        : ""
-                    }
-                    ${videoContent}
-                    <h6>${mensagemInicio} e ${mensagemFim}</h6>
-                    <div class="container-infooter">
-                            <span class="turno-indicacao"><b>${turno}</b></span>
-                        <div class="buttons-container">
-                            <button class="delete-button" onclick="deleteInformativo(${
-                            informativo.id
-                            })">Excluir</button>
-                            <button class="edit-button" onclick="editInformativo(${
-                            informativo.id
-                            })">Editar</button>
-                        </div>
-                    </div>`;
-
-                programadosList.appendChild(container);
+                return response.json();
+            })
+            .then(data => {
+                bufferProgramados = data;
+                bufferProgramadosIndex = 0;
+                displayProgramados(bufferProgramados.slice(bufferProgramadosIndex, bufferProgramadosIndex + itensPorPagina));
+                bufferProgramadosIndex += itensPorPagina;
+            })
+            .catch(error => {
+                alert(error.message);
             });
-        })
-        .catch((error) => {
-            alert(error.message);
+    }
+}
+
+export function displayProgramados(programados, pageIndex, totalProgramados) {
+    if (!programadosList) {
+        console.error("programadosList não encontrado no DOM.");
+        return;
+    }
+    programadosList.innerHTML = "";
+
+    // Adiciona o último informativo da página anterior se não for a primeira página
+    if (pageIndex > 1) {
+        const lastOfPreviousIndex = (pageIndex - 2) * programados.length + (programados.length - 1);
+        const lastOfPrevious = totalProgramados[lastOfPreviousIndex];
+        const container = document.createElement('div');
+        container.classList.add('programado-container', 'item-pela-metade');
+        
+        // Preenchimento do container com informações do lastOfPrevious
+        fillProgramadoContainer(container, lastOfPrevious);
+
+        programadosList.appendChild(container);
+    }
+
+    programados.forEach((informativo, index) => {
+        const container = document.createElement('div');
+        container.classList.add('programado-container');
+
+        // Preenchimento do container com informações do informativo
+        fillProgramadoContainer(container, informativo);
+
+        // Na primeira página, marca o último informativo para ser exibido pela metade
+        if (pageIndex === 1 && index === programados.length - 1) {
+            container.classList.add('item-pela-metade');
+        }
+
+        programadosList.appendChild(container);
     });
+}
+
+export function fillProgramadoContainer(container, informativo) {
+    const turno = informativo.turno === "matutino" ? "Matutino" :
+                  informativo.turno === "vespertino" ? "Vespertino" : "Ambos";
+
+    let videoContent = "";
+    if (informativo.videoUrl) {
+        if (informativo.videoUrl.includes("youtube")) {
+            const videoId = informativo.videoUrl.split("v=")[1];
+            const autoplay = "&autoplay=1";
+            const loop = "&loop=1";
+            const mute = informativo.videoComSom ? "" : "&mute=1";
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}${autoplay}${loop}${mute}&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0`;
+
+            videoContent = `<iframe width="100%" height="480" src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        } else {
+            videoContent = `<video src="${informativo.videoUrl}" ${
+                informativo.videoComSom ? "controls" : "muted"
+            } loop autoplay></video>`;
+        }
+    }
+
+    const dataInicioFormatada = informativo.dataInicio ? formatarData(informativo.dataInicio) : null;
+    const dataFimFormatada = informativo.dataFim ? formatarData(informativo.dataFim) : null;
+
+    container.innerHTML = `
+        <h3>${informativo.titulo}</h3>
+        <p>${informativo.mensagem}</p>
+        ${informativo.imagemUrl ? `<img src="${informativo.imagemUrl}" alt="Imagem do Informativo" class="informativo-imagem">` : ""}
+        ${videoContent}
+        <h6>Será publicado no dia ${dataInicioFormatada} e <br />${dataFimFormatada ? `será excluído no dia ${dataFimFormatada}` : 'terá duração indeterminada'}</h6>
+        <div class="container-infooter">
+            <span class="turno-indicacao"><b>${turno}</b></span>
+            <div class="buttons-container">
+                <button class="delete-button" onclick="deleteInformativo(${informativo.id})">Excluir</button>
+                <button class="edit-button" onclick="editInformativo(${informativo.id})">Editar</button>
+            </div>
+        </div>`;
 }
 
 export function deleteInformativo(id) {
@@ -421,9 +567,17 @@ export function editInformativo(id) {
         inputVideoComSom.removeAttribute("hidden");
         document.querySelector('label[for="videoComSom"]').removeAttribute("style");
         formData.set("videoComSom", "");
+        const editorElement = document.querySelector('[informativo-mensagem="true"]');
+        const conteudoQuill = new Quill('#editor');
+
+        if (editorElement) {
+            const conteudoDB = informativo.mensagem;
+            conteudoQuill.root.innerHTML = conteudoDB;
+        } else {
+            console.error('Elemento do editor não encontrado.');
+        }
 
         inputTitulo.value = informativo.titulo;
-        inputMensagem.value = informativo.mensagem;
         inputImagemUrl.value = informativo.imagemUrl || "";
         inputVideoUrl.value = informativo.videoUrl || "";
         inputVideoComSom.checked = informativo.videoComSom || false;
@@ -451,7 +605,8 @@ export function editInformativo(id) {
 
 export function limparFormulario() {
     inputTitulo.value = "";
-    inputMensagem.value = "";
+    const editorQuill = document.querySelector('.ql-editor');
+    editorQuill.innerHTML = ""; // Define o conteúdo do Quill para uma string vazia
     inputImagemUrl.value = "";
     inputImagemFile.value = "";
     inputVideoUrl.value = "";
@@ -468,18 +623,46 @@ let paginaAtualPublicados = 1;
 let paginaAtualProgramados = 1; 
 const itensPorPagina = 10;
 
-export function atualizarBotoesPaginacao(tipo, totalPaginas) {
+export async function atualizarBotoesPaginacao(tipo, totalPaginas) {
     const botaoRecuar = document.getElementById(`recuar${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
     const botaoAvancar = document.getElementById(`avancar${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
-
+    
     if (botaoRecuar && botaoAvancar) {
-        // Desabilita o botão recuar se estamos na primeira página
-        botaoRecuar.disabled = paginaAtualPublicados === 1;
-        botaoRecuar.classList.toggle('disabled', paginaAtualPublicados === 1);
-
-        // Desabilita o botão avançar se estamos na última página ou só existe uma página
-        botaoAvancar.disabled = paginaAtualPublicados >= totalPaginas || totalPaginas <= 1;
-        botaoAvancar.classList.toggle('disabled', paginaAtualPublicados >= totalPaginas || totalPaginas <= 1);
+        if (tipo === 'publicados') {
+            if (paginaAtualPublicados === 1) {
+                botaoRecuar.classList.add('disabled');
+                botaoRecuar.disabled = true;
+                botaoAvancar.classList.add('disabled');
+                botaoAvancar.disabled = true;
+            } else {
+                botaoRecuar.classList.remove('disabled');
+                botaoRecuar.disabled = false;
+            }
+        
+            if (paginaAtualPublicados === totalPaginas || totalPaginas === 0) {
+                botaoAvancar.classList.add('disabled');
+                botaoAvancar.disabled = true;
+            } else {
+                botaoAvancar.classList.remove('disabled');
+                botaoAvancar.disabled = false;
+            }
+        } else if (tipo === 'programados') {
+            if (paginaAtualProgramados === 1) {
+                botaoRecuar.classList.add('disabled');
+                botaoRecuar.disabled = true;
+            } else {
+                botaoRecuar.classList.remove('disabled');
+                botaoRecuar.disabled = false;
+            }
+        
+            if (paginaAtualProgramados === totalPaginas || totalPaginas === 0) {
+                botaoAvancar.classList.add('disabled');
+                botaoAvancar.disabled = true;
+            } else {
+                botaoAvancar.classList.remove('disabled');
+                botaoAvancar.disabled = false;
+            }
+        }
     }
 }
 

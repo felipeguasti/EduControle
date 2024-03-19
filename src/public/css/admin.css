@@ -559,25 +559,25 @@ table tr td:nth-child(6) {
     margin-top: 20px;
   }
   
-  #paginacaoAnuncios button {
-    background-color: #005f6b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  #paginacaoAnuncios button:hover {
-    background-color: #003366;
-  }
-  
-  #paginacaoAnuncios button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
+#paginacaoAnuncios button {
+background-color: #005f6b;
+color: white;
+border: none;
+padding: 10px 20px;
+margin: 0 10px;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+#paginacaoAnuncios button:hover {
+background-color: #003366;
+}
+
+#paginacaoAnuncios button:disabled {
+background-color: #cccccc;
+cursor: not-allowed;
+}
 
 nav {
     background-color: transparent; /* Sem cor de fundo */
@@ -614,26 +614,21 @@ nav ul li .btnActive {
     border: 3px white solid;
 }
 
-.tituloPublicados {
-    margin-top: 40px; /* Adiciona 20 pixels de espaço acima do título */
-}
-
 #informativoList,
 #programadosList {
     background-color: rgba(255, 255, 255, 0.8); /* branco com 0.8 de transparência */
-    padding: 10px; /* Adapte o preenchimento conforme necessário */
     border-radius: 5px; /* Adicione borda arredondada */
     box-sizing: border-box;
     width: 100%;
+    white-space: nowrap; /* Mantém todos os itens na mesma linha */
+    padding: 10px 0; /* Ajuste conforme necessário */
 }
-
 
 /* Estilo para os contêineres de informativo */
 .informativo-container {
     border: 2px solid #96cf59; /* Cor da borda para informativos */
     padding: 20px;
     margin: 10px;
-    width: calc(33.33% - 20px); /* Define a largura para ocupar 1/3 da largura do container pai */
     display: inline-block;
     vertical-align: top; /* Alinha os contêineres no topo */
     box-sizing: border-box; /* Garante que a largura inclua o padding */
@@ -654,9 +649,17 @@ nav ul li .btnActive {
 
 .informativo-container,
 .programado-container {
-    min-height: auto; /* Adicione esta linha */
+    width: calc(20%); /* Ajusta para que quatro caibam na linha, com espaço para margens */
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px 5px; /* Ajuste as margens conforme necessário */
+    box-sizing: border-box;
+    overflow: hidden; /* Adicionado para garantir que o conteúdo extra seja ocultado */
 }
 
+.carregamento-container h2 {
+    padding-top: 20px;
+}
 .informativo-container img,
 .programado-container img {
     width: 100%; /* Define a largura da imagem como 100% do container */
@@ -667,6 +670,24 @@ nav ul li .btnActive {
     margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
 }
 
+.informativo-container:not(:nth-child(4)),
+.programado-container:not(:nth-child(4)) {
+    width: calc(100% / 4.5);
+}
+
+.informativo-container:nth-child(4),
+.programado-container:nth-child(4) {
+    width: calc(100% / 4.5);
+    overflow: hidden;
+    position: relative;
+}
+
+.informativo-container:nth-child(4),
+.programado-container:nth-child(4) {
+    width: calc(100% / 4.5);
+    overflow: hidden;
+    position: relative;
+}
 
 /* Estilos para os botões de edição e exclusão */
 .delete-button,
@@ -710,10 +731,33 @@ nav ul li .btnActive {
     margin-right: 10px; /* Adiciona uma margem à direita do ícone de editar */
 }
 
+.carrossel-container {
+    width: 100%; /* Ajuste conforme necessário */
+    overflow-x: hidden;
+    white-space: nowrap; /* Garante que os itens fiquem na mesma linha */
+}  
+
 .carousel {
     overflow: hidden;
     position: relative;
     width: 100%;
+}
+
+.carousel::after {
+    /* Outras propriedades aqui */
+    position: absolute; /* Precisamos de position: absolute para criar um pseudo-elemento */
+    top: 0;
+    left: 100%; /* Inicialmente, posicionamos o pseudo-elemento fora da visão */
+    width: 100%; /* Preenche toda a largura do contêiner pai */
+    height: 100%; /* Preenche toda a altura do contêiner pai */
+    background-color: rgba(255, 255, 255, 0.5); /* Cor branca com 50% de opacidade */
+    z-index: 1; /* Garante que o pseudo-elemento fique sobre os elementos internos */
+    content: ""; /* Adiciona conteúdo ao pseudo-elemento */
+    transition: left 0.5s ease; /* Adiciona uma transição suave para a propriedade left */
+}
+
+.carousel.show::after {
+    left: 0; /* Move o pseudo-elemento para a esquerda */
 }
 
 .carousel-inner {
@@ -726,41 +770,94 @@ nav ul li .btnActive {
     margin-right: 10px; /* espaço entre os itens */
 }
 
+.informativo-container.item-pela-metade::after,
+.programado-container.item-pela-metade::after {
+    content: ""; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 14, 14, 0.2);
+    z-index: 2;
+}
+
+.carrossel-container {
+    position:absolute;
+}
 .prev,
 .next {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent;
-    color: #3B3C3A;
+    top: -20px;
+    bottom: 0;
+    width: 50px; /* Largura dos botões - ajuste conforme necessário */
+    background-color: rgba(129, 129, 129, 0.5); /* Cor de fundo com transparência */
+    color: rgb(48, 48, 48);
     border: none;
     cursor: pointer;
+    border-radius: 0; /* Limpa os cantos do botão */
+    z-index: 1;
 }
 
 .prev:hover,
 .next:hover {
-    background-color: #003366;
-    color:white;
-    border: none;
-    cursor: pointer;
+    background-color: rgba(9, 9, 9, 0.5); /* Cor de fundo com transparência */
+    color: rgb(255, 255, 255);
 }
 
 .prev {
-    left: 10px;
+    left: 0;
+    transform: rotate(-180deg); /* Girar o texto em -90 graus (sentido anti-horário) */
+    writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
+    align-items: center;
 }
 
 .next {
-    right: 10px;
+    right: -25px;
+    writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
+    align-items: center;
 }
 
-button.disabled {
+.button.disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
+#editor {
+    height: 200px;
+}
+
+.ql-container {
+    margin: 0 auto; /* Centralize horizontalmente */
+    display: flex; /* Use flexbox para centralizar verticalmente */
+    align-items: center; /* Centralize verticalmente */
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;    
+}
+
+/* Estilos para a barra de ferramentas do Quill */
+.ql-toolbar {
+    max-height: 40px; /* Defina a altura máxima da barra de ferramentas */
+    width: auto;
+    display: flex;
+    align-items: center; /* Centralizar os elementos verticalmente */
+    flex-wrap: nowrap; /* Evitar quebra de linha */
+}
+
+.ql-formats {
+    flex-grow: 1; /* Fazer os botões de formatação ocuparem todo o espaço disponível */
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+}
+
+.ql-formats:not(:first-child) {
+    height: 60px;
+}
 
 /* Estilos responsivos para dispositivos móveis */
 @media screen and (max-width: 768px) {
+    /* Mantendo as regras existentes */
     header, footer {
         text-align: left;
         padding: 10px;
@@ -770,10 +867,12 @@ button.disabled {
         padding-top: 50px;
         text-align: center;
     }
+
     header h3 {
-        padding-top: 20px;
+        padding: 10px 0 50px 0;
         text-align: center;
     }
+
     form {
         padding: 10px;
     }
@@ -781,22 +880,86 @@ button.disabled {
     .footer-content {
         flex-direction: column;
     }
+
     .footer-section {
-        margin: 10px 0; /* Espaçamento vertical entre as seções para telas menores */
+        margin: 10px 0;
     }
+
     .imageContact {
         display: flex;
-        justify-content: center; /* Alinha horizontalmente */
-        flex-wrap: wrap; /* Permite que os itens sejam empilhados se não couberem em uma linha */
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
     .imageContact img {
-        width: 25px; /* Ou o tamanho que preferir */
+        width: 25px;
         height: auto;
         margin: 5px;
     }
+
     #calendarioSemanal {
-    overflow-x: auto;
+        overflow-x: auto;
+    }
+
+    .informativo-container, .programado-container {
+        max-width: 100%; /* Defina o tamanho máximo desejado */
+        width: 100%; /* Defina o tamanho máximo desejado */
+        overflow-x: auto; /* Adicione uma barra de rolagem horizontal quando necessário */
+        flex-direction: column; /* Altera a direção do flex para vertical */
+        display: grid;
+    }
+    
+    /* Adiciona uma barra de rolagem horizontal ao container inteiro */
+    #informativoList, #programadosList {
+        overflow-x: auto; /* Adiciona uma barra de rolagem horizontal quando necessário */
+        white-space: nowrap; /* Evita que os elementos filhos quebrem em várias linhas */
+        width: 100%; /* Defina o tamanho máximo desejado */
+    }
+
+    .informativo-container:not(:nth-child(4)),
+    .programado-container:not(:nth-child(4)) {
+        width: calc(90%); /* Define a largura do contêiner */
+    }
+    .informativo-container:nth-child(4),
+    .programado-container:nth-child(4) {
+        width: calc(90%);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .informativo-container:nth-child(n + 5),
+    .programado-container:nth-child(n + 5) {
+        display: none; /* Oculta os itens a partir do quinto */
+    }
+
+    .item-pela-metade {
+        width: 100%; /* Define a largura total para cada item */
+    }
+
+    .informativo-container img
+    .programado-container img {
+        width: auto; /* Defina a largura da imagem como automática */
+        max-width: 200px; /* Defina a largura máxima da imagem como 100% do contêiner */
+        height: auto; /* Defina a altura da imagem como automática para manter a proporção */
+        max-height: 100%; /* Defina a altura máxima da imagem */
+        display: block; /* Remove espaços extras abaixo da imagem */
+        margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
+    }
+        
+    .buttons-container {
+        display: flex;
+        flex-direction: row; /* Mantém a direção do flex para horizontal */
+        justify-content: space-between; /* Espaçamento uniforme entre os botões */
+        margin-top: 10px; /* Adicione espaçamento superior entre os botões */
+    }
+
+    .next {
+        right: -7px;
+    }
+
+    .ql-list[value="bullet"], .ql-link {
+        visibility: hidden;   
     }
 }
+
 

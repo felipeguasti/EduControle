@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnAvancar = document.getElementById('btnAvancar');
         btnAvancar.addEventListener('click', avancarAnuncios);
     }
-
+    
     if (formAnuncio) {
         formAnuncio.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
     // Script de validação do formulário
     if (formAnuncio) {
         formAnuncio.addEventListener('submit', function(event) {
