@@ -23,7 +23,10 @@
             </nav>
         </header>
         <section>
-            <h2>Atualização das TV's do Refeitório</h2>
+            <div class="container-visualizar">
+                <h2>Atualização das TV's do Refeitório</h2>
+                <a href="/refeitorio" id="visualizar" class="button">Visualizar Painel</a>
+            </div>
             <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm" enctype="multipart/form-data">
                 <label for="titulo">Título:</label>
                 <input type="text" id="titulo" name="titulo" required>
@@ -90,7 +93,10 @@
         <%- include('partials/footerRefeitorio') %>             
 <% } else { %>
     <section>
-        <h2>Atualização das TV's do Refeitório</h2>
+        <div class="container-visualizar">
+            <h2>Atualização das TV's do Refeitório</h2>
+            <a href="/refeitorio" id="visualizar" class="button">Visualizar Painel</a>
+        </div>
         <form id="informativoForm" action="/api/refeitorio" method="post" name="informativoForm" enctype="multipart/form-data">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" required>

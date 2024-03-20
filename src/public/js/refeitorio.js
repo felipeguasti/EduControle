@@ -719,3 +719,4 @@ export async function getTotalPaginasProgramados() {
     const data = await response.json();
     return data.totalPaginas;
 }
+

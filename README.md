@@ -36,19 +36,21 @@ Para iniciar o servidor após a instalação, execute:
 Contribuições são bem-vindas! Para contribuir com o projeto, siga estas etapas: 1. Fork o repositório. 2. Crie uma nova branch: git checkout -b minha-nova-feature. 3. Faça suas alterações e commit: git commit -am 'Adiciona alguma feature'. 4. Envie para a branch original: git push origin minha-nova-feature. 5. Crie uma pull request.
 
 ## Versionamento
-### Versão 1.0 (já finalizada)
+### Versão 1.0
 - ✅ Desenvolvimento do sistema de reserva de equipamentos e espaços.
 - ✅ Criação de interfaces de usuário para reservas e administração.
 - ✅ Configuração da base de dados para gerenciamento de reservas e usuários.
 - ✅ Estabelecimento das regras de negócio para reservas e cancelamentos.
 
-### Versão 2.0 (em andamento)
+### Versão 2.0
 - ✅ Introdução de um limite de 30 dias para as reservas, garantindo uma maior rotatividade dos equipamentos.
 - ✅ Melhoria na navegação das páginas de anúncios, com botões para avançar e voltar, proporcionando uma experiência de usuário mais fluida.
-- Lançamento do painel do refeitório e da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - ✅ Otimização da área administrativa, tornando-a mais intuitiva e eficiente para os gestores.
-- Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.
+- ✅ Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.
 - ✅ Aprimoramento da visualização de anúncios na página do administrador, com opções para avançar e recuar, facilitando a gestão de conteúdo.
+
+### Versão 3.0 (em andamento)
+- Lançamento da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - Desenvolvimento do lobby de aplicativos, que se tornará a nova página inicial, reorganizando o acesso aos diferentes sistemas e serviços.
 - A atual página inicial será renomeada para "Equipamentos", e um ícone no lobby será adicionado para acessar o sistema de reservas de equipamentos.
 

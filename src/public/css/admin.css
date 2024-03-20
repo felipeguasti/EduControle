@@ -41,6 +41,7 @@ header {
     box-shadow: 0 0 10px rgba(0,0,0,0.4);
     margin-bottom: 0; /* Remove a margem inferior do cabeçalho */
     position: relative;
+    margin-bottom: 20px;
 
 }
 header h1 {
@@ -58,7 +59,7 @@ header h1, header h3 {
 }
 
 section {
-    margin: 20px;
+    margin-bottom: 20px;
     padding-top: 30px;
 }
 
@@ -614,6 +615,33 @@ nav ul li .btnActive {
     border: 3px white solid;
 }
 
+section {
+    padding-top:0;
+    padding:0 20px 0 20px;
+}
+
+.container-visualizar{
+    display: flex;
+    justify-content: space-between; /* Isso alinha um elemento à esquerda e o outro à direita */
+    align-items: center; /* Isso alinha os elementos verticalmente no centro, se necessário */
+    margin: 20px 0;
+}
+
+.container-visualizar h2{
+    margin-bottom:0;
+}
+
+.container-visualizar a {
+    color:#23486f; /* Adiciona uma linha na parte inferior de cada item da lista */
+    font-weight: bold;
+    text-decoration: none; /* Remove sublinhado */
+}
+
+.container-visualizar a:hover {
+    color:#acbac9; /* Adiciona uma linha na parte inferior de cada item da lista */
+    font-weight: bolder;
+}
+
 #informativoList,
 #programadosList {
     background-color: rgba(255, 255, 255, 0.8); /* branco com 0.8 de transparência */
@@ -660,6 +688,7 @@ nav ul li .btnActive {
 .carregamento-container h2 {
     padding-top: 20px;
 }
+
 .informativo-container img,
 .programado-container img {
     width: 100%; /* Define a largura da imagem como 100% do container */
