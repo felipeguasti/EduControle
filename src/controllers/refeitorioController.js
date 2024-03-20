@@ -5,17 +5,10 @@ const sequelize = require('../config/db');
 const moment = require('moment');
 const { Op } = require('sequelize');
 
-
 const getTurnoAtual = () => {
     const now = new Date();
-    const horaBrasilia = now.getUTCHours() - 3; // Ajustar para o fuso horário de Brasília
-    if (horaBrasilia >= 0 && horaBrasilia < 12.5) {
-        return 'matutino';
-    } else if (horaBrasilia >= 12.5 && horaBrasilia < 24) {
-        return 'vespertino';
-    } else {
-        return 'nao_exibir'; // Um novo retorno para indicar que não deve exibir informativos
-    }
+    const horaBrasilia = now.getUTCHours() - 3;
+    return (horaBrasilia >= 0 && horaBrasilia < 12.5) ? 'matutino' : 'vespertino';
 };
 
 exports.listarInformativos = async (req, res) => {
@@ -25,6 +18,7 @@ exports.listarInformativos = async (req, res) => {
         const filtroProgramados = req.query.filtroProgramados === 'true';
         const filtroPublicados = req.query.filtroPublicados === 'true';
         const filtroExpirados = req.query.filtroExpirados === 'true';
+        const filtroPainel = req.query.filtroPainel === 'true';
         
         // Parâmetros de paginação
         const pagina = parseInt(req.query.page) || 1; // Alterei para 'page' conforme a solicitação HTTP
@@ -51,6 +45,11 @@ exports.listarInformativos = async (req, res) => {
         
         if (filtroExpirados) {
             whereClause = appendToWhereClause(whereClause, 'dataFim < NOW()');
+        }
+        
+        if (filtroPainel) {
+            whereClause = appendToWhereClause(whereClause, '((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())) AND (turno = :turnoAtual OR turno = "ambos")');
+            replacements.turnoAtual = turnoAtual;
         }
         
         // Adiciona a cláusula WHERE à consulta se houver alguma cláusula adicionada
@@ -83,41 +82,6 @@ exports.listarInformativos = async (req, res) => {
     }
 };
 
-exports.listarInformativosPainel = async (req, res) => {
-    try {
-        const turnoAtual = getTurnoAtual();
-        let whereClause = '';
-        let replacements = { turnoAtual };
-        let query = 'SELECT * FROM refeitorios';
-
-        // Adapte esta lógica para se adequar às necessidades específicas do painel
-        whereClause = appendToWhereClause(whereClause, '((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW()))');
-
-        // Adiciona a cláusula WHERE à consulta se houver alguma cláusula adicionada
-        if (whereClause) {
-            query += ' WHERE ' + whereClause;
-        }
-
-        function appendToWhereClause(whereClause, condition) {
-            if (whereClause !== '') {
-                whereClause += ' AND ';
-            }
-            return whereClause + condition;
-        }
-
-        // Sem cláusulas de LIMIT e OFFSET para remover a paginação
-
-        const refeitorios = await sequelize.query(query, {
-            replacements: replacements,
-            type: sequelize.QueryTypes.SELECT 
-        });
-
-        res.send(refeitorios);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: error.message });
-    }
-};
 
 exports.criarInformativo = async (req, res) => {
     console.log("Recebida requisição POST em '/api/refeitorio'");
