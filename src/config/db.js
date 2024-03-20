@@ -11,7 +11,7 @@ const Sequelize = require('sequelize');
 const database = "u612973268_broadcast";
 const username = "u612973268_broadcast";
 const password = "E1=iTrLXsvk";
-const host = "localhost"; // O MySQL está rodando localmente, então o host é localhost
+const host = "localhost"; // O MySQL está rodando localmente
 const dialect = "mysql";
 
 // Inicializar a conexão com o banco de dados
