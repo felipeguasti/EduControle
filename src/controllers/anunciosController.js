@@ -1,5 +1,46 @@
+const cron = require('node-cron');
 const Anuncio = require('../models/anuncio');
-const moment = require('moment-timezone');
+const moment = require('moment');
+require('moment/locale/pt-br'); // Importa a localização pt-br
+
+
+function agendarPublicacaoAnuncio() {
+    const dataAtual = new Date();
+    const ultimoDiaMesAtual = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+    const setimoDiaAntesFimMes = new Date(ultimoDiaMesAtual.getFullYear(), ultimoDiaMesAtual.getMonth(), ultimoDiaMesAtual.getDate() - 7);
+
+    // Obter o nome do próximo mês em português
+    const proximoMes = moment(setimoDiaAntesFimMes).add(1, 'month').locale('pt-br').format('MMMM');
+
+    const minutos = setimoDiaAntesFimMes.getMinutes();
+    const horas = setimoDiaAntesFimMes.getHours();
+    const dia = setimoDiaAntesFimMes.getDate();
+    const mes = setimoDiaAntesFimMes.getMonth() + 1; // Ajuste porque getMonth() começa de 0
+
+    const agendamento = `${minutos} ${horas} ${dia} ${mes} *`;
+
+    cron.schedule(agendamento, async () => {
+        const mensagem = `A reserva para o <b>mês de ${proximoMes} </b>estão abertas. Reserve o seu equipamento!`;
+
+        try {
+            await Anuncio.create({
+                tituloAnuncio: 'Reservas Abertas',
+                conteudoAnuncio: mensagem,
+                dataPublicacao: new Date() // Ou use setimoDiaAntesFimMes se preferir
+            });
+        } catch (error) {
+            console.error('Erro ao criar anúncio:', error);
+        }
+
+        // Reagenda a tarefa para o próximo mês após a execução
+        agendarPublicacaoAnuncio();
+    }, {
+        scheduled: true,
+        timezone: "America/Sao_Paulo"
+    });
+}
+
+agendarPublicacaoAnuncio();
 
 exports.listarAnuncios = async (req, res) => {
     try {

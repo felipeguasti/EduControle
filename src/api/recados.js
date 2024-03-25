@@ -20,7 +20,7 @@ function verificaAutenticacao(req, res, next) {
 router.post('/', verificaAutenticacao,
   [ // Validações
     body('titulo').isLength({ max: 100 }).withMessage('Título muito longo.'),
-    body('conteudo').isLength({ max: 280 }).withMessage('Conteúdo muito longo.'),
+    body('conteudo').isLength({ max: 520 }).withMessage('Conteúdo muito longo.'),
     // Adicione mais validações conforme necessário
   ],
   async (req, res) => {

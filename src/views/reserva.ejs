@@ -20,19 +20,21 @@
             <div id="recursoQuantidade"></div>
             <input  type="hidden" id="recurso" name="recurso" readonly>
             </select>
-
+        
             <label for="data">Data:</label>
             <input type="date" id="data" name="data" required>
-
+        
             <label for="turno">Turno:</label>
             <select id="turno" name="turno" required>
                 <option value="Matutino">Matutino</option>
                 <option value="Vespertino">Vespertino</option>
             </select>
-
+        
+            <div id="permiteOutrosMeses"></div> <!-- Aqui será adicionado o checkbox dinamicamente -->
+        
             <label for="professor">Professor:</label>
             <input type="text" id="professor" name="professor" required>
-
+        
             <label for="turma">Turma:</label>
             <select id="turma" name="turma" required>
                 <!-- As opções serão preenchidas dinamicamente com JavaScript -->
@@ -48,9 +50,9 @@
             <!-- Estrutura básica do Popup (pode ser colocada no seu arquivo HTML) -->
             <label for="observacoes">Observações:</label>
             <textarea id="observacoes" name="observacoes"></textarea>
-
+        
             <button type="submit">Realizar Reserva</button>
-        </form>
+        </form>        
         <div id="popupProfessores" class="popup-container">
             <div class="popup-content">
                 <span class="close" onclick="fecharPopupProfessores()">&times;</span>

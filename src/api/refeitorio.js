@@ -18,6 +18,9 @@ const upload = multer({ storage: storage });
 // Rota para listar informativos (refeições)
 router.get('/listar', refeitorioController.listarInformativos);
 
+// Rota para listar informativos (refeições)
+router.get('/painel', refeitorioController.listarInformativosPainel);
+
 // Rota para criar um novo informativo (refeição)
 router.post('/', upload.single('imagemFile'), refeitorioController.criarInformativo);
 

@@ -2,14 +2,15 @@ const Refeitorio = require('../models/refeitorio');
 const path = require('path');
 const fs = require('fs');
 const sequelize = require('../config/db'); 
-const moment = require('moment');
+const moment = require('moment-timezone');
 const { Op } = require('sequelize');
 
-const getTurnoAtual = () => {
+// Função auxiliar para determinar o turno com base no horário de Brasília
+function getTurnoAtual() {
     const now = new Date();
-    const horaBrasilia = now.getUTCHours() - 3;
-    return (horaBrasilia >= 0 && horaBrasilia < 12.5) ? 'matutino' : 'vespertino';
-};
+    const horaBrasilia = now.getUTCHours() - 3; // Convertendo para o horário de Brasília
+    return (horaBrasilia >= 0 && horaBrasilia < 12) ? 'matutino' : 'vespertino';
+}
 
 exports.listarInformativos = async (req, res) => {
     try {
@@ -18,7 +19,6 @@ exports.listarInformativos = async (req, res) => {
         const filtroProgramados = req.query.filtroProgramados === 'true';
         const filtroPublicados = req.query.filtroPublicados === 'true';
         const filtroExpirados = req.query.filtroExpirados === 'true';
-        const filtroPainel = req.query.filtroPainel === 'true';
         
         // Parâmetros de paginação
         const pagina = parseInt(req.query.page) || 1; // Alterei para 'page' conforme a solicitação HTTP
@@ -40,17 +40,12 @@ exports.listarInformativos = async (req, res) => {
         }        
                 
         if (filtroPublicados) {
-            whereClause = appendToWhereClause(whereClause, '(dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())');
+            whereClause = appendToWhereClause(whereClause, '(dataInicio IS NULL OR DATE(dataInicio) <= CURDATE()) AND (dataFim IS NULL OR DATE(dataFim) >= CURDATE())');
         }      
         
         if (filtroExpirados) {
             whereClause = appendToWhereClause(whereClause, 'dataFim < NOW()');
-        }
-        
-        if (filtroPainel) {
-            whereClause = appendToWhereClause(whereClause, '((dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())) AND (turno = :turnoAtual OR turno = "ambos")');
-            replacements.turnoAtual = turnoAtual;
-        }
+        }      
         
         // Adiciona a cláusula WHERE à consulta se houver alguma cláusula adicionada
         if (whereClause) {
@@ -69,6 +64,43 @@ exports.listarInformativos = async (req, res) => {
         query += ` LIMIT ${totalLimite} OFFSET ${offset}`;
 
         replacements = { turnoAtual };
+
+        const refeitorios = await sequelize.query(query, {
+            replacements: replacements,
+            type: sequelize.QueryTypes.SELECT 
+        });
+
+        res.send(refeitorios);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
+exports.listarInformativosPainel = async (req, res) => {
+    try {
+        const turnoAtual = getTurnoAtual();
+        let whereClause = '';
+        let replacements = { turnoAtual };
+        let query = 'SELECT * FROM refeitorios';
+
+        // Filtra informativos baseado na data e no turno
+        whereClause = appendToWhereClause(whereClause, '(dataInicio IS NULL OR DATE(dataInicio) <= CURDATE()) AND (dataFim IS NULL OR DATE(dataFim) >= CURDATE())');
+        whereClause = appendToWhereClause(whereClause, '(turno = :turnoAtual OR turno = "ambos")');
+
+        // Adiciona a cláusula WHERE à consulta se houver alguma cláusula adicionada
+        if (whereClause) {
+            query += ' WHERE ' + whereClause;
+        }
+
+        function appendToWhereClause(whereClause, condition) {
+            if (whereClause !== '') {
+                whereClause += ' AND ';
+            }
+            return whereClause + condition;
+        }
+
+        // Sem cláusulas de LIMIT e OFFSET para remover a paginação
 
         const refeitorios = await sequelize.query(query, {
             replacements: replacements,
@@ -107,8 +139,8 @@ exports.criarInformativo = async (req, res) => {
             if (dataTerminoAnuncio.isBefore(dataInicioAnuncio, 'day')) {
                 return res.status(400).send({ error: "A data de término não pode ser anterior à data de início do anúncio." });
             }
-            dataExpiracao = dataTerminoAnuncio.endOf('day');
-        }
+            dataExpiracao = dataTerminoAnuncio.toDate();
+        }        
 
         if (imagemFile) {
             imagemFinalUrl = req.protocol + '://' + req.get('host') + '/images/uploads/' + imagemFile.filename;
@@ -236,17 +268,16 @@ exports.buscarInformativoPorId = async (req, res) => {
 
 exports.calcularTotalPaginas = async (req, res) => {
     try {
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
-        const limite = 4;
+        const hoje = moment().startOf('day').format('YYYY-MM-DD'); // Data de hoje no formato YYYY-MM-DD
 
+        const limite = 4;
         let whereClause = "";
 
         if (req.query.tipo === 'programados') {
             whereClause = 'DATE(dataInicio) > CURDATE()';
             console.log("Filtrando programados");
         } else if (req.query.tipo === 'publicados') {
-            whereClause = '(dataInicio IS NULL OR dataInicio <= NOW()) AND (dataFim IS NULL OR dataFim >= NOW())';
+            whereClause = '(dataInicio IS NULL OR DATE(dataInicio) <= CURDATE()) AND (dataFim IS NULL OR DATE(dataFim) >= CURDATE())';
             console.log("Filtrando publicados");
         } else {
             console.log("Tipo inválido: ", req.query.tipo);
@@ -255,8 +286,10 @@ exports.calcularTotalPaginas = async (req, res) => {
 
         console.log("Where Clause: ", whereClause);
 
-        // Converta whereClause para uma condição Sequelize entendível
-        const total = await Refeitorio.count({ where: sequelize.literal(whereClause) });
+        const total = await Refeitorio.count({
+            where: sequelize.literal(whereClause)
+        });
+
         console.log("Total contado: ", total);
 
         const totalPaginas = Math.ceil(total / limite);

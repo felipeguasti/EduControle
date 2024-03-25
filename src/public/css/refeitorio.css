@@ -37,6 +37,7 @@ body, html {
     opacity: 1; /* Inicia escondido */
     transition: opacity 0.5s; /* Transição suave para exibição */
     display: none;
+    box-sizing: border-box;
 }
 .informativo-slide h1 {
     width: 38%;
@@ -49,16 +50,58 @@ body, html {
     margin-bottom:0;
 }
 
-.informativo-slide p {
-    width: 35%;
-    float: left; 
+.informativo-mensagem {
     background-color: rgba(238, 173, 46, 0.43); 
-    font-size: 2em;
-    text-align: justify;
+    padding: 25px 30px 0 15px;
+    width: 45%;
+    float: left; 
+    text-align: left;
     clear: left; 
     margin:0;
-    margin-left: 0,8%;
-    padding: 15px 5%;
+    box-sizing: border-box;
+}
+
+
+.informativo-slide p {
+    width: 95%;
+    float: left; 
+    font-size: 2em;
+    text-align: left;
+    clear: left; 
+    margin:0;
+    margin-left: 0.8%;
+}
+
+.informativo-slide p + p {
+    margin-top: 0;
+    padding: 0 5%;
+}
+
+.informativo-slide p:last-of-type {
+    padding-bottom: 30px;
+}
+
+.informativo-slide li {
+    width: 100%;
+    float: left; 
+    font-size: 2em;
+    text-align: left;
+    clear: left; 
+    margin:0;
+    margin-left: 0.5%;
+}
+
+.informativo-slide ul,
+.informativo-slide ol{
+    padding-left:20%;
+}
+
+.informativo-slide li + li {
+    margin-top: 0;
+}
+
+.informativo-slide li:last-of-type {
+    padding-bottom: 30px;
 }
 
 /* Estilo para imagem e vídeo */

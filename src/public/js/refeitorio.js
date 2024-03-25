@@ -11,7 +11,6 @@ let recuarProgramados;
 let avancarPublicados;
 let recuarPublicados;
 let avancarProgramados;
-let conteudoQuill;
 let form;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -29,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     avancarProgramados = document.getElementById("avancarProgramados");
     const informativoList = document.getElementById("informativoList");
     const programadosList = document.getElementById("programadosList");
+    let conteudoQuill;
 
     if (typeof window.isAdminScriptLoaded === 'undefined' || window.isAdminScriptLoaded === false) {
         const informativoList = document.getElementById("informativoList");
@@ -164,50 +164,59 @@ export function inicializar() {
 }
 
 
-export function enviarInformativo () {
-    const dataInicio = new Date(document.getElementById("dataInicio").value);
-    const dataFim = new Date(document.getElementById("dataFim").value);
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+export function enviarInformativo() {
+    const formData = new FormData();
 
-    // Verifica se a data inicial é no passado
-    if (dataInicio < hoje) {
+    // Usando moment.js para manipular as datas
+    const hoje = moment();
+    const dataPostagemFormatada = hoje.format('YYYY-MM-DD');
+
+    let dataInicioInput = document.getElementById("dataInicio").value;
+    let dataInicio = dataInicioInput ? moment(dataInicioInput) : hoje;
+
+    if (dataInicio.isBefore(hoje, 'day')) {
         console.log("A data inicial é no passado");
         alert("A data inicial não pode ser no passado.");
         return;
-    }else{
-        console.log("A data inicial está correta");
     }
 
-    // Verifica se a data final é anterior à data inicial
-    if (dataFim && dataFim < dataInicio) {
-        alert("A data final não pode ser anterior à data inicial de postagem.");
-        return;
+    // Adiciona a data de início ao formData sem zerar a hora
+    formData.append("dataInicio", dataInicio.format('YYYY-MM-DD HH:mm:ss'));
+
+    const dataFimInput = document.getElementById("dataFim").value;
+    if (dataFimInput) {
+        let dataFim = moment(dataFimInput);
+        if (dataFim.isBefore(dataInicio, 'day')) {
+            alert("A data final não pode ser anterior à data inicial de postagem.");
+            return;
+        }
+        // Adiciona a data de fim ao formData sem zerar a hora
+        formData.append("dataFim", dataFim.format('YYYY-MM-DD HH:mm:ss'));
+    } else {
+        formData.append("dataFim", "");
     }
-    
-    console.log("Enviando formulário...");
+
+    formData.append("dataPostagem", dataPostagemFormatada);
+
     const conteudoQuill = document.querySelector('.ql-editor').innerHTML;
-    const formData = new FormData();
     formData.append("titulo", inputTitulo.value);
     formData.append("mensagem", conteudoQuill);
     formData.append("imagemUrl", inputImagemUrl.value);
     formData.append("videoUrl", inputVideoUrl.value);
     formData.append("videoComSom", inputVideoComSom.checked.toString());
     formData.append("turno", inputTurno.value);
-    formData.append("dataInicio", document.getElementById("dataInicio").value);
-
-    const dataFimValue = document.getElementById("dataFim").value;
-    if (dataFimValue) {
-        formData.append("dataFim", dataFimValue);
-    } else {
-        formData.append("dataFim", "");
-    }
-
-    const dataPostagemFormatada = hoje.toISOString().split('T')[0];
-    formData.append("dataPostagem", dataPostagemFormatada);
 
     if (imagemFile && !editandoId) {
         formData.append("imagemFile", imagemFile);
+    }
+
+    if (inputImagemFile.files.length > 0) {
+        formData.set("imagemFile", inputImagemFile.files[0]);
+    }
+
+    console.log("Enviando formulário...");
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
     }
 
     let url = '/api/refeitorio';
@@ -234,11 +243,11 @@ export function enviarInformativo () {
             alert("Informativo enviado com sucesso!");
         } else if (method === 'PUT') {
             alert("Informativo atualizado com sucesso!");
-            editandoId = null; // Reset editandoId após a atualização
+            editandoId = null;
         }
         loadInformativos();
         loadProgramados();
-        limparFormulario(); // Limpa o formulário após o envio
+        limparFormulario();
     })
     .catch(error => {
         alert("Erro ao enviar o informativo: " + error.message);
@@ -246,9 +255,9 @@ export function enviarInformativo () {
 }
 
 
+
 export function quillContainer () {
     const quill = new Quill('#editor', {
-        placeholder: 'Escreva a sua mensagem aqui...',
         theme: 'snow', // or 'bubble'
     });
 }
@@ -321,11 +330,8 @@ export function alternarCampo(elemento, nomeCampo, esconder = false) {
 }
 
 export function formatarData(data) {
-    const dataObj = new Date(data);
-    const dia = String(dataObj.getDate()).padStart(2, '0');
-    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
-    const ano = dataObj.getFullYear();
-    return `${dia}.${mes}.${ano}`;
+    const dataMoment = moment.utc(data); // Cria um objeto moment em UTC com a data fornecida
+    return dataMoment.format('DD.MM.YYYY'); // Formata a data no padrão desejado
 }
 
 let bufferInformativos = [];
@@ -474,6 +480,10 @@ export function displayProgramados(programados, pageIndex, totalProgramados) {
         return;
     }
     programadosList.innerHTML = "";
+    if (programados.length === 0) {
+        programadosList.innerHTML = "<p>Não tem informativos programados.</p>";
+        return;
+    }
 
     // Adiciona o último informativo da página anterior se não for a primeira página
     if (pageIndex > 1) {
@@ -546,9 +556,11 @@ export function fillProgramadoContainer(container, informativo) {
 export function deleteInformativo(id) {
 fetch(`/api/refeitorio/${id}`, { method: "DELETE" }).then((response) => {
     if (response.ok) {
-    loadInformativos();
+        loadInformativos();
+        loadProgramados();
+        limparFormulario();
     } else {
-    alert("Erro ao excluir o informativo");
+        alert("Erro ao excluir o informativo");
     }
 });
 }

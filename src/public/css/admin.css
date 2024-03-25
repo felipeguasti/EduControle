@@ -1,965 +1,1052 @@
 /* Estilos principais do sistema EquipReserve */
 
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url('/images/background.webp');
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: repeat;
-    background-color: #f0f4f7;
-    color: #2d4156;
-    position: relative; /* Adiciona posição relativa para o pseudo-elemento */
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url("/images/background.webp");
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: repeat;
+  background-color: #f0f4f7;
+  color: #2d4156;
+  position: relative; /* Adiciona posição relativa para o pseudo-elemento */
 }
 
 body::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5); /* Camada branca com transparência */
-    z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5); /* Camada branca com transparência */
+  z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
 }
 
 h2 {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra com deslocamento de 2px horizontal e 2px vertical, borrão de 4px e cor preta com 50% de transparência */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra com deslocamento de 2px horizontal e 2px vertical, borrão de 4px e cor preta com 50% de transparência */
 }
 
 header {
-    background-image: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(255, 20, 147, 0.5)), url('/images/header.jpg');    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    color: white;
-    text-align: center;
-    padding: 80px 0;
-    border-bottom: 5px solid white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    margin-bottom: 0; /* Remove a margem inferior do cabeçalho */
-    position: relative;
-
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 255, 0.5),
+      rgba(255, 20, 147, 0.5)
+    ),
+    url("/images/header.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  color: white;
+  text-align: center;
+  padding: 80px 0;
+  border-bottom: 5px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  margin-bottom: 0; /* Remove a margem inferior do cabeçalho */
+  position: relative;
+  margin-bottom: 20px;
 }
 header h1 {
-    padding:0;
-    padding-bottom: 1%;
-    margin:0;
+  padding: 0;
+  padding-bottom: 1%;
+  margin: 0;
 }
 header h3 {
-    padding:0;
-    margin:0;
+  padding: 0;
+  margin: 0;
 }
 
-header h1, header h3 {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+header h1,
+header h3 {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 section {
-    margin: 20px;
-    padding-top: 30px;
+  margin-bottom: 20px;
+  padding-top: 30px;
 }
 
 form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 label {
-    display: block;
-    margin-top: 10px;
+  display: block;
+  margin-top: 10px;
 }
 
 input[type="text"],
 input[type="date"],
 textarea,
 select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 button {
-    background-color: #005f6b; /* Complemento da paleta de cores */
-    color: white;
-    font-size: 1.2em;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-right:2%;
+  background-color: #005f6b; /* Complemento da paleta de cores */
+  color: white;
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-right: 2%;
 }
 
 button:hover {
-    background-color: #003366; /* Cor mais escura para o hover */
+  background-color: #003366; /* Cor mais escura para o hover */
 }
 
 /* Melhorias na tipografia */
-h1, h2, h3 {
-    font-family: 'Helvetica', sans-serif;
-    margin-top: 0;
+h1,
+h2,
+h3 {
+  font-family: "Helvetica", sans-serif;
+  margin-top: 0;
 }
 
 p {
-    line-height: 1.6;
-    color: #2d4156;
-    ;
+  line-height: normal;
+  color: #2d4156;
+  margin: 0;
 }
 /* Estilos para o botão de administração */
 #btnAdmin {
-    background-color: transparent; /* Sem cor de fundo */
-    color: white;                  /* Cor do texto */
-    border: none;                  /* Sem bordas */
-    font-size: 16px;               /* Tamanho da fonte */
-    position: absolute;            /* Posicionamento absoluto */
-    top: -10px;                     /* Distância do topo */
-    right: 10px;                   /* Distância da direita */
-    cursor: pointer;               /* Estilo do cursor como ponteiro */
+  background-color: transparent; /* Sem cor de fundo */
+  color: white; /* Cor do texto */
+  border: none; /* Sem bordas */
+  font-size: 16px; /* Tamanho da fonte */
+  position: absolute; /* Posicionamento absoluto */
+  top: -10px; /* Distância do topo */
+  right: 10px; /* Distância da direita */
+  cursor: pointer; /* Estilo do cursor como ponteiro */
 }
 
 /* Estilo para hover no botão de administração */
 #btnAdmin:hover {
-    color: #ddd; /* Cor do texto ao passar o mouse */
+  color: #ddd; /* Cor do texto ao passar o mouse */
 }
 
 .btn-voltar {
-    position: absolute;
-    top: 1%;
-    left: 1%;
-    background-color: transparent; /* ou qualquer outra cor desejada */
-    color: white;
-    border: none;                  /* Sem bordas */
-    font-size: 16px;               /* Tamanho da fonte */
-    padding: 10px 20px;
-    text-decoration: none;
+  position: absolute;
+  top: 1%;
+  left: 1%;
+  background-color: transparent; /* ou qualquer outra cor desejada */
+  color: white;
+  border: none; /* Sem bordas */
+  font-size: 16px; /* Tamanho da fonte */
+  padding: 10px 20px;
+  text-decoration: none;
 }
 
 .btn-voltar:hover {
-    color: #ddd; /* Cor do texto ao passar o mouse */
+  color: #ddd; /* Cor do texto ao passar o mouse */
 }
 
-
 footer {
-    background-color: #d6e6e8; /* Cor padrão da Secretaria de Educação do Espírito Santo */
-    color: #2d4156;
-    text-align: center;
-    padding-top: 30px;
+  background-color: #d6e6e8; /* Cor padrão da Secretaria de Educação do Espírito Santo */
+  color: #2d4156;
+  text-align: center;
+  padding-top: 30px;
 }
 
 .footer-content {
-    display: flex; /* Usa flexbox para criar layout de colunas */
-    justify-content: space-between; /* Espaço entre as colunas */
-    align-items: flex-start; /* Alinha itens à esquerda */
-    padding: 20px 0; /* Adiciona padding vertical ao conteúdo do rodapé */
+  display: flex; /* Usa flexbox para criar layout de colunas */
+  justify-content: space-between; /* Espaço entre as colunas */
+  align-items: flex-start; /* Alinha itens à esquerda */
+  padding: 20px 0; /* Adiciona padding vertical ao conteúdo do rodapé */
 }
 
 .footer-section {
-    flex: 1; /* Permite que cada seção ocupe uma parte igual do espaço */
-    padding: 0 20px; /* Espaçamento interno */
-    margin: 0 10px; /* Aumente a margem para adicionar mais espaço entre as seções */
-    text-align: left; /* Alinha o texto à esquerda */
+  flex: 1; /* Permite que cada seção ocupe uma parte igual do espaço */
+  padding: 0 20px; /* Espaçamento interno */
+  margin: 0 10px; /* Aumente a margem para adicionar mais espaço entre as seções */
+  text-align: left; /* Alinha o texto à esquerda */
 }
 
 .footer-section h3 {
-    margin-top: 0; /* Remove a margem superior do título da seção */
-    color:#c86673;
+  margin-top: 0; /* Remove a margem superior do título da seção */
+  color: #c86673;
 }
 
 .footer-section ul {
-    list-style: none; /* Remove os bullets */
-    padding: 0; /* Remove o padding padrão */
-    margin: 0; /* Remove a margem padrão */
+  list-style: none; /* Remove os bullets */
+  padding: 0; /* Remove o padding padrão */
+  margin: 0; /* Remove a margem padrão */
 }
 
 .footer-section ul li a {
-    color: inherit;
-    text-decoration: none; /* Remove sublinhado */
+  color: inherit;
+  text-decoration: none; /* Remove sublinhado */
 }
 
 .footer-section ul li a:hover {
-    text-decoration: underline; /* Sublinha ao passar o mouse */
-    color:white;
+  text-decoration: underline; /* Sublinha ao passar o mouse */
+  color: white;
 }
 
 .footer-section.links ul li {
-    border-bottom: 1px solid #2d4156; /* Adiciona uma linha na parte inferior de cada item da lista */
-    padding-bottom: 5px; /* Adiciona um pouco de espaço entre o texto e a linha */
-    margin-bottom: 5px; /* Adiciona um pouco de espaço após cada item da lista */
+  border-bottom: 1px solid #2d4156; /* Adiciona uma linha na parte inferior de cada item da lista */
+  padding-bottom: 5px; /* Adiciona um pouco de espaço entre o texto e a linha */
+  margin-bottom: 5px; /* Adiciona um pouco de espaço após cada item da lista */
 }
 
 .footer-section.links ul li:last-child {
-    border-bottom: none; /* Remove a linha do último item para evitar uma linha dupla */
+  border-bottom: none; /* Remove a linha do último item para evitar uma linha dupla */
 }
 
 .pencil-icon {
-    background: url('/images/link.png') no-repeat; /* Caminho para o ícone de lápis na pasta images */
-    background-size: 13px 13px; /* Define o tamanho do ícone */
-    padding-left: 20px; /* Espaço à esquerda do texto para acomodar o ícone */
-    margin-right: 10px; /* Espaço entre o ícone e o texto */
+  background: url("/images/link.png") no-repeat; /* Caminho para o ícone de lápis na pasta images */
+  background-size: 13px 13px; /* Define o tamanho do ícone */
+  padding-left: 20px; /* Espaço à esquerda do texto para acomodar o ícone */
+  margin-right: 10px; /* Espaço entre o ícone e o texto */
 }
 
 .footer-section a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 .footer-section a:hover {
-    color: darkgray; /* Cor do texto cinza claro */
+  color: darkgray; /* Cor do texto cinza claro */
 }
-
 
 /* Estilos para a parte de baixo do rodapé com direitos autorais */
 .footer-bottom {
-    background-color: #c86673; /* Cor de fundo cinza azulado */
-    color: #2d4156; /* Cor do texto cinza claro */
-    text-align: left; /* Alinha o texto à esquerda */
-    padding: 30px; /* Adiciona padding horizontal */
-    font-size: 1em; /* Tamanho da fonte menor */
+  background-color: #c86673; /* Cor de fundo cinza azulado */
+  color: #2d4156; /* Cor do texto cinza claro */
+  text-align: left; /* Alinha o texto à esquerda */
+  padding: 30px; /* Adiciona padding horizontal */
+  font-size: 1em; /* Tamanho da fonte menor */
 }
 
 .footer-bottom a {
-    color:darkgray;
-    text-decoration: none; /* Remove sublinhado */
+  color: darkgray;
+  text-decoration: none; /* Remove sublinhado */
 }
 
 .footer-bottom a:hover {
-    text-decoration: underline; /* Sublinha ao passar o mouse */
-    color:white;
+  text-decoration: underline; /* Sublinha ao passar o mouse */
+  color: white;
 }
 
 footer {
-    clear: both; /* Clear floats */
+  clear: both; /* Clear floats */
 }
 
 .footer-section.about button {
-    background-color: #d6e6e8; /* Fundo do botão */
-    color: #2d4156; /* Cor do texto do botão */
-    border: 1px solid #2d4156; /* Borda do botão */
-    padding: 10px 20px; /* Espaçamento interno do botão */
-    border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Cursor do mouse como ponteiro */
-    margin-top: 10px; /* Espaço acima do botão */
-    text-align: center; /* Texto centralizado */
+  background-color: #d6e6e8; /* Fundo do botão */
+  color: #2d4156; /* Cor do texto do botão */
+  border: 1px solid #2d4156; /* Borda do botão */
+  padding: 10px 20px; /* Espaçamento interno do botão */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor do mouse como ponteiro */
+  margin-top: 10px; /* Espaço acima do botão */
+  text-align: center; /* Texto centralizado */
 }
 
 .footer-section.about button:hover {
-    background-color: #2d4156; /* Fundo do botão no hover */
-    color: #d6e6e8; /* Cor do texto no hover */
-    border: 1px solid #d6e6e8; /* Borda no hover */
+  background-color: #2d4156; /* Fundo do botão no hover */
+  color: #d6e6e8; /* Cor do texto no hover */
+  border: 1px solid #d6e6e8; /* Borda no hover */
 }
 
 .footer-section.contact img {
-    width: 35px; /* Ou o tamanho que preferir */
-    height: auto;
-    margin: 5px;
+  width: 35px; /* Ou o tamanho que preferir */
+  height: auto;
+  margin: 5px;
 }
 
 #recursoInfo {
-    font-size: 1.2em;
-    font-weight: bold;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 #listaAnuncios {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Cria duas colunas */
-    grid-gap: 20px; /* Espaçamento entre os itens da grade */
-    max-height: 1000px; /* Altura máxima para 5 linhas, ajuste conforme necessário */
-    overflow: auto; /* Permite a rolagem se necessário */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Cria duas colunas */
+  grid-gap: 20px; /* Espaçamento entre os itens da grade */
+  max-height: 1000px; /* Altura máxima para 5 linhas, ajuste conforme necessário */
+  overflow: auto; /* Permite a rolagem se necessário */
 }
 
 .anuncio-container {
-    background-color: rgba(255, 255, 255, 0.9); /* Branco com 50% de transparência */
-    margin-bottom: 10px; /* Espaçamento entre os anúncios */
-    padding: 10px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
+  background-color: rgba(
+    255,
+    255,
+    255
+  ); /* Branco com 50% de transparência */
+  margin-bottom: 10px; /* Espaçamento entre os anúncios */
+  padding: 10px; /* Espaçamento interno */
+  border-radius: 5px; /* Bordas arredondadas */
 }
 
 #conteudoAnuncios {
-    background-color: rgba(255, 255, 255, 0.5); /* White background with 50% transparency */
-    padding: 2px 30px 2px 30px;
+  background-color: rgba(
+    255,
+    255,
+    255
+  ); /* White background with 50% transparency */
+  padding: 2px 30px 2px 30px;
 }
 
 #conteudoAnuncios p {
-    margin-bottom: 10px; /* Reduces space after <p> */
-    padding-top: 10px; /* Adds space above <p> */
+  margin-bottom: 10px; /* Reduces space after <p> */
+  padding-top: 10px; /* Adds space above <p> */
 }
 
 #conteudoAnuncios h6 {
-    margin-top: 5px; /* Reduces space before <h6> */
-    padding-bottom: 0px;
-    margin-left: 35px;
+  margin-top: 5px; /* Reduces space before <h6> */
+  padding-bottom: 0px;
+  margin-left: 35px;
 }
 #conteudoAnuncios div {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 #conteudoAnuncios .anuncio-container {
-    padding: 10px 15px; /* Reduces internal padding */
+  padding: 10px 15px; /* Reduces internal padding */
 }
 
 #conteudoAnuncios .data-publicacao {
-    margin-top: 10px; /* Espaçamento entre a data de publicação e o corpo da postagem */
+  margin-top: 10px; /* Espaçamento entre a data de publicação e o corpo da postagem */
 }
 
 #conteudoAnuncios .anuncio-titulo {
-    margin-bottom: 15px; /* Espaçamento entre o título do anúncio e o corpo da postagem */
+  margin-bottom: 15px; /* Espaçamento entre o título do anúncio e o corpo da postagem */
 }
 
-
 #conteudoAnuncios div:not(:last-child) {
-    border-bottom: 1px solid #2d4156; /* Line separator */
+  border-bottom: 1px solid #2d4156; /* Line separator */
 }
 
 #conteudoAnuncios .anuncio-icon {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-    margin-right: 10px;
-    display: inline;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 10px;
+  display: inline;
 }
 
 .simbolo-disponivel {
-    color: green;
-    margin-left: 25px;
-    font-weight: bold;
-    text-align: center;
+  color: green;
+  margin-left: 25px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .simbolo-indisponivel {
-    color: red;
-    margin-left: 25px;
-    font-weight: bold;
-    text-align: center;
+  color: red;
+  margin-left: 25px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .texto-status {
-    font-size: 0.8em; /* Tamanho da fonte ajustado */
-    margin-left: 5px; /* Espaçamento para separar do símbolo */
-    text-align: center;
+  font-size: 0.8em; /* Tamanho da fonte ajustado */
+  margin-left: 5px; /* Espaçamento para separar do símbolo */
+  text-align: center;
 }
 
 /* Alinhamento e estilo para as labels dos horários */
 label[for^="horario"] {
-    display: inline-block; /* Alinhamento inline */
-    margin-right: 10px; /* Espaço entre a label e o próximo elemento */
+  display: inline-block; /* Alinhamento inline */
+  margin-right: 10px; /* Espaço entre a label e o próximo elemento */
 }
 
 /* Estilização adicional para elementos interativos */
-button:hover, input[type='radio']:hover {
-    cursor: pointer;
-    opacity: 0.8; /* Ligeira transparência ao passar o mouse */
+button:hover,
+input[type="radio"]:hover {
+  cursor: pointer;
+  opacity: 0.8; /* Ligeira transparência ao passar o mouse */
 }
 
 #horariosDisponiveis {
-    background-color: #f9f9f9; /* Fundo claro */
-    padding: 15px; /* Espaço interno */
-    border-radius: 8px; /* Bordas arredondadas */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    margin-top: 20px; /* Espaço acima do container */
+  background-color: #f9f9f9; /* Fundo claro */
+  padding: 15px; /* Espaço interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  margin-top: 20px; /* Espaço acima do container */
 }
 
 .horario-item {
-    display: flex;
-    align-items:center;
-    padding:10px;
-    margin-bottom: 10px; /* Espaçamento entre itens */
-    border: 1px solid #ddd; /* Borda sutil */
-    padding: 10px; /* Espaço interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    transition: transform 0.2s; /* Transição suave */
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px; /* Espaçamento entre itens */
+  border: 1px solid #ddd; /* Borda sutil */
+  padding: 10px; /* Espaço interno */
+  border-radius: 5px; /* Bordas arredondadas */
+  transition: transform 0.2s; /* Transição suave */
 }
 
 .horario-item:hover {
-    transform: scale(1.03); /* Efeito de zoom ao passar o mouse */
+  transform: scale(1.03); /* Efeito de zoom ao passar o mouse */
 }
 
-
 .horario-item label {
-    display: inline-block; /* Certifica-se de que o label tem uma largura e altura */
-    width: 60px; /* Ajuste a largura conforme necessário */
-    line-height: 15px; /* Ajusta a altura da linha para corresponder à altura da caixa de seleção */
-    font-size: 1.2em;
-    margin-bottom: 7px;
+  display: inline-block; /* Certifica-se de que o label tem uma largura e altura */
+  width: 60px; /* Ajuste a largura conforme necessário */
+  line-height: 15px; /* Ajusta a altura da linha para corresponder à altura da caixa de seleção */
+  font-size: 1.2em;
+  margin-bottom: 7px;
 }
 
 .horario-item input[type="radio"] {
-    width: 15px; /* Defina a largura desejada */
-    height: 15px; /* Defina a altura desejada */
-    transform: scale(1.5); /* Aumentar o tamanho */
-    margin-right: 10px; /* Espaçamento à direita */
+  width: 15px; /* Defina a largura desejada */
+  height: 15px; /* Defina a altura desejada */
+  transform: scale(1.5); /* Aumentar o tamanho */
+  margin-right: 10px; /* Espaçamento à direita */
 }
 
 #calendarioSemanal table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
 }
 
 #calendarioSemanal th {
-    border: 1px solid #005f6b;
-    border-right: 1px solid #ddd;
-    padding: 8px;
-    &:first-child {
-        border-left: 1px solid #005f6b;
-    }
-    &:last-child {
-        border-right: 1px solid #005f6b;
-    }
+  border: 1px solid #005f6b;
+  border-right: 1px solid #ddd;
+  padding: 8px;
+  &:first-child {
+    border-left: 1px solid #005f6b;
+  }
+  &:last-child {
+    border-right: 1px solid #005f6b;
+  }
 }
 
 #calendarioSemanal td {
-    border: 1px solid #ddd;
-    padding: 8px;
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
 .disponivel {
-    font-style: italic;
-    color: green;
+  font-style: italic;
+  color: green;
 }
 
 /* Oculta as células correspondentes aos dias de sábado (dia-semana-6) e domingo (dia-semana-0) */
 table tr td:nth-child(7) {
-    display: none;
+  display: none;
 }
 
 table tr td:nth-child(6) {
-    display: none;
+  display: none;
 }
 
 #calendarioSemanal {
-    width: 100%;
-    border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
-    border-spacing: 0; /* Remove cell spacing to maintain the table layout */
-    background-color: none;
-    border: none;
-    outline-offset: 0px;
-    margin: 20px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px; /* Rounded corners for the table */
-    overflow: hidden; /* Ensures the content respects the border radius */
-    outline: 0;
+  width: 100%;
+  border-collapse: separate; /* This is changed to 'separate' to handle border-radius */
+  border-spacing: 0; /* Remove cell spacing to maintain the table layout */
+  background-color: none;
+  border: none;
+  outline-offset: 0px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px; /* Rounded corners for the table */
+  overflow: hidden; /* Ensures the content respects the border radius */
+  outline: 0;
 }
 
 #calendarioSemanal thead th {
-    background-color: #005f6b;
-    color: #d6e6e8;
-    padding: 10px;
-    text-align: center;
-    /* Add border-radius to the first and last th for rounded corners */
-    &:first-child {
-        border-top-left-radius: 5px;
-    }
-    &:last-child {
-        border-top-right-radius: 5px;
-    }
+  background-color: #005f6b;
+  color: #d6e6e8;
+  padding: 10px;
+  text-align: center;
+  /* Add border-radius to the first and last th for rounded corners */
+  &:first-child {
+    border-top-left-radius: 5px;
+  }
+  &:last-child {
+    border-top-right-radius: 5px;
+  }
 }
 
 #calendarioSemanal tbody td {
-    background-color: #fff;
-    padding: 15px;
-    border-bottom: 1px solid #eaeaea;
-    text-align: left;
-    /* Add border-radius to the first and last td in the last tr for rounded corners */
-    &:first-child {
-        border-bottom-left-radius: 5px;
-    }
-    &:last-child {
-        border-bottom-right-radius: 5px;
-    }
+  background-color: #fff;
+  padding: 15px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+  /* Add border-radius to the first and last td in the last tr for rounded corners */
+  &:first-child {
+    border-bottom-left-radius: 5px;
+  }
+  &:last-child {
+    border-bottom-right-radius: 5px;
+  }
 }
 
 #calendarioSemanal tbody td.disponivel {
-    background-color: #dff0d8;
-    color: #3c763d;
+  background-color: #dff0d8;
+  color: #3c763d;
 }
 
 #calendarioSemanal tbody td:not(.disponivel) {
-    background-color: #f9f9f9;
-    color: #a0a0a0;
+  background-color: #f9f9f9;
+  color: #a0a0a0;
 }
 
 #calendarioSemanal tbody tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 #calendar-title {
-    font-size: 48px; /* Adjust the size as needed */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    font-style: italic; /* Makes the text italic */
-    font-family: 'Indie Flower', cursive; /* Add other styles like font-size, color as needed */
-    color: #2d4156; /* Choose a color that fits your design */
-    font-weight: bold; /* Make the title bold */
-    text-align: center; /* Center align the title */
-    padding: 10px 0; /* Add some padding above and below the title */
-    margin: 10px 0px; /* Space below the title before the table starts */
-    display: block; /* By default, caption is table-caption, which can't have margin/padding */
+  font-size: 48px; /* Adjust the size as needed */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-style: italic; /* Makes the text italic */
+  font-family: "Indie Flower", cursive; /* Add other styles like font-size, color as needed */
+  color: #2d4156; /* Choose a color that fits your design */
+  font-weight: bold; /* Make the title bold */
+  text-align: center; /* Center align the title */
+  padding: 10px 0; /* Add some padding above and below the title */
+  margin: 10px 0px; /* Space below the title before the table starts */
+  display: block; /* By default, caption is table-caption, which can't have margin/padding */
 }
 
 .icon-container {
-    display: block; /* Isso forçará o contêiner a ocupar uma linha inteira */
-    margin-top: 5px; /* Espaço acima dos ícones */
+  display: block; /* Isso forçará o contêiner a ocupar uma linha inteira */
+  margin-top: 5px; /* Espaço acima dos ícones */
 }
 
-.edit-reserva-icon, .delete-reserva-icon {
-    width: 20px; /* Ajuste o tamanho conforme necessário */
-    height: 20px; /* Ajuste o tamanho conforme necessário */
-    cursor: pointer;
-    margin-right: 5px; /* Espaçamento entre os ícones */
+.edit-reserva-icon,
+.delete-reserva-icon {
+  width: 20px; /* Ajuste o tamanho conforme necessário */
+  height: 20px; /* Ajuste o tamanho conforme necessário */
+  cursor: pointer;
+  margin-right: 5px; /* Espaçamento entre os ícones */
 }
 
 /* Estilização adicional se necessário */
-.edit-reserva-icon:hover, .delete-reserva-icon:hover {
-    opacity: 0.8;
+.edit-reserva-icon:hover,
+.delete-reserva-icon:hover {
+  opacity: 0.8;
 }
 
 /* Estilo para o popup modal */
 .popup-container {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .popup-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
 }
 
 .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 #paginacaoAnuncios {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
+  text-align: center;
+  margin-top: 20px;
+}
+
 #paginacaoAnuncios button {
-background-color: #005f6b;
-color: white;
-border: none;
-padding: 10px 20px;
-margin: 0 10px;
-border-radius: 5px;
-cursor: pointer;
-transition: background-color 0.3s ease;
+  background-color: #005f6b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #paginacaoAnuncios button:hover {
-background-color: #003366;
+  background-color: #003366;
 }
 
 #paginacaoAnuncios button:disabled {
-background-color: #cccccc;
-cursor: not-allowed;
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 nav {
-    background-color: transparent; /* Sem cor de fundo */
-    position: absolute;
-    bottom: 0; /* Alinha na parte inferior do header */
-    right: 0; /* Alinha no canto inferior direito */
+  background-color: transparent; /* Sem cor de fundo */
+  position: absolute;
+  bottom: 0; /* Alinha na parte inferior do header */
+  right: 0; /* Alinha no canto inferior direito */
 }
 
 nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    text-align: center; /* Centraliza os itens do menu */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: center; /* Centraliza os itens do menu */
 }
 
 nav ul li {
-    display: inline-block; /* Itens do menu na horizontal */
-    margin-right: 20px; /* Espaço entre os itens */
-    padding: 10px 0;
+  display: inline-block; /* Itens do menu na horizontal */
+  margin-right: 20px; /* Espaço entre os itens */
+  padding: 10px 0;
 }
 
 nav ul li a {
-    text-decoration: none;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    padding: 10px 10px; /* Padding para tornar a área clicável maior */
+  text-decoration: none;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 10px 10px; /* Padding para tornar a área clicável maior */
 }
 
-nav ul li a:hover, nav ul li a.active {
-    border: 3px white solid;
+nav ul li a:hover,
+nav ul li a.active {
+  border: 3px white solid;
 }
 
 nav ul li .btnActive {
-    border: 3px white solid;
+  border: 3px white solid;
+}
+
+section {
+  padding-top: 0;
+  padding: 0 20px 0 20px;
+}
+
+.container-visualizar {
+  display: flex;
+  justify-content: space-between; /* Isso alinha um elemento à esquerda e o outro à direita */
+  align-items: center; /* Isso alinha os elementos verticalmente no centro, se necessário */
+  margin: 20px 0;
+}
+
+.container-visualizar h2 {
+  margin-top: 0;
+}
+
+.container-visualizar a {
+  color: #23486f; /* Adiciona uma linha na parte inferior de cada item da lista */
+  font-weight: bold;
+  text-decoration: none; /* Remove sublinhado */
+}
+
+.container-visualizar a:hover {
+  color: #acbac9; /* Adiciona uma linha na parte inferior de cada item da lista */
+  font-weight: bolder;
 }
 
 #informativoList,
 #programadosList {
-    background-color: rgba(255, 255, 255, 0.8); /* branco com 0.8 de transparência */
-    border-radius: 5px; /* Adicione borda arredondada */
-    box-sizing: border-box;
-    width: 100%;
-    white-space: nowrap; /* Mantém todos os itens na mesma linha */
-    padding: 10px 0; /* Ajuste conforme necessário */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* branco com 0.8 de transparência */
+  border-radius: 5px; /* Adicione borda arredondada */
+  box-sizing: border-box;
+  width: 100%;
+  white-space: nowrap; /* Mantém todos os itens na mesma linha */
+  padding: 10px 0; /* Ajuste conforme necessário */
 }
 
 /* Estilo para os contêineres de informativo */
 .informativo-container {
-    border: 2px solid #96cf59; /* Cor da borda para informativos */
-    padding: 20px;
-    margin: 10px;
-    display: inline-block;
-    vertical-align: top; /* Alinha os contêineres no topo */
-    box-sizing: border-box; /* Garante que a largura inclua o padding */
-    background-color: #f9f9f9; /* Cor de fundo dos contêineres */
+  border: 2px solid #96cf59; /* Cor da borda para informativos */
+  padding: 20px;
+  margin: 10px;
+  display: inline-block;
+  vertical-align: top; /* Alinha os contêineres no topo */
+  box-sizing: border-box; /* Garante que a largura inclua o padding */
+  background-color: #f9f9f9; /* Cor de fundo dos contêineres */
 }
 
 /* Estilo para os contêineres de informativo programado */
 .programado-container {
-    border: 2px solid #3a9fe9; /* Cor da borda para programados */
-    padding: 20px;
-    margin: 10px;
-    width: calc(33.33% - 20px); /* Define a largura para ocupar 1/3 da largura do container pai */
-    display: inline-block;
-    vertical-align: top; /* Alinha os contêineres no topo */
-    box-sizing: border-box; /* Garante que a largura inclua o padding */
-    background-color: #f9f9f9; /* Cor de fundo dos contêineres */
+  border: 2px solid #3a9fe9; /* Cor da borda para programados */
+  padding: 20px;
+  margin: 10px;
+  width: calc(
+    33.33% - 20px
+  ); /* Define a largura para ocupar 1/3 da largura do container pai */
+  display: inline-block;
+  vertical-align: top; /* Alinha os contêineres no topo */
+  box-sizing: border-box; /* Garante que a largura inclua o padding */
+  background-color: #f9f9f9; /* Cor de fundo dos contêineres */
 }
 
 .informativo-container,
 .programado-container {
-    width: calc(20%); /* Ajusta para que quatro caibam na linha, com espaço para margens */
-    display: inline-block;
-    vertical-align: top;
-    margin: 10px 5px; /* Ajuste as margens conforme necessário */
-    box-sizing: border-box;
-    overflow: hidden; /* Adicionado para garantir que o conteúdo extra seja ocultado */
+  width: calc(
+    20%
+  ); /* Ajusta para que quatro caibam na linha, com espaço para margens */
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px 5px; /* Ajuste as margens conforme necessário */
+  box-sizing: border-box;
+  overflow: hidden; /* Adicionado para garantir que o conteúdo extra seja ocultado */
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .carregamento-container h2 {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 .informativo-container img,
 .programado-container img {
-    width: 100%; /* Define a largura da imagem como 100% do container */
-    height: 200px; /* Define a altura da imagem como 100% do container */
-    object-fit: cover; /* Redimensiona e corta a imagem para caber dentro do contêiner mantendo sua proporção */
-    object-position: top; /* Define a posição da imagem para que a parte superior seja sempre visível */
-    display: block; /* Remove espaços extras abaixo da imagem */
-    margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
+  width: 100%; /* Define a largura da imagem como 100% do container */
+  height: 200px; /* Define a altura da imagem como 100% do container */
+  object-fit: cover; /* Redimensiona e corta a imagem para caber dentro do contêiner mantendo sua proporção */
+  object-position: top; /* Define a posição da imagem para que a parte superior seja sempre visível */
+  display: block; /* Remove espaços extras abaixo da imagem */
+  margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
 }
 
 .informativo-container:not(:nth-child(4)),
 .programado-container:not(:nth-child(4)) {
-    width: calc(100% / 4.5);
+  width: calc(100% / 4.5);
 }
 
 .informativo-container:nth-child(4),
 .programado-container:nth-child(4) {
-    width: calc(100% / 4.5);
-    overflow: hidden;
-    position: relative;
+  width: calc(100% / 4.5);
+  overflow: hidden;
+  position: relative;
 }
 
 .informativo-container:nth-child(4),
 .programado-container:nth-child(4) {
-    width: calc(100% / 4.5);
-    overflow: hidden;
-    position: relative;
+  width: calc(100% / 4.5);
+  overflow: hidden;
+  position: relative;
 }
 
 /* Estilos para os botões de edição e exclusão */
 .delete-button,
 .edit-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    width: 30px; /* Defina o tamanho desejado para os ícones */
-    height: 30px; /* Defina o tamanho desejado para os ícones */
-    text-indent: -9999px; /* Oculta o texto ao mover para fora da tela */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 30px; /* Defina o tamanho desejado para os ícones */
+  height: 30px; /* Defina o tamanho desejado para os ícones */
+  text-indent: -9999px; /* Oculta o texto ao mover para fora da tela */
 }
 
 /* Estilo para o botão de excluir */
 .delete-button {
-    background-image: url('/images/excluir.png'); /* Caminho para o ícone de excluir */
-    background-size: cover;
+  background-image: url("/images/excluir.png"); /* Caminho para o ícone de excluir */
+  background-size: cover;
 }
 
 /* Estilo para o botão de editar */
 .edit-button {
-    background-image: url('/images/editar.png'); /* Caminho para o ícone de editar */
-    background-size: cover;
+  background-image: url("/images/editar.png"); /* Caminho para o ícone de editar */
+  background-size: cover;
 }
 
 /* Estilo para o container principal */
 .container-infooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Estilo para o container dos botões */
 .buttons-container {
-    display: flex;
+  display: flex;
 }
 
 /* Estilo para os botões de editar e excluir */
 .delete-button,
 .edit-button {
-    margin-right: 10px; /* Adiciona uma margem à direita do ícone de editar */
+  margin-right: 10px; /* Adiciona uma margem à direita do ícone de editar */
 }
 
 .carrossel-container {
-    width: 100%; /* Ajuste conforme necessário */
-    overflow-x: hidden;
-    white-space: nowrap; /* Garante que os itens fiquem na mesma linha */
-}  
+  width: 100%; /* Ajuste conforme necessário */
+  overflow-x: hidden;
+  white-space: nowrap; /* Garante que os itens fiquem na mesma linha */
+}
 
 .carousel {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 }
 
 .carousel::after {
-    /* Outras propriedades aqui */
-    position: absolute; /* Precisamos de position: absolute para criar um pseudo-elemento */
-    top: 0;
-    left: 100%; /* Inicialmente, posicionamos o pseudo-elemento fora da visão */
-    width: 100%; /* Preenche toda a largura do contêiner pai */
-    height: 100%; /* Preenche toda a altura do contêiner pai */
-    background-color: rgba(255, 255, 255, 0.5); /* Cor branca com 50% de opacidade */
-    z-index: 1; /* Garante que o pseudo-elemento fique sobre os elementos internos */
-    content: ""; /* Adiciona conteúdo ao pseudo-elemento */
-    transition: left 0.5s ease; /* Adiciona uma transição suave para a propriedade left */
+  /* Outras propriedades aqui */
+  position: absolute; /* Precisamos de position: absolute para criar um pseudo-elemento */
+  top: 0;
+  left: 100%; /* Inicialmente, posicionamos o pseudo-elemento fora da visão */
+  width: 100%; /* Preenche toda a largura do contêiner pai */
+  height: 100%; /* Preenche toda a altura do contêiner pai */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* Cor branca com 50% de opacidade */
+  z-index: 1; /* Garante que o pseudo-elemento fique sobre os elementos internos */
+  content: ""; /* Adiciona conteúdo ao pseudo-elemento */
+  transition: left 0.5s ease; /* Adiciona uma transição suave para a propriedade left */
 }
 
 .carousel.show::after {
-    left: 0; /* Move o pseudo-elemento para a esquerda */
+  left: 0; /* Move o pseudo-elemento para a esquerda */
 }
 
 .carousel-inner {
-    display: flex;
+  display: flex;
 }
 
 .carousel-item {
-    flex: 0 0 auto;
-    width: 300px; /* largura de cada item */
-    margin-right: 10px; /* espaço entre os itens */
+  flex: 0 0 auto;
+  width: 300px; /* largura de cada item */
+  margin-right: 10px; /* espaço entre os itens */
 }
 
 .informativo-container.item-pela-metade::after,
 .programado-container.item-pela-metade::after {
-    content: ""; 
-    position: absolute; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(15, 14, 14, 0.2);
-    z-index: 2;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 14, 14, 0.2);
+  z-index: 2;
 }
 
 .carrossel-container {
-    position:absolute;
+  position: absolute;
 }
 .prev,
 .next {
-    position: absolute;
-    top: -20px;
-    bottom: 0;
-    width: 50px; /* Largura dos botões - ajuste conforme necessário */
-    background-color: rgba(129, 129, 129, 0.5); /* Cor de fundo com transparência */
-    color: rgb(48, 48, 48);
-    border: none;
-    cursor: pointer;
-    border-radius: 0; /* Limpa os cantos do botão */
-    z-index: 1;
+  position: absolute;
+  top: -20px;
+  bottom: 0;
+  width: 50px; /* Largura dos botões - ajuste conforme necessário */
+  background-color: rgba(
+    129,
+    129,
+    129,
+    0.5
+  ); /* Cor de fundo com transparência */
+  color: rgb(48, 48, 48);
+  border: none;
+  cursor: pointer;
+  border-radius: 0; /* Limpa os cantos do botão */
+  z-index: 1;
 }
 
 .prev:hover,
 .next:hover {
-    background-color: rgba(9, 9, 9, 0.5); /* Cor de fundo com transparência */
-    color: rgb(255, 255, 255);
+  background-color: rgba(9, 9, 9, 0.5); /* Cor de fundo com transparência */
+  color: rgb(255, 255, 255);
 }
 
 .prev {
-    left: 0;
-    transform: rotate(-180deg); /* Girar o texto em -90 graus (sentido anti-horário) */
-    writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
-    align-items: center;
+  left: 0;
+  transform: rotate(
+    -180deg
+  ); /* Girar o texto em -90 graus (sentido anti-horário) */
+  writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
+  align-items: center;
 }
 
 .next {
-    right: -25px;
-    writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
-    align-items: center;
+  right: -25px;
+  writing-mode: vertical-lr; /* Escrever o texto na vertical de cima para baixo */
+  align-items: center;
 }
 
 .button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #editor {
-    height: 200px;
+  height: 200px;
 }
 
 .ql-container {
-    margin: 0 auto; /* Centralize horizontalmente */
-    display: flex; /* Use flexbox para centralizar verticalmente */
-    align-items: center; /* Centralize verticalmente */
-    border-top: 1px solid #ddd;
-    border-radius: 0 0 5px 5px;    
+  margin: 0 auto; /* Centralize horizontalmente */
+  display: flex; /* Use flexbox para centralizar verticalmente */
+  align-items: center; /* Centralize verticalmente */
+  border-top: 1px solid #ddd;
+  border-radius: 0 0 5px 5px;
 }
 
 /* Estilos para a barra de ferramentas do Quill */
 .ql-toolbar {
-    max-height: 40px; /* Defina a altura máxima da barra de ferramentas */
-    width: auto;
-    display: flex;
-    align-items: center; /* Centralizar os elementos verticalmente */
-    flex-wrap: nowrap; /* Evitar quebra de linha */
+  max-height: 40px; /* Defina a altura máxima da barra de ferramentas */
+  width: auto;
+  display: flex;
+  align-items: center; /* Centralizar os elementos verticalmente */
+  flex-wrap: nowrap; /* Evitar quebra de linha */
 }
 
 .ql-formats {
-    flex-grow: 1; /* Fazer os botões de formatação ocuparem todo o espaço disponível */
-    padding: 0;
-    margin: 0;
-    display: inline-block;
+  flex-grow: 1; /* Fazer os botões de formatação ocuparem todo o espaço disponível */
+  padding: 0;
+  margin: 0;
+  display: inline-block;
 }
 
 .ql-formats:not(:first-child) {
-    height: 60px;
+  height: 60px;
+}
+.ql-link {
+visibility: hidden;
 }
 
 /* Estilos responsivos para dispositivos móveis */
 @media screen and (max-width: 768px) {
-    /* Mantendo as regras existentes */
-    header, footer {
-        text-align: left;
-        padding: 10px;
-    }
+  /* Mantendo as regras existentes */
+  header,
+  footer {
+    text-align: left;
+    padding: 10px;
+  }
 
-    header h1 {
-        padding-top: 50px;
-        text-align: center;
-    }
+  header h1 {
+    padding-top: 50px;
+    text-align: center;
+  }
 
-    header h3 {
-        padding: 10px 0 50px 0;
-        text-align: center;
-    }
+  header h3 {
+    padding: 10px 0 50px 0;
+    text-align: center;
+  }
 
-    form {
-        padding: 10px;
-    }
+  section {
+    padding: 0 5px 0 5px;
+  }
 
-    .footer-content {
-        flex-direction: column;
-    }
+  form {
+    padding: 10px;
+  }
 
-    .footer-section {
-        margin: 10px 0;
-    }
+  .footer-content {
+    flex-direction: column;
+  }
 
-    .imageContact {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+  .footer-section {
+    margin: 10px 0;
+  }
 
-    .imageContact img {
-        width: 25px;
-        height: auto;
-        margin: 5px;
-    }
+  .imageContact {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 
-    #calendarioSemanal {
-        overflow-x: auto;
-    }
+  .imageContact img {
+    width: 25px;
+    height: auto;
+    margin: 5px;
+  }
 
-    .informativo-container, .programado-container {
-        max-width: 100%; /* Defina o tamanho máximo desejado */
-        width: 100%; /* Defina o tamanho máximo desejado */
-        overflow-x: auto; /* Adicione uma barra de rolagem horizontal quando necessário */
-        flex-direction: column; /* Altera a direção do flex para vertical */
-        display: grid;
-    }
-    
-    /* Adiciona uma barra de rolagem horizontal ao container inteiro */
-    #informativoList, #programadosList {
-        overflow-x: auto; /* Adiciona uma barra de rolagem horizontal quando necessário */
-        white-space: nowrap; /* Evita que os elementos filhos quebrem em várias linhas */
-        width: 100%; /* Defina o tamanho máximo desejado */
-    }
+  #calendarioSemanal {
+    overflow-x: auto;
+  }
+  
+ .container-visualizar h2 {
+      padding-right: 10px;
+  }
 
-    .informativo-container:not(:nth-child(4)),
-    .programado-container:not(:nth-child(4)) {
-        width: calc(90%); /* Define a largura do contêiner */
-    }
-    .informativo-container:nth-child(4),
-    .programado-container:nth-child(4) {
-        width: calc(90%);
-        overflow: hidden;
-        position: relative;
-    }
+  .informativo-container,
+  .programado-container {
+    max-width: 100%; /* Defina o tamanho máximo desejado */
+    width: 100%; /* Defina o tamanho máximo desejado */
+    overflow-x: auto; /* Adicione uma barra de rolagem horizontal quando necessário */
+    flex-direction: column; /* Altera a direção do flex para vertical */
+    display: grid;
+  }
 
-    .informativo-container:nth-child(n + 5),
-    .programado-container:nth-child(n + 5) {
-        display: none; /* Oculta os itens a partir do quinto */
-    }
+  /* Adiciona uma barra de rolagem horizontal ao container inteiro */
+  #informativoList,
+  #programadosList {
+    overflow-x: auto; /* Adiciona uma barra de rolagem horizontal quando necessário */
+    white-space: nowrap; /* Evita que os elementos filhos quebrem em várias linhas */
+    width: 100%; /* Defina o tamanho máximo desejado */
+  }
 
-    .item-pela-metade {
-        width: 100%; /* Define a largura total para cada item */
-    }
+  .informativo-container:not(:nth-child(4)),
+  .programado-container:not(:nth-child(4)) {
+    width: calc(90%); /* Define a largura do contêiner */
+  }
+  .informativo-container:nth-child(4),
+  .programado-container:nth-child(4) {
+    width: calc(90%);
+    overflow: hidden;
+    position: relative;
+  }
 
-    .informativo-container img
-    .programado-container img {
-        width: auto; /* Defina a largura da imagem como automática */
-        max-width: 200px; /* Defina a largura máxima da imagem como 100% do contêiner */
-        height: auto; /* Defina a altura da imagem como automática para manter a proporção */
-        max-height: 100%; /* Defina a altura máxima da imagem */
-        display: block; /* Remove espaços extras abaixo da imagem */
-        margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
-    }
-        
-    .buttons-container {
-        display: flex;
-        flex-direction: row; /* Mantém a direção do flex para horizontal */
-        justify-content: space-between; /* Espaçamento uniforme entre os botões */
-        margin-top: 10px; /* Adicione espaçamento superior entre os botões */
-    }
+  .informativo-container:nth-child(n + 5),
+  .programado-container:nth-child(n + 5) {
+    display: none; /* Oculta os itens a partir do quinto */
+  }
 
-    .next {
-        right: -7px;
-    }
+  .item-pela-metade {
+    width: 100%; /* Define a largura total para cada item */
+  }
 
-    .ql-list[value="bullet"], .ql-link {
-        visibility: hidden;   
-    }
+  .informativo-container img .programado-container img {
+    width: auto; /* Defina a largura da imagem como automática */
+    max-width: 200px; /* Defina a largura máxima da imagem como 100% do contêiner */
+    height: auto; /* Defina a altura da imagem como automática para manter a proporção */
+    max-height: 100%; /* Defina a altura máxima da imagem */
+    display: block; /* Remove espaços extras abaixo da imagem */
+    margin: 0 auto; /* Centraliza a imagem horizontalmente dentro do contêiner */
+  }
+
+  .buttons-container {
+    display: flex;
+    flex-direction: row; /* Mantém a direção do flex para horizontal */
+    justify-content: space-between; /* Espaçamento uniforme entre os botões */
+    margin-top: 10px; /* Adicione espaçamento superior entre os botões */
+  }
+
+  .next {
+    right: -7px;
+  }
+  .ql-list,
+  .ql-underline {
+    visibility: hidden;
+  }
+  #editor[placeholder]:not(.focus) {
+    color: #999; /* Cor do placeholder */
+    opacity: 1; /* Garante que o placeholder seja visível */
+  }
+
+  /* Estilo para garantir que o placeholder desapareça quando o usuário começar a inserir texto */
+  #editor.focus[placeholder] {
+      opacity: 0; /* Faz com que o placeholder desapareça quando o editor está em foco */
+  }
 }
-
-

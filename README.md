@@ -45,10 +45,12 @@ Contribuições são bem-vindas! Para contribuir com o projeto, siga estas etapa
 ### Versão 2.0 (em andamento)
 - ✅ Introdução de um limite de 30 dias para as reservas, garantindo uma maior rotatividade dos equipamentos.
 - ✅ Melhoria na navegação das páginas de anúncios, com botões para avançar e voltar, proporcionando uma experiência de usuário mais fluida.
-- Lançamento do painel do refeitório e da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - ✅ Otimização da área administrativa, tornando-a mais intuitiva e eficiente para os gestores.
-- Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.
+- ✅ Implementação de uma funcionalidade que permite ao administrador programar anúncios, oferecendo maior flexibilidade na comunicação.
 - ✅ Aprimoramento da visualização de anúncios na página do administrador, com opções para avançar e recuar, facilitando a gestão de conteúdo.
+
+### Versão 3.0 (em andamento)
+- Lançamento da sala de aula, expandindo as funcionalidades do sistema para cobrir mais áreas da instituição.
 - Desenvolvimento do lobby de aplicativos, que se tornará a nova página inicial, reorganizando o acesso aos diferentes sistemas e serviços.
 - A atual página inicial será renomeada para "Equipamentos", e um ícone no lobby será adicionado para acessar o sistema de reservas de equipamentos.
 

@@ -68,37 +68,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const recurso = document.getElementById("recurso").value;
     const professor = document.getElementById("professor").value;
     const turma = document.getElementById("turma").value;
+    const permiteOutrosMeses = document.querySelector("#permiteOutrosMeses input[type='checkbox']").checked;
+    console.log("permiteOutrosMeses:", permiteOutrosMeses);
     const dataReservaDate = new Date(dataReserva);
     const dataAtual = new Date();
-    dataAtual.setDate(dataAtual.getDate() - 1); // Subtrai um dia da data atual
     dataReservaDate.setHours(0, 0, 0, 0);
     dataAtual.setHours(0, 0, 0, 0);
-
-    var dataLimite = new Date();
-    dataLimite.setDate(dataLimite.getDate() + 30); // Adiciona 30 dias à data atual
+    console.log("hoje é", dataAtual);
 
     let mensagemErro = "";
 
-    if (dataReservaDate < dataAtual) {
-      mensagemErro = "Não é possível selecionar uma data passada.";
-  } else if (dataReservaDate > dataLimite) {
-      mensagemErro = "A reserva não pode ser feita com mais de 30 dias de antecedência.";
-  }
-  if (!recurso) {
-      mensagemErro = "Por favor, selecione um recurso para reservar.";
-  }
-  if (!professor) {
-      mensagemErro = "Por favor, informe o nome do professor.";
-  } else if (!turma) {
-      mensagemErro = "Por favor, informe a turma.";
+    if (!recurso) {
+        mensagemErro = "Por favor, selecione um recurso para reservar.";
+    } else if (!professor) {
+        mensagemErro = "Por favor, informe o nome do professor.";
+    } else if (!turma) {
+        mensagemErro = "Por favor, informe a turma.";
+    } else if (!permiteOutrosMeses) {
+        const ultimoDiaMesAtual = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+        const setimoDiaAntesFimMes = new Date(ultimoDiaMesAtual.getFullYear(), ultimoDiaMesAtual.getMonth(), ultimoDiaMesAtual.getDate() - 7);
+        console.log("Setimo dia antes do fim", setimoDiaAntesFimMes);
+        if (!(dataAtual >= setimoDiaAntesFimMes || dataReservaDate.getMonth() === dataAtual.getMonth())) {
+            mensagemErro = "A reserva só pode ser feita para o mês atual ou, nos últimos 7 dias do mês, para o mês seguinte.";
+        }
+    }
+    if (mensagemErro) {
+        alert(mensagemErro);
+        return false;
+    }
+    return true;
   }
 
-  if (mensagemErro) {
-      alert(mensagemErro);
-      return false;
-  }
-  return true;
-}
+
   function exibirCarregamento(carregando) {
     const loadingIndicator = document.getElementById("loadingIndicator");
     if (carregando) {
@@ -611,17 +612,31 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Adicionar um ouvinte de evento para atualizar o cabeçalho quando a data for alterada
-  document
-    .getElementById("data")
-    .addEventListener("change", preencherCabecalhoCalendario);
-
+  document.getElementById("data").addEventListener("change", preencherCabecalhoCalendario);
+  const selectRecurso = document.getElementById("recurso");
+  const selectData = document.getElementById("data");
   const selectTurno = document.getElementById("turno");
+
+  // Definindo a data atual no campo de seleção de data
+  const dataAtual = new Date().toISOString().split('T')[0];
+  selectData.value = dataAtual;
+
+  // Obter o horário local do navegador
+  const hora = new Date().getHours();
+  const minutos = new Date().getMinutes();
+
+  // Definir o turno com base no horário local
+  if (hora < 12 || (hora === 12 && minutos <= 30)) {
+      selectTurno.value = "Matutino";
+  } else {
+      selectTurno.value = "Vespertino";
+  }
+
+    
   selectTurno.addEventListener("change", function () {
     buscarHorariosDisponiveis();
     atualizarCalendarioSemanal();
   });
-  const selectRecurso = document.getElementById("recurso");
-  const selectData = document.getElementById("data");
 
   selectTurno.addEventListener("change", function () {
     atualizarOpcoesTurma(this.value);
@@ -634,6 +649,17 @@ document.addEventListener("DOMContentLoaded", function () {
   selectData.addEventListener("change", atualizarCalendarioSemanal);
   selectTurno.addEventListener("change", atualizarCalendarioSemanal);
 
+  const container = document.getElementById("permiteOutrosMeses");
+  adicionarCheckbox(container, "Reunião?");
+
+  function atualizarCarregamento() {
+    const selectData = document.getElementById("data");
+    const dataAtual = new Date().toISOString().split('T')[0];
+    selectData.value = dataAtual;
+    atualizarCalendarioSemanal();
+  }
+
+
   // Call functions to initialize the page
   setRecursoFromURL();
   setRecursoInfo();
@@ -641,4 +667,29 @@ document.addEventListener("DOMContentLoaded", function () {
   atualizarOpcoesTurma(selectTurno.value);
   atualizarCalendarioSemanal();
   atualizarQuantidadeRecurso();
+  atualizarCarregamento();
+});
+
+function adicionarCheckbox(container, label) {
+  const checkboxDiv = document.createElement("div");
+  const checkboxLabel = document.createElement("label");
+  checkboxLabel.textContent = label;
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.name = label.toLowerCase().replace("?", "");
+  checkboxLabel.appendChild(checkbox);
+  checkboxDiv.appendChild(checkboxLabel);
+  container.appendChild(checkboxDiv);
+}
+
+document.getElementById("turno").addEventListener("change", function () {
+  const container = document.getElementById("permiteOutrosMeses");
+  container.innerHTML = ""; // Limpa o conteúdo atual antes de adicionar o novo campo de checkbox
+  const turnoSelecionado = this.value;
+  
+  if (turnoSelecionado === "Matutino") {
+      adicionarCheckbox(container, "Reunião?");
+  } else if (turnoSelecionado === "Vespertino") {
+      adicionarCheckbox(container, "Letrus?");
+  }
 });

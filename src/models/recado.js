@@ -16,16 +16,10 @@ Recado.init({
   titulo: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      len: [0, 100]
-    }
   },
   conteudo: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      len: [0, 280]
-    }
   },
   imagem: {
     type: DataTypes.STRING,
